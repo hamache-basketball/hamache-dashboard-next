@@ -5,6 +5,7 @@ import FourFactorsCards from '@/components/charts/FourFactorsCards';
 import ScatterChart from '@/components/charts/ScatterChart';
 import MomentumChart from '@/components/charts/MomentumChart';
 import SankeyChart from '@/components/charts/SankeyChart';
+import QuarterScoreChart from '@/components/charts/QuarterScoreChart';
 import { calcFP, calcEFF, calcUSG, parseNum, formatNum, col } from '@/lib/stats-logic';
 
 export default function ReportClient({ initialData }: { initialData: any }) {
@@ -144,22 +145,33 @@ export default function ReportClient({ initialData }: { initialData: any }) {
         <FourFactorsCards ourData={our4Factors} oppData={opp4Factors} />
       </div>
 
-      <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px' }}>
-        <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>2</span>
-          Momentum (累積得失点差)
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>2</span>
+            ピリオド別スコア
+          </div>
+          <div style={{ height: '200px' }}>
+            <QuarterScoreChart data={periodData} />
+          </div>
         </div>
-        <div style={{ height: '200px' }}>
-          <MomentumChart labels={momentumLabels} dataDiff={momentumData} />
-        </div>
-        <div style={{ textAlign: 'right', marginTop: '10px', fontSize: '12px', color: 'var(--muted)' }}>
-          最終得失点差: <span style={{ color: finalDiff >= 0 ? 'var(--accent2)' : 'var(--lose)', fontWeight: 'bold' }}>{finalDiff > 0 ? `+${finalDiff}` : finalDiff}</span>
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>3</span>
+            Momentum (累積得失点差)
+          </div>
+          <div style={{ height: '200px' }}>
+            <MomentumChart labels={momentumLabels} dataDiff={momentumData} />
+          </div>
+          <div style={{ textAlign: 'right', marginTop: '10px', fontSize: '12px', color: 'var(--muted)' }}>
+            最終得失点差: <span style={{ color: finalDiff >= 0 ? 'var(--accent2)' : 'var(--lose)', fontWeight: 'bold' }}>{finalDiff > 0 ? `+${finalDiff}` : finalDiff}</span>
+          </div>
         </div>
       </div>
 
       <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px' }}>
         <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>3</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>4</span>
           攻撃ポゼッションの内訳フロー (Sankey Diagram)
         </div>
         <SankeyChart {...sankeyStats} />
@@ -177,7 +189,7 @@ export default function ReportClient({ initialData }: { initialData: any }) {
           <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>貢献度マップ B (EFF × USG%)</div>
           <div style={{ fontSize: '10px', color: 'var(--muted)', marginBottom: '16px' }}>右上ほど攻撃を引き受け、かつ正確にプレー</div>
           <div style={{ height: '220px' }}>
-            <ScatterChart points={scatterEFF} xLabel="USG%" yLabel="EFF" />
+            <ScatterChart points={scatterEFF} xLabel="USG%" yLabel="EFF" color="#4f8ef7" />
           </div>
         </div>
       </div>

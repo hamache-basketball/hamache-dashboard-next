@@ -16,17 +16,20 @@ interface ScatterChartProps {
   points: ScatterPoint[];
   xLabel: string;
   yLabel: string;
+  color?: string;
 }
 
-export default function ScatterChart({ points, xLabel, yLabel }: ScatterChartProps) {
+export default function ScatterChart({ points, xLabel, yLabel, color = '#f7a84f' }: ScatterChartProps) {
   const data = {
     datasets: [
       {
         label: '選手',
         data: points,
-        backgroundColor: 'rgba(247, 168, 79, 0.6)', 
-        borderColor: '#f7a84f',
+        backgroundColor: color + '99', 
+        borderColor: color,
         borderWidth: 1,
+        pointRadius: (context: any) => context.raw?.r || 4,
+        pointHoverRadius: (context: any) => (context.raw?.r || 4) + 2,
       }
     ]
   };
