@@ -291,48 +291,69 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
       {/* Trend Chart */}
       <div style={{ marginBottom: '40px' }}>
         <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>得点推移（試合ごと）</div>
-        <div className="glass-panel" style={{ padding: '20px 20px 40px 20px', height: '240px', position: 'relative' }}>
+        <div className="glass-panel" style={{ padding: '20px 20px 60px 20px', height: '260px', position: 'relative' }}>
           {trendData.length > 0 ? (
-            <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
-              {/* Y Axis Grid */}
-              {[0, 25, 50, 75, 100].map(p => (
-                <line key={p} x1="0" y1={p} x2="100" y2={p} stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
-              ))}
-              
-              <polyline
-                fill="none"
-                stroke="#4f8ef7"
-                strokeWidth="2"
-                points={trendData.map((d, i) => {
-                  const maxPts = Math.max(...trendData.map((dd: any) => parseNum(dd.PTS)), 10);
-                  const x = (i / Math.max(1, trendData.length - 1)) * 100;
-                  const y = 100 - (parseNum(d.PTS) / maxPts) * 100;
-                  return `${x},${y}`;
-                }).join(' ')}
-              />
-              
-              {trendData.map((d, i) => {
-                const maxPts = Math.max(...trendData.map((dd: any) => parseNum(dd.PTS)), 10);
-                const x = (i / Math.max(1, trendData.length - 1)) * 100;
-                const y = 100 - (parseNum(d.PTS) / maxPts) * 100;
-                const label = `${col(d.gameObj, 'date')}_${col(d.gameObj, '対戦相手')}`;
-                
-                return (
-                  <g key={i}>
-                    <circle cx={x} cy={y} r="2" fill="#4f8ef7" stroke="var(--bg2)" strokeWidth="1" />
-                    <text 
-                      x={x} y={108} 
-                      fontSize="3.5" 
-                      fill="var(--muted)" 
-                      textAnchor="end" 
-                      transform={`rotate(-35 ${x} 108)`}
-                    >
-                      {label.substring(0, 15)}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
+            <>
+              <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                  {/* Y Axis Grid */}
+                  {[0, 50, 100, 150, 200].map(p => (
+                    <line key={p} x1="0" y1={p} x2="1000" y2={p} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                  ))}
+                  
+                  <polyline
+                    fill="none"
+                    stroke="#4f8ef7"
+                    strokeWidth="3"
+                    points={trendData.map((d, i) => {
+                      const maxPts = Math.max(...trendData.map((dd: any) => parseNum(dd.PTS)), 10);
+                      const x = (i / Math.max(1, trendData.length - 1)) * 1000;
+                      const y = 200 - (parseNum(d.PTS) / maxPts) * 200;
+                      return `${x},${y}`;
+                    }).join(' ')}
+                  />
+                  
+                  {trendData.map((d, i) => {
+                    const maxPts = Math.max(...trendData.map((dd: any) => parseNum(dd.PTS)), 10);
+                    const x = (i / Math.max(1, trendData.length - 1)) * 1000;
+                    const y = 200 - (parseNum(d.PTS) / maxPts) * 200;
+                    
+                    return (
+                      <circle key={i} cx={x} cy={y} r="6" fill="#4f8ef7" stroke="var(--bg2)" strokeWidth="3" />
+                    );
+                  })}
+                </svg>
+
+                {/* HTML Labels for X Axis (avoids SVG text stretching) */}
+                <div style={{ position: 'absolute', bottom: '-45px', left: '0', width: '100%', height: '40px' }}>
+                  {trendData.map((d, i) => {
+                    const xPct = (i / Math.max(1, trendData.length - 1)) * 100;
+                    const rawDate = col(d.gameObj, 'date') || '';
+                    const shortDate = rawDate.replace(/^\d{4}\//, ''); // remove year
+                    const label = `${shortDate} ${col(d.gameObj, '対戦相手')}`;
+                    
+                    return (
+                      <div 
+                        key={i} 
+                        style={{ 
+                          position: 'absolute', 
+                          left: `${xPct}%`, 
+                          top: '0',
+                          transform: 'translateX(-50%) rotate(-35deg)',
+                          transformOrigin: 'top center',
+                          fontSize: '10px',
+                          color: 'var(--muted)',
+                          whiteSpace: 'nowrap',
+                          pointerEvents: 'none'
+                        }}
+                      >
+                        {label.length > 14 ? label.substring(0, 14) + '...' : label}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
           ) : (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--muted)' }}>データがありません</div>
           )}
