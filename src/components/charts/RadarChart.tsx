@@ -46,7 +46,23 @@ export default function RadarChart({ ourData, oppData }: RadarChartProps) {
       }
     },
     plugins: {
-      legend: { position: 'bottom' as const, labels: { usePointStyle: true, boxWidth: 8 } }
+      legend: { position: 'bottom' as const, labels: { usePointStyle: true, boxWidth: 8 } },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.label === 'TO% (Rev)') {
+              label += (100 - context.raw).toFixed(1);
+            } else {
+              label += typeof context.raw === 'number' ? context.raw.toFixed(1) : context.raw;
+            }
+            return label;
+          }
+        }
+      }
     }
   };
 

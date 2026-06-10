@@ -4,16 +4,21 @@ import React, { useState, useMemo } from 'react';
 import RadarChart from '@/components/charts/RadarChart';
 import ScatterChart from '@/components/charts/ScatterChart';
 import MomentumChart from '@/components/charts/MomentumChart';
+import SankeyChart from '@/components/charts/SankeyChart';
 import { calcFP, calcEFF, calcUSG, parseNum, formatNum, col } from '@/lib/stats-logic';
 
 export default function ReportClient({ initialData }: { initialData: any }) {
-  const { games, players } = initialData;
-  const [selectedGameId, setSelectedGameId] = useState<string>(games.length > 0 ? games[0].GameID : '');
+  const { games, players, lineups } = initialData;
+  const [selectedGameId, setSelectedGameId] = useState<string>(games?.length > 0 ? games[0].GameID : '');
 
-  const game = games.find((g: any) => g.GameID === selectedGameId);
+  const game = games?.find((g: any) => g.GameID === selectedGameId);
+
+  const playerRows = useMemo(() => {
+    return players?.filter((p: any) => p.GameID === selectedGameId) || [];
+  }, [selectedGameId, players]);
 
   const gamePlayers = useMemo(() => {
-    return players.filter((p: any) => p.GameID === selectedGameId).map((p: any) => {
+    return playerRows.map((p: any) => {
       const fp = calcFP(p.PTS, p.OR, p.DR, p.AST, p.STL, p.BLK, p.TO);
       const eff = calcEFF(p.PTS, p.REB, p.AST, p.STL, p.BLK, p.FGA, p.FGM, p.FTA, p.FTM, p.TO);
       const usg = calcUSG(
@@ -25,58 +30,65 @@ export default function ReportClient({ initialData }: { initialData: any }) {
       );
       return { ...p, FP: fp, EFF: eff, USG: usg };
     }).sort((a: any, b: any) => b.FP - a.FP);
-  }, [selectedGameId, players, game]);
+  }, [playerRows, game]);
 
   if (!game) return <div className="empty-state">試合データがありません</div>;
 
-  // Chart data
+  // 4 Factors
   const our4Factors = [
     parseNum(col(game, 'team', 'efg')), 
-    100 - parseNum(col(game, 'team', 'to%')), 
+    parseNum(col(game, 'team', 'to%')), 
     parseNum(col(game, 'team', 'or%')), 
     parseNum(col(game, 'team', 'ftr'))
   ];
   const opp4Factors = [
     parseNum(col(game, 'opp', 'efg')), 
-    100 - parseNum(col(game, 'opp', 'to%')), 
+    parseNum(col(game, 'opp', 'to%')), 
     parseNum(col(game, 'opp', 'or%')), 
     parseNum(col(game, 'opp', 'ftr'))
   ];
 
+  // Scatter data
   const scatterFP = gamePlayers.map((p: any) => ({ 
-    x: p.USG, 
-    y: p.FP, 
-    r: Math.max(2, parseNum(p.PTS)/2), 
-    name: p['コートネーム']||p['選手名']||'Unknown', 
-    pts: parseNum(p.PTS) 
+    x: p.USG, y: p.FP, r: Math.max(2, parseNum(p.PTS)/2), 
+    name: p['コートネーム']||p['選手名']||'Unknown', pts: parseNum(p.PTS) 
   }));
   const scatterEFF = gamePlayers.map((p: any) => ({ 
-    x: p.USG, 
-    y: p.EFF, 
-    r: Math.max(2, parseNum(p.PTS)/2), 
-    name: p['コートネーム']||p['選手名']||'Unknown', 
-    pts: parseNum(p.PTS) 
+    x: p.USG, y: p.EFF, r: Math.max(2, parseNum(p.PTS)/2), 
+    name: p['コートネーム']||p['選手名']||'Unknown', pts: parseNum(p.PTS) 
   }));
 
-  const momentumLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
-  const usScores = [
-    parseNum(col(game, 'q1', 'us')), 
-    parseNum(col(game, 'q2', 'us')), 
-    parseNum(col(game, 'q3', 'us')), 
-    parseNum(col(game, 'q4', 'us'))
-  ];
-  const oppScores = [
-    parseNum(col(game, 'q1', 'opp')), 
-    parseNum(col(game, 'q2', 'opp')), 
-    parseNum(col(game, 'q3', 'opp')), 
-    parseNum(col(game, 'q4', 'opp'))
-  ];
-  
-  let cumUs = 0; let cumOpp = 0;
-  const momentumData = usScores.map((s, i) => {
-    cumUs += s; cumOpp += oppScores[i];
-    return cumUs - cumOpp;
+  // Momentum (Lineups data)
+  const lineupRows = lineups ? lineups.filter((r: any) => r.GameID === selectedGameId) : [];
+  const periods = ['1Q', '2Q', '3Q', '4Q'];
+  const periodData = periods.map(q => {
+    const qRows = lineupRows.filter((r: any) => r.Period === q);
+    if (!qRows.length) return { q, us: 0, opp: 0 };
+    const us = Math.max(...qRows.map((r: any) => parseNum(r.Score_Us_End))) - Math.min(...qRows.map((r: any) => parseNum(r.Score_Us_Start)));
+    const opp = Math.max(...qRows.map((r: any) => parseNum(r.Score_Opp_End))) - Math.min(...qRows.map((r: any) => parseNum(r.Score_Opp_Start)));
+    return { q, us, opp };
   });
+
+  const momentumLabels = ['開始', '1Q', '2Q', '3Q', '4Q'];
+  let cumUs = 0; let cumOpp = 0;
+  const momentumData = [0];
+  periodData.forEach(p => {
+    cumUs += p.us; cumOpp += p.opp;
+    momentumData.push(cumUs - cumOpp);
+  });
+  const finalDiff = momentumData[momentumData.length - 1];
+
+  // Sankey Stats
+  const sankeyStats = {
+    pa2: playerRows.reduce((a: number, r: any) => a + parseNum(r['2PA']), 0),
+    pm2: playerRows.reduce((a: number, r: any) => a + parseNum(r['2PM']), 0),
+    pa3: playerRows.reduce((a: number, r: any) => a + parseNum(r['3PA']), 0),
+    pm3: playerRows.reduce((a: number, r: any) => a + parseNum(r['3PM']), 0),
+    fta: playerRows.reduce((a: number, r: any) => a + parseNum(r['FTA']), 0),
+    ftm: playerRows.reduce((a: number, r: any) => a + parseNum(r['FTM']), 0),
+    to: playerRows.reduce((a: number, r: any) => a + parseNum(r['TO']), 0),
+    orb: playerRows.reduce((a: number, r: any) => a + parseNum(r['OR']), 0),
+  };
 
   return (
     <div>
@@ -87,7 +99,7 @@ export default function ReportClient({ initialData }: { initialData: any }) {
           value={selectedGameId} 
           onChange={e => setSelectedGameId(e.target.value)}
         >
-          {games.map((g: any) => (
+          {games?.map((g: any) => (
             <option key={g.GameID} value={g.GameID}>{col(g, 'date')} vs {col(g, '対戦相手')}</option>
           ))}
         </select>
@@ -124,9 +136,14 @@ export default function ReportClient({ initialData }: { initialData: any }) {
             <MomentumChart labels={momentumLabels} dataDiff={momentumData} />
           </div>
           <div style={{ textAlign: 'right', marginTop: '10px', fontSize: '12px', color: 'var(--muted)' }}>
-            最終得失点差: <span style={{ color: momentumData[3] >= 0 ? 'var(--accent2)' : 'var(--lose)', fontWeight: 'bold' }}>{momentumData[3] > 0 ? `+${momentumData[3]}` : momentumData[3]}</span>
+            最終得失点差: <span style={{ color: finalDiff >= 0 ? 'var(--accent2)' : 'var(--lose)', fontWeight: 'bold' }}>{finalDiff > 0 ? `+${finalDiff}` : finalDiff}</span>
           </div>
         </div>
+      </div>
+
+      <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>攻撃ポゼッションの内訳フロー (Sankey Diagram)</div>
+        <SankeyChart {...sankeyStats} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '24px' }}>
