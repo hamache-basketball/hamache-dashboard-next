@@ -39,3 +39,14 @@ export const calcUSG = (fga: any, fta: any, to: any, min: any, tmMin: any, tmFga
   if (m === 0 || teamLoad === 0) return 0;
   return 100 * ((playerLoad * (tM / 5)) / (m * teamLoad));
 };
+
+export const col = (obj: any, ...parts: string[]): string => {
+  if (!obj) return '';
+  for (const k of Object.keys(obj)) {
+    const flat = k.replace(/[\s\n_]/g, '').toLowerCase();
+    if (parts.every(p => flat.includes(p.replace(/[_\s]/g, '').toLowerCase()))) {
+      return obj[k];
+    }
+  }
+  return '';
+};

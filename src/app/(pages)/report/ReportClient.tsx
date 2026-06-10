@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import RadarChart from '@/components/charts/RadarChart';
 import ScatterChart from '@/components/charts/ScatterChart';
 import MomentumChart from '@/components/charts/MomentumChart';
-import { calcFP, calcEFF, calcUSG, parseNum, formatNum } from '@/lib/stats-logic';
+import { calcFP, calcEFF, calcUSG, parseNum, formatNum, col } from '@/lib/stats-logic';
 
 export default function ReportClient({ initialData }: { initialData: any }) {
   const { games, players } = initialData;
@@ -16,7 +16,13 @@ export default function ReportClient({ initialData }: { initialData: any }) {
     return players.filter((p: any) => p.GameID === selectedGameId).map((p: any) => {
       const fp = calcFP(p.PTS, p.OR, p.DR, p.AST, p.STL, p.BLK, p.TO);
       const eff = calcEFF(p.PTS, p.REB, p.AST, p.STL, p.BLK, p.FGA, p.FGM, p.FTA, p.FTM, p.TO);
-      const usg = calcUSG(p.FGA, p.FTA, p.TO, p.MIN, game?.['Team_MIN']||200, game?.['Team_FGA']||100, game?.['Team_FTA']||20, game?.['Team_TO']||15);
+      const usg = calcUSG(
+        p.FGA, p.FTA, p.TO, p.MIN, 
+        col(game, 'team', 'min') || 200, 
+        col(game, 'team', 'fga') || 100, 
+        col(game, 'team', 'fta') || 20, 
+        col(game, 'team', 'to') || 15
+      );
       return { ...p, FP: fp, EFF: eff, USG: usg };
     }).sort((a: any, b: any) => b.FP - a.FP);
   }, [selectedGameId, players, game]);
@@ -24,15 +30,47 @@ export default function ReportClient({ initialData }: { initialData: any }) {
   if (!game) return <div className="empty-state">試合データがありません</div>;
 
   // Chart data
-  const our4Factors = [parseNum(game['Team_eFG%']), 100 - parseNum(game['Team_TO%']), parseNum(game['Team_OR%']), parseNum(game['Team_FTR'])];
-  const opp4Factors = [parseNum(game['Opp_eFG%']), 100 - parseNum(game['Opp_TO%']), parseNum(game['Opp_OR%']), parseNum(game['Opp_FTR'])];
+  const our4Factors = [
+    parseNum(col(game, 'team', 'efg')), 
+    100 - parseNum(col(game, 'team', 'to%')), 
+    parseNum(col(game, 'team', 'or%')), 
+    parseNum(col(game, 'team', 'ftr'))
+  ];
+  const opp4Factors = [
+    parseNum(col(game, 'opp', 'efg')), 
+    100 - parseNum(col(game, 'opp', 'to%')), 
+    parseNum(col(game, 'opp', 'or%')), 
+    parseNum(col(game, 'opp', 'ftr'))
+  ];
 
-  const scatterFP = gamePlayers.map((p: any) => ({ x: p.USG, y: p.FP, r: Math.max(2, parseNum(p.PTS)/2), name: p['コートネーム']||p['選手名']||'Unknown', pts: parseNum(p.PTS) }));
-  const scatterEFF = gamePlayers.map((p: any) => ({ x: p.USG, y: p.EFF, r: Math.max(2, parseNum(p.PTS)/2), name: p['コートネーム']||p['選手名']||'Unknown', pts: parseNum(p.PTS) }));
+  const scatterFP = gamePlayers.map((p: any) => ({ 
+    x: p.USG, 
+    y: p.FP, 
+    r: Math.max(2, parseNum(p.PTS)/2), 
+    name: p['コートネーム']||p['選手名']||'Unknown', 
+    pts: parseNum(p.PTS) 
+  }));
+  const scatterEFF = gamePlayers.map((p: any) => ({ 
+    x: p.USG, 
+    y: p.EFF, 
+    r: Math.max(2, parseNum(p.PTS)/2), 
+    name: p['コートネーム']||p['選手名']||'Unknown', 
+    pts: parseNum(p.PTS) 
+  }));
 
   const momentumLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
-  const usScores = [parseNum(game['Q1_US']||game['1Q_US']), parseNum(game['Q2_US']||game['2Q_US']), parseNum(game['Q3_US']||game['3Q_US']), parseNum(game['Q4_US']||game['4Q_US'])];
-  const oppScores = [parseNum(game['Q1_OPP']||game['1Q_OPP']), parseNum(game['Q2_OPP']||game['2Q_OPP']), parseNum(game['Q3_OPP']||game['3Q_OPP']), parseNum(game['Q4_OPP']||game['4Q_OPP'])];
+  const usScores = [
+    parseNum(col(game, 'q1', 'us')), 
+    parseNum(col(game, 'q2', 'us')), 
+    parseNum(col(game, 'q3', 'us')), 
+    parseNum(col(game, 'q4', 'us'))
+  ];
+  const oppScores = [
+    parseNum(col(game, 'q1', 'opp')), 
+    parseNum(col(game, 'q2', 'opp')), 
+    parseNum(col(game, 'q3', 'opp')), 
+    parseNum(col(game, 'q4', 'opp'))
+  ];
   
   let cumUs = 0; let cumOpp = 0;
   const momentumData = usScores.map((s, i) => {
@@ -50,24 +88,24 @@ export default function ReportClient({ initialData }: { initialData: any }) {
           onChange={e => setSelectedGameId(e.target.value)}
         >
           {games.map((g: any) => (
-            <option key={g.GameID} value={g.GameID}>{g['Date']} vs {g['Opponent']}</option>
+            <option key={g.GameID} value={g.GameID}>{col(g, 'date')} vs {col(g, '対戦相手')}</option>
           ))}
         </select>
       </div>
 
       <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
-          <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)', lineHeight: 1 }}>{game['Team_PTS'] || game['PTS_US'] || '0'}</span>
+          <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)', lineHeight: 1 }}>{col(game, 'team', 'pts') || col(game, 'pts', 'us') || '0'}</span>
           <span style={{ fontSize: '24px', color: 'var(--border2)' }}>—</span>
-          <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--muted)', lineHeight: 1 }}>{game['Opp_PTS'] || game['PTS_OPP'] || '0'}</span>
+          <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--muted)', lineHeight: 1 }}>{col(game, 'opp', 'pts') || '0'}</span>
         </div>
         <div style={{ display: 'flex', gap: '24px' }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{formatNum(game['Team_PACE']||0)}</div>
+            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{formatNum(col(game, 'pace')||0)}</div>
             <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Pace</div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)' }}>{formatNum(game['Team_PPP']||0, 2)}</div>
+            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)' }}>{formatNum(col(game, 'team', 'ppp')||0, 2)}</div>
             <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Team PPP</div>
           </div>
         </div>
