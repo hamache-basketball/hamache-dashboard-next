@@ -64,7 +64,7 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
     const y3PM = y3PA, y3Miss = y3PM + h3PM + GAP;
     const yFTM = yFT, yFTMiss = yFTM + hFTM + GAP;
     const yTotal = y2Miss;
-    const yOR = yTotal, yDR = yOR + hOR + GAP;
+    const yOR = yTotal;
 
     const band = (x1: number, y1: number, h1: number, x2: number, y2: number, h2: number, col: string, opacity = 0.22) => {
       const mx = (x1 + x2) / 2;
