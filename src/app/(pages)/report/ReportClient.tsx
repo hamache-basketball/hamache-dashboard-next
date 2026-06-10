@@ -10,9 +10,13 @@ import { calcFP, calcEFF, calcUSG, parseNum, formatNum, col } from '@/lib/stats-
 
 export default function ReportClient({ initialData }: { initialData: any }) {
   const { games, players, lineups } = initialData;
-  const [selectedGameId, setSelectedGameId] = useState<string>(games?.length > 0 ? games[0].GameID : '');
+  const sortedGames = useMemo(() => {
+    return [...(games || [])].reverse();
+  }, [games]);
+  
+  const [selectedGameId, setSelectedGameId] = useState<string>(sortedGames.length > 0 ? sortedGames[0].GameID : '');
 
-  const game = games?.find((g: any) => g.GameID === selectedGameId);
+  const game = sortedGames.find((g: any) => g.GameID === selectedGameId);
 
   const playerRows = useMemo(() => {
     return players?.filter((p: any) => p.GameID === selectedGameId) || [];
@@ -113,8 +117,8 @@ export default function ReportClient({ initialData }: { initialData: any }) {
           value={selectedGameId} 
           onChange={e => setSelectedGameId(e.target.value)}
         >
-          {games?.map((g: any) => (
-            <option key={g.GameID} value={g.GameID}>{col(g, 'date')} vs {col(g, '対戦相手')}</option>
+          {sortedGames.map((g: any) => (
+            <option key={g.GameID} value={g.GameID}>{g.GameID} — {col(g, 'date')} vs {col(g, '対戦相手')}</option>
           ))}
         </select>
       </div>
