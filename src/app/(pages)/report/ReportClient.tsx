@@ -18,7 +18,20 @@ export default function ReportClient({ initialData }: { initialData: any }) {
   }, [selectedGameId, players]);
 
   const gamePlayers = useMemo(() => {
-    return playerRows.map((p: any) => {
+    const playerMap = new Map<string, any>();
+    playerRows.forEach((p: any) => {
+      const name = p['コートネーム'] || p['選手名'] || 'Unknown';
+      if (!playerMap.has(name)) {
+        playerMap.set(name, { ...p });
+      } else {
+        const exist = playerMap.get(name);
+        ['PTS', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FGA', 'FGM', 'FTA', 'FTM', 'MIN', 'OR', 'DR', '2PA', '2PM', '3PA', '3PM'].forEach(key => {
+          exist[key] = (parseNum(exist[key]) + parseNum(p[key])).toString();
+        });
+      }
+    });
+
+    return Array.from(playerMap.values()).map((p: any) => {
       const fp = calcFP(p.PTS, p.OR, p.DR, p.AST, p.STL, p.BLK, p.TO);
       const eff = calcEFF(p.PTS, p.REB, p.AST, p.STL, p.BLK, p.FGA, p.FGM, p.FTA, p.FTM, p.TO);
       const usg = calcUSG(
