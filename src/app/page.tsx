@@ -4,7 +4,7 @@ export default async function Home() {
   const data = await fetchAllData();
   const gameCount = data.games.length;
   // 選手の一意な数をカウント
-  const uniquePlayers = new Set(data.players.map(p => p['選手名'])).size;
+  const uniquePlayers = new Set(data.players.map((p: Record<string, string>) => p['選手名'])).size;
   
   return (
     <div className="page active">
