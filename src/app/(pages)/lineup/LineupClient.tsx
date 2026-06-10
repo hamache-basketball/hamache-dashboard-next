@@ -63,7 +63,7 @@ export default function LineupClient({ initialData }: { initialData: any }) {
     });
 
     // Sort by Diff descending
-    return mapped.sort((a, b) => b.diff - a.diff);
+    return mapped.sort((a: any, b: any) => b.diff - a.diff);
   }, [lineups, selectedGameId, selectedPeriod]);
 
   return (
