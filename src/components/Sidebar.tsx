@@ -6,7 +6,8 @@ export default function Sidebar() {
   const pathname = usePathname();
   
   const navItems = [
-    { name: "試合レポート", path: "/", icon: "📋" },
+    { name: "ホーム", path: "/", icon: "🏠" },
+    { name: "試合レポート", path: "/report", icon: "📋" },
     { name: "試合分析", path: "/game", icon: "🏀" },
     { name: "選手個人", path: "/player", icon: "👤" },
     { name: "ラインナップ", path: "/lineup", icon: "👥" },

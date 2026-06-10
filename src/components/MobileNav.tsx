@@ -6,11 +6,11 @@ export default function MobileNav() {
   const pathname = usePathname();
   
   const navItems = [
-    { name: "レポート", path: "/", icon: "📋" },
-    { name: "分析", path: "/game", icon: "🏀" },
-    { name: "選手", path: "/player", icon: "👤" },
-    { name: "コンビ", path: "/lineup", icon: "👥" },
-    { name: "チーム", path: "/team", icon: "📊" },
+    { name: "ホーム", path: "/", icon: "🏠" },
+    { name: "試合レポート", path: "/report", icon: "📋" },
+    { name: "試合分析", path: "/game", icon: "🏀" },
+    { name: "選手個人", path: "/player", icon: "👤" },
+    { name: "ラインナップ", path: "/lineup", icon: "👥" },
   ];
 
   return (
