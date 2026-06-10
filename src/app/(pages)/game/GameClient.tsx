@@ -31,11 +31,14 @@ export default function GameClient({ initialData }: { initialData: any }) {
   }, [selectedGameId, players]);
 
   const gamePlayers = useMemo(() => {
+    // D列（4列目）のキー名を取得
+    const jerseyKey = playerRows.length > 0 ? Object.keys(playerRows[0])[3] : '背番号';
+    
     const playerMap = new Map<string, any>();
     playerRows.forEach((p: any) => {
       const name = p['コートネーム'] || p['選手名'] || 'Unknown';
       if (!playerMap.has(name)) {
-        playerMap.set(name, { ...p, EFG: 0, FP: 0, EFF: 0, USG: 0, PlusMinus: 0 });
+        playerMap.set(name, { ...p, '背番号': p[jerseyKey] || p['背番号'] || '-', EFG: 0, FP: 0, EFF: 0, USG: 0, PlusMinus: 0 });
       }
       
       const exist = playerMap.get(name);
@@ -66,7 +69,13 @@ export default function GameClient({ initialData }: { initialData: any }) {
       );
 
       return { ...p, EFG: efg, FP: fp, EFF: eff, USG: usg };
-    }).sort((a: any, b: any) => parseNum(b.MIN) - parseNum(a.MIN));
+    }).sort((a: any, b: any) => {
+      // 1. PTS降順
+      const ptsDiff = parseNum(b.PTS) - parseNum(a.PTS);
+      if (ptsDiff !== 0) return ptsDiff;
+      // 2. PTSが同じ場合は背番号（#）昇順
+      return parseNum(a['背番号']) - parseNum(b['背番号']);
+    });
   }, [playerRows, game]);
 
   if (!game) return <div className="empty-state">試合データがありません</div>;
