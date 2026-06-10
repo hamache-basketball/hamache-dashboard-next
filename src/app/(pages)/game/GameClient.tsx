@@ -20,8 +20,9 @@ export default function GameClient({ initialData }: { initialData: any }) {
   const categories = useMemo(() => {
     const cats = new Set<string>();
     (games || []).forEach((g: any) => {
-      const c = col(g, 'カテゴリー') || g['_col_34'];
-      if (c && c.trim() !== '') cats.add(c);
+      // AI列は35番目（インデックス34）
+      const c = col(g, 'カテゴリー') || (g._rawRow && g._rawRow[34]) || g['_col_34'];
+      if (c && typeof c === 'string' && c.trim() !== '') cats.add(c.trim());
     });
     return ['全カテゴリー', ...Array.from(cats)];
   }, [games]);
@@ -102,8 +103,8 @@ export default function GameClient({ initialData }: { initialData: any }) {
           >
             {sortedGames
               .filter((g: any) => {
-                const c = col(g, 'カテゴリー') || g['_col_34'];
-                return selectedCategory === '全カテゴリー' || c === selectedCategory;
+                const c = col(g, 'カテゴリー') || (g._rawRow && g._rawRow[34]) || g['_col_34'];
+                return selectedCategory === '全カテゴリー' || (c && c.trim() === selectedCategory);
               })
               .map((g: any) => (
                 <option key={g.GameID} value={g.GameID}>{g.GameID} — {col(g, 'date')} vs {col(g, '対戦相手')}</option>
@@ -119,8 +120,8 @@ export default function GameClient({ initialData }: { initialData: any }) {
               setSelectedCategory(e.target.value);
               // reset selected game to the first one in the new category
               const newGames = sortedGames.filter((g: any) => {
-                const c = col(g, 'カテゴリー') || g['_col_34'];
-                return e.target.value === '全カテゴリー' || c === e.target.value;
+                const c = col(g, 'カテゴリー') || (g._rawRow && g._rawRow[34]) || g['_col_34'];
+                return e.target.value === '全カテゴリー' || (c && c.trim() === e.target.value);
               });
               if (newGames.length > 0) setSelectedGameId(newGames[0].GameID);
             }}

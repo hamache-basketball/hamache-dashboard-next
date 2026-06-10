@@ -22,12 +22,16 @@ export async function fetchSheet(sheetName: string) {
   
   if (values.length < 2) return [];
   
-  const headers = values[0].map((s: string) => s.trim());
+  const headers = values[0].map((s: string, i: number) => s.trim() || `_col_${i}`);
   const rows = values.slice(1).map((row: string[]) => {
     const obj: Record<string, string> = {};
-    headers.forEach((header: string, i: number) => {
+    const maxLen = Math.max(headers.length, row.length);
+    for (let i = 0; i < maxLen; i++) {
+      const header = headers[i] || `_col_${i}`;
       obj[header] = (row[i] || '').trim();
-    });
+    }
+    // 生の行データ配列を保持しておく（インデックスで直接アクセスするため）
+    (obj as any)._rawRow = row;
     return obj;
   });
   
