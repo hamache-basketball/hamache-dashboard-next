@@ -110,7 +110,7 @@ export default function LineupClient({ initialData }: { initialData: any }) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {displayLineups.length > 0 ? (
-          displayLineups.map((l, i) => {
+          displayLineups.map((l: any, i: number) => {
             const isPositive = l.diff > 0;
             const isNegative = l.diff < 0;
             
@@ -118,7 +118,7 @@ export default function LineupClient({ initialData }: { initialData: any }) {
               <div key={i} className="glass-panel" style={{ padding: '24px' }}>
                 {/* Players */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
-                  {l.players.map((p, idx) => (
+                  {l.players.map((p: any, idx: number) => (
                     <div key={idx} style={{ 
                       padding: '8px 20px', 
                       background: 'rgba(255,255,255,0.05)', 
