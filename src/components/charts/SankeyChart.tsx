@@ -91,13 +91,13 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
       `<text font-size="10" font-family="monospace" fill="${col}" x="${x+w/2}" y="${y+h/2-4}" text-anchor="middle" dominant-baseline="central">${label}</text>`+
       `<text font-size="12" font-weight="500" font-family="monospace" fill="${col}" x="${x+w/2}" y="${y+h/2+8}" text-anchor="middle" dominant-baseline="central">${val}</text>`;
 
-    let s = \`<svg width="100%" viewBox="0 0 \${W} \${H}" xmlns="http://www.w3.org/2000/svg">\`;
+    let s = `<svg width="100%" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
 
     const legend = [['シュートフロー','#4f8ef7'],['成功（得点）','#38d9a9'],['失敗・ミス','#f06f6f'],['FT','#f7a84f'],['OReb','#7f77dd']];
     let lx = 20;
     legend.forEach(([lbl, col]) => {
-      s += \`<rect x="\${lx}" y="6" width="8" height="8" rx="2" fill="\${col}"/>\`;
-      s += \`<text font-size="9" font-family="monospace" fill="#9098b0" x="\${lx+11}" y="10" dominant-baseline="central">\${lbl}</text>\`;
+      s += `<rect x="${lx}" y="6" width="8" height="8" rx="2" fill="${col}"/>`;
+      s += `<text font-size="9" font-family="monospace" fill="#9098b0" x="${lx+11}" y="10" dominant-baseline="central">${lbl}</text>`;
       lx += lbl.length * 6 + 26;
     });
 
