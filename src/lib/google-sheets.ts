@@ -4,8 +4,11 @@ const API_KEY = 'AIzaSyDDG3PeoGS6_0QBEo-H8VxKBU3XvrUJjhw';
 export async function fetchSheet(sheetName: string) {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
   
-  // ISR (Incremental Static Regeneration) - 60秒ごとにキャッシュを更新
+  // APIキーのHTTPリファラー制限を回避するため、元のダッシュボードのURLをRefererとして付与
   const res = await fetch(url, { 
+    headers: {
+      'Referer': 'https://hamache-basketball.github.io/hamache-dashboard/'
+    },
     next: { revalidate: 60 } 
   });
   
