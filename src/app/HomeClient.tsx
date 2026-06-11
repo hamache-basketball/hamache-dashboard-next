@@ -241,6 +241,18 @@ export default function HomeClient({ initialData }: { initialData: any }) {
             <div style={{ fontSize: '12px', color: 'var(--muted)' }}>5人組組み合わせ毎の+/-（得失点差）と出場時間の分析</div>
           </div>
 
+          <div 
+            onClick={() => handleNavigate('/team')}
+            className="glass-panel" 
+            style={{ padding: '24px', cursor: 'pointer', borderTop: '2px solid #22c55e', transition: 'transform 0.2s, background 0.2s' }}
+            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'var(--bg2)'; }}
+          >
+            <div style={{ fontSize: '24px', marginBottom: '16px' }}>🏢</div>
+            <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>チーム全体スタッツ</div>
+            <div style={{ fontSize: '12px', color: 'var(--muted)' }}>チーム全体の4 Factorsやカテゴリー別・勝敗別の傾向分析</div>
+          </div>
+
         </div>
       </div>
 
