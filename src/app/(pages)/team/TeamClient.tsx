@@ -98,6 +98,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     return {
       total, wins, losses,
       winPct: total > 0 ? (wins / total) * 100 : 0,
+      ptsTotal: pts,
+      oppPtsTotal: oppPts,
       ptsAvg: total > 0 ? pts / total : 0,
       oppPtsAvg: total > 0 ? oppPts / total : 0,
       fgPct: fga > 0 ? (fgm / fga) * 100 : 0,
@@ -353,9 +355,12 @@ export default function TeamClient({ initialData }: { initialData: any }) {
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>勝率 {formatNum(teamStats.winPct)}%</div>
         </div>
         <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent2)' }}>
-          <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>平均得点</div>
-          <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(teamStats.ptsAvg)}</div>
-          <div style={{ fontSize: '11px', color: 'var(--muted)' }}>失点 avg {formatNum(teamStats.oppPtsAvg)}</div>
+          <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>チーム得点 (AVG / TOTAL)</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1 }}>{formatNum(teamStats.ptsAvg)}</span>
+            <span style={{ fontSize: '14px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>/ {teamStats.ptsTotal}</span>
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--muted)' }}>失点: {formatNum(teamStats.oppPtsAvg)} avg / {teamStats.oppPtsTotal} total</div>
         </div>
         <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #38d9a9' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>チームFG%</div>
