@@ -190,33 +190,38 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       const poss = d.fga + 0.44 * d.fta + d.to;
       const ppp = poss > 0 ? d.pts / poss : 0;
       
-      // Net Rating approx
-      // estimated possessions player was on court across the season
-      const estPlayerPoss = totalTeamPoss * (d.min / (totalTeamMin > 0 ? Math.max(totalTeamMin / 5, 1) : 200));
-      const netRating = estPlayerPoss > 0 ? (d.pm / estPlayerPoss) * 100 : 0;
-      
-      // FP / EFF per game
-      const fp = calcFP(d.pts, d.or, d.dr, d.ast, d.stl, d.blk, d.to);
-      const eff = calcEFF(d.pts, d.or + d.dr, d.ast, d.stl, d.blk, d.fga, d.fgm, d.fta, d.ftm, d.to);
-      
-      // USG% approx across season
+      // USG% approx across season & Team POSS for Net Rating
       let usg = 0;
       let myTotalTeamMinForUsg = 0;
       let myTotalTeamFgaForUsg = 0;
       let myTotalTeamFtaForUsg = 0;
       let myTotalTeamToForUsg = 0;
+      
+      // Calculate total Team POSS only for games this player played in
+      let myTotalTeamPossForNetRating = 0;
+
       uniqueGamesPerPlayer.get(name)?.forEach(gid => {
         const game = filteredGamesAsc.find((g: any) => g.GameID === gid);
         if (game) {
-          myTotalTeamMinForUsg += parseNum(col(game, 'team', 'min')) || 200;
+          const gMin = parseNum(col(game, 'min')) || 40;
+          myTotalTeamMinForUsg += gMin * 5;
           myTotalTeamFgaForUsg += parseNum(col(game, 'team', 'fga'));
           myTotalTeamFtaForUsg += parseNum(col(game, 'team', 'fta'));
           myTotalTeamToForUsg += parseNum(col(game, 'team', 'to'));
+          
+          myTotalTeamPossForNetRating += parseNum(col(game, 'team', 'fga')) + 0.44 * parseNum(col(game, 'team', 'fta')) + parseNum(col(game, 'team', 'to'));
         }
       });
       if (d.min > 0) {
         usg = calcUSG(d.fga, d.fta, d.to, d.min, myTotalTeamMinForUsg, myTotalTeamFgaForUsg, myTotalTeamFtaForUsg, myTotalTeamToForUsg);
       }
+
+      // User's explicit Net Rating formula: Total PM / Total Team POSS of played games * 100
+      const netRating = myTotalTeamPossForNetRating > 0 ? (d.pm / myTotalTeamPossForNetRating) * 100 : 0;
+
+      // FP / EFF per game
+      const fp = calcFP(d.pts, d.or, d.dr, d.ast, d.stl, d.blk, d.to);
+      const eff = calcEFF(d.pts, d.or + d.dr, d.ast, d.stl, d.blk, d.fga, d.fgm, d.fta, d.ftm, d.to);
 
       rankings.push({
         name, jersey: d.jersey, games: gCount,
