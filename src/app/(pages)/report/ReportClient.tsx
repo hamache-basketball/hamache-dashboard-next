@@ -158,43 +158,6 @@ export default function ReportClient({ initialData }: { initialData: any }) {
     return { text, winFactors, loseFactors };
   }, [game]);
 
-  // Conclusion & Win/Lose Factors
-  const conclusionAnalysis = useMemo(() => {
-    if (!game) return null;
-    const efgUs  = parseNum(col(game, 'team', 'efg'));
-    const efgOpp = parseNum(col(game, 'opp', 'efg'));
-    const topUs  = parseNum(col(game, 'team', 'to%'));
-    const topOpp = parseNum(col(game, 'opp', 'to%'));
-    const orpUs  = parseNum(col(game, 'team', 'or%'));
-    const orpOpp = parseNum(col(game, 'opp', 'or%'));
-    const ftrUs  = parseNum(col(game, 'team', 'ftr'));
-    const ftrOpp = parseNum(col(game, 'opp', 'ftr'));
-
-    const efgWin = efgUs >= efgOpp;
-    const topWin = topUs <= topOpp; // lower is better
-    const orpWin = orpUs >= orpOpp;
-    const ftrWin = ftrUs >= ftrOpp;
-    const wins   = [efgWin, topWin, orpWin, ftrWin].filter(Boolean).length;
-
-    const winFactors  = [];
-    const loseFactors = [];
-    if(efgWin)  winFactors.push(`eFG%で相手を上回った（${formatNum(efgUs,1)}% vs ${formatNum(efgOpp,1)}%）`);
-    else       loseFactors.push(`eFG%で相手に劣勢（${formatNum(efgUs,1)}% vs ${formatNum(efgOpp,1)}%）`);
-    if(topWin)  winFactors.push(`ボール管理で相手を上回った（TO% ${formatNum(topUs,1)}% vs ${formatNum(topOpp,1)}%）`);
-    else       loseFactors.push(`ターンオーバーが多かった（TO% ${formatNum(topUs,1)}% vs ${formatNum(topOpp,1)}%）`);
-    if(orpWin)  winFactors.push(`リバウンドで競り勝った（OR% ${formatNum(orpUs,1)}% vs ${formatNum(orpOpp,1)}%）`);
-    else       loseFactors.push(`リバウンドで劣勢だった（OR% ${formatNum(orpUs,1)}% vs ${formatNum(orpOpp,1)}%）`);
-    if(ftrWin)  winFactors.push(`フリースロー獲得で優位に立った（FTR ${formatNum(ftrUs,2)} vs ${formatNum(ftrOpp,2)}）`);
-    else       loseFactors.push(`FTR獲得で相手に及ばなかった（FTR ${formatNum(ftrUs,2)} vs ${formatNum(ftrOpp,2)}）`);
-
-    let text = '';
-    if (wins >= 3) {
-      text = `4 Factorsのうち${wins}項目で相手を上回る内容。${winFactors[0]}など、高い完成度の試合だった。`;
-    } else if (wins === 2) {
-      text = `4 Factorsは${wins}勝${4-wins}敗で拮抗。${winFactors.length ? winFactors[0] + '一方、' : ''} ${loseFactors.length ? loseFactors[0] + 'が課題として残った。' : ''}`;
-    } else {
-      text = `4 Factorsのうち${4-wins}項目で相手に劣勢。${loseFactors[0]}が主な課題。立て直しが必要な試合だった。`;
-    }
   return (
     <div>
       <div style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'var(--bg2)', padding: '12px 16px', borderRadius: '10px', marginBottom: '24px', border: '1px solid var(--border)' }}>
