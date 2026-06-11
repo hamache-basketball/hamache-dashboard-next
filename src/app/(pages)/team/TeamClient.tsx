@@ -227,7 +227,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
 
       rankings.push({
         name, jersey: d.jersey, games: gCount,
-        ptsAvg, fgPct, efg, ftp, ppp, netRating,
+        ptsAvg, ptsTotal: d.pts, fgPct, efg, ftp, ppp, netRating,
         fpAvg: fp / gCount, effAvg: eff / gCount, usg
       });
     }
@@ -394,7 +394,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                 <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>順位</th>
                 <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>選手</th>
                 <th style={{ padding: '12px 16px', textAlign: 'center', fontFamily: 'inherit' }}>試合数</th>
-                <th style={{ padding: '12px 16px' }}>PTS</th>
+                <th style={{ padding: '12px 16px' }}>PTS <span style={{ fontSize: '10px', color: 'var(--muted)', fontWeight: 400 }}>(AVG/TOT)</span></th>
                 <th style={{ padding: '12px 16px' }}>FG%</th>
                 <th style={{ padding: '12px 16px' }}>EFG%</th>
                 <th style={{ padding: '12px 16px' }}>FT%</th>
@@ -411,7 +411,10 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                   <td style={{ padding: '12px 16px', textAlign: 'left' }}>{i + 1}</td>
                   <td style={{ padding: '12px 16px', textAlign: 'left', color: '#4f8ef7', fontWeight: 600, fontFamily: '"Inter", sans-serif' }}>#{p.jersey} <span style={{ textDecoration: 'underline' }}>{p.name}</span></td>
                   <td style={{ padding: '12px 16px', textAlign: 'center' }}>{p.games}</td>
-                  <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text)' }}>{formatNum(p.ptsAvg)}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text)' }}>
+                    <span style={{ fontWeight: 700 }}>{formatNum(p.ptsAvg)}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--muted)', marginLeft: '6px' }}>/ {p.ptsTotal}</span>
+                  </td>
                   <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.fgPct)}%</td>
                   <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.efg)}%</td>
                   <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.ftp)}%</td>
