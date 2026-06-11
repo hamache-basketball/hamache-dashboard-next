@@ -260,14 +260,14 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     const losses = filteredGamesAsc.filter((g: any) => parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us')) < parseNum(col(g, 'opp', 'pts')));
 
     const avgFactor = (gamesArr: any[], statKey: string) => {
-      if (gamesArr.length === 0) return 0;
-      const sum = gamesArr.reduce((acc, g) => acc + getGameFactor(g, 'team', statKey), 0);
+      if (!gamesArr.length) return 0;
+      const sum = gamesArr.reduce((acc: number, g: any) => acc + getGameFactor(g, 'team', statKey), 0);
       return sum / gamesArr.length;
     };
     
     const avgPts = (gamesArr: any[], prefix: 'team' | 'opp') => {
-      if (gamesArr.length === 0) return 0;
-      const sum = gamesArr.reduce((acc, g) => acc + parseNum(col(g, prefix, 'pts') || (prefix === 'team' ? col(g, 'pts', 'us') : 0)), 0);
+      if (!gamesArr.length) return 0;
+      const sum = gamesArr.reduce((acc: number, g: any) => acc + parseNum(col(g, prefix, 'pts') || (prefix === 'team' ? col(g, 'pts', 'us') : 0)), 0);
       return sum / gamesArr.length;
     };
     
@@ -386,13 +386,13 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       const vals = recent.map((g: any) => getGameFactor(g, 'team', key)).filter((v: number) => v > 0);
       if (vals.length < 2) return null;
       const mid = Math.ceil(vals.length / 2);
-      const first = vals.slice(0, mid).reduce((a, b) => a + b, 0) / mid;
-      const last = vals.slice(mid).reduce((a, b) => a + b, 0) / (vals.length - mid);
+      const first = vals.slice(0, mid).reduce((a: number, b: number) => a + b, 0) / mid;
+      const last = vals.slice(mid).reduce((a: number, b: number) => a + b, 0) / (vals.length - mid);
       const diff = last - first;
       const pct = Math.abs(diff).toFixed(1);
       const improving = higherBetter ? diff > 0 : diff < 0;
       const flat = Math.abs(diff) < 2;
-      const allAvg = vals.reduce((a, b) => a + b, 0) / vals.length;
+      const allAvg = vals.reduce((a: number, b: number) => a + b, 0) / vals.length;
       
       if (flat) return { icon: '→', text: `横ばい傾向 (直近5試合 avg ${allAvg.toFixed(1)}%)`, color: 'var(--muted)' };
       return improving
