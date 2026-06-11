@@ -1,13 +1,18 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { formatNum } from '@/lib/stats-logic';
+import { useGlobalState } from '@/lib/GlobalStateProvider';
 
 interface PlayerStatsTableProps {
   players: any[];
 }
 
 export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
+  const router = useRouter();
+  const { setGlobalPlayerName } = useGlobalState();
+
   return (
     <div className="glass-panel" style={{ overflowX: 'auto', padding: '10px 0' }}>
       <div style={{ padding: '10px 20px', fontSize: '11px', color: 'var(--muted)' }}>
@@ -42,7 +47,18 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
             return (
               <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                 <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{p['背番号'] || '-'}</td>
-                <td style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap' }}>{p['コートネーム'] || p['選手名']}</td>
+                <td 
+                  style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: '#4f8ef7', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap', cursor: 'pointer' }}
+                  onClick={() => {
+                    const name = p['コートネーム'] || p['選手名'];
+                    if (name) {
+                      setGlobalPlayerName(name);
+                      router.push('/player');
+                    }
+                  }}
+                >
+                  <span style={{ textDecoration: 'underline' }}>{p['コートネーム'] || p['選手名']}</span>
+                </td>
                 <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.MIN || '0'}</td>
                 <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text)' }}>{p.PTS || '0'}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.FGM || '0'}/{p.FGA || '0'}</td>
