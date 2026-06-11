@@ -8,11 +8,7 @@ export async function fetchSheet(sheetName: string) {
   }
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
   
-  // APIキーのHTTPリファラー制限を回避するため、元のダッシュボードのURLをRefererとして付与
   const res = await fetch(url, { 
-    headers: {
-      'Referer': 'https://hamache-basketball.github.io/hamache-dashboard/'
-    },
     next: { revalidate: 60 } 
   });
   
@@ -49,5 +45,8 @@ export async function fetchAllData() {
     fetchSheet('DB_Player_3')
   ]);
   
-  return { games, lineups, players };
+  const rawData = { games, lineups, players };
+  // Force a deep clone to strip any non-serializable properties, prototypes, 
+  // or Undici specific internal symbols that cause Next.js RSC stringify to crash.
+  return JSON.parse(JSON.stringify(rawData));
 }
