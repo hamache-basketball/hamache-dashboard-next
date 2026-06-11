@@ -21,6 +21,33 @@ const lineToCubicBezier = (points: [number, number][]) => {
   return d.join(' ');
 };
 
+// Helpers for 4 Factors
+const getGameFactor = (g: any, prefix: 'team' | 'opp', factor: string) => {
+  const fga = parseNum(col(g, prefix, 'fga'));
+  const fgm = parseNum(col(g, prefix, 'fgm'));
+  const p3m = parseNum(col(g, prefix, '3pm'));
+  const fta = parseNum(col(g, prefix, 'fta'));
+  const to = parseNum(col(g, prefix, 'to'));
+  const or = parseNum(col(g, prefix, 'or'));
+  const oppPrefix = prefix === 'team' ? 'opp' : 'team';
+  const oppDr = parseNum(col(g, oppPrefix, 'dr'));
+
+  switch (factor) {
+    case 'efg':
+      return fga > 0 ? ((fgm + 0.5 * p3m) / fga) * 100 : 0;
+    case 'to': {
+      const poss = fga + 0.44 * fta + to;
+      return poss > 0 ? (to / poss) * 100 : 0;
+    }
+    case 'or':
+      return (or + oppDr) > 0 ? (or / (or + oppDr)) * 100 : 0;
+    case 'ftr':
+      return fga > 0 ? (fta / fga) * 100 : 0;
+    default:
+      return 0;
+  }
+};
+
 export default function TeamClient({ initialData }: { initialData: any }) {
   const router = useRouter();
   const { games, players } = initialData;
@@ -28,33 +55,6 @@ export default function TeamClient({ initialData }: { initialData: any }) {
   const { globalCategory, setGlobalCategory, setGlobalPlayerName } = useGlobalState();
   const selectedCategory = globalCategory;
   const setSelectedCategory = setGlobalCategory;
-
-  // Helpers for 4 Factors
-  const getGameFactor = (g: any, prefix: 'team' | 'opp', factor: string) => {
-    const fga = parseNum(col(g, prefix, 'fga'));
-    const fgm = parseNum(col(g, prefix, 'fgm'));
-    const p3m = parseNum(col(g, prefix, '3pm'));
-    const fta = parseNum(col(g, prefix, 'fta'));
-    const to = parseNum(col(g, prefix, 'to'));
-    const or = parseNum(col(g, prefix, 'or'));
-    const oppPrefix = prefix === 'team' ? 'opp' : 'team';
-    const oppDr = parseNum(col(g, oppPrefix, 'dr'));
-
-    switch (factor) {
-      case 'efg':
-        return fga > 0 ? ((fgm + 0.5 * p3m) / fga) * 100 : 0;
-      case 'to': {
-        const poss = fga + 0.44 * fta + to;
-        return poss > 0 ? (to / poss) * 100 : 0;
-      }
-      case 'or':
-        return (or + oppDr) > 0 ? (or / (or + oppDr)) * 100 : 0;
-      case 'ftr':
-        return fga > 0 ? (fta / fga) * 100 : 0;
-      default:
-        return 0;
-    }
-  };
 
   // Categories
   const categories = useMemo(() => {
