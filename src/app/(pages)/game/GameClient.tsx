@@ -32,29 +32,29 @@ export default function GameClient({ initialData }: { initialData: any }) {
   }, [selectedGameId, players]);
 
   const gamePlayers = useMemo(() => {
-    // D列（4列目）のキー名を取得
-    const jerseyKey = playerRows.length > 0 ? Object.keys(playerRows[0])[3] : '背番号';
-    
     const playerMap = new Map<string, any>();
+    
     playerRows.forEach((p: any) => {
       const name = p['コートネーム'] || p['選手名'] || 'Unknown';
       if (!playerMap.has(name)) {
-        playerMap.set(name, { ...p, '背番号': p[jerseyKey] || p['背番号'] || '-', EFG: 0, FP: 0, EFF: 0, USG: 0, PlusMinus: 0 });
+        playerMap.set(name, { 
+          ...p, 
+          '背番号': (p._rawRow && p._rawRow[3]) || p['背番号'] || '-', 
+          PTS: '0', REB: '0', AST: '0', STL: '0', BLK: '0', TO: '0', 
+          FGA: '0', FGM: '0', FTA: '0', FTM: '0', MIN: '0', OR: '0', DR: '0', 
+          '2PA': '0', '2PM': '0', '3PA': '0', '3PM': '0',
+          PlusMinus: '0', EFG: 0, FP: 0, EFF: 0, USG: 0 
+        });
       }
       
       const exist = playerMap.get(name);
       
-      if (playerMap.has(name) && playerMap.get(name) !== p) {
-        ['PTS', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FGA', 'FGM', 'FTA', 'FTM', 'MIN', 'OR', 'DR', '2PA', '2PM', '3PA', '3PM'].forEach(key => {
-          if (p[key]) exist[key] = (parseNum(exist[key]) + parseNum(p[key])).toString();
-        });
-      }
+      ['PTS', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FGA', 'FGM', 'FTA', 'FTM', 'MIN', 'OR', 'DR', '2PA', '2PM', '3PA', '3PM'].forEach(key => {
+        exist[key] = (parseNum(exist[key]) + parseNum(p[key])).toString();
+      });
 
-      // +/- column is around AB (28th column). We'll try to find it.
-      const pmKey = Object.keys(p).find(k => k.includes('+') || k.toLowerCase().includes('plus') || k === 'AB');
-      if (pmKey && p[pmKey]) {
-        exist.PlusMinus = (parseNum(exist.PlusMinus) + parseNum(p[pmKey])).toString();
-      }
+      const pmVal = (p._rawRow && p._rawRow[27]) || p['AB'] || p['+/-'] || p['PlusMinus'] || 0;
+      exist.PlusMinus = (parseNum(exist.PlusMinus) + parseNum(pmVal)).toString();
     });
 
     return Array.from(playerMap.values()).map((p: any) => {
