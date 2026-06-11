@@ -764,7 +764,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                         }
                         const val = sum / count;
                         const max = 80;
-                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200];
+                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200] as [number, number];
                       }))}
                     />
                   </svg>
