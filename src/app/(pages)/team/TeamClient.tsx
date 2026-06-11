@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { parseNum, formatNum, col, calcEFG, calcFP, calcEFF, calcUSG } from '@/lib/stats-logic';
+import { useGlobalState } from '@/lib/GlobalStateProvider';
 
 export default function TeamClient({ initialData }: { initialData: any }) {
   const { games, players } = initialData;
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('全カテゴリー');
+  const { globalCategory, setGlobalCategory } = useGlobalState();
+  const selectedCategory = globalCategory;
+  const setSelectedCategory = setGlobalCategory;
 
   // Helpers for 4 Factors
   const getGameFactor = (g: any, prefix: 'team' | 'opp', factor: string) => {

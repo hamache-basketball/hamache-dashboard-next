@@ -3,6 +3,8 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
 
+import { GlobalStateProvider } from "@/lib/GlobalStateProvider";
+
 export const metadata: Metadata = {
   title: "HAMACHE Dashboard",
   description: "Advanced Basketball Analytics Dashboard",
@@ -16,17 +18,19 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <div style={{ display: 'flex', minHeight: '100vh' }}>
-          {/* Desktop Sidebar */}
-          <Sidebar />
-          
-          <main style={{ flex: 1, minWidth: 0, padding: '32px 36px', paddingBottom: '100px' }}>
-            {children}
-          </main>
-          
-          {/* Mobile Bottom Navigation */}
-          <MobileNav />
-        </div>
+        <GlobalStateProvider>
+          <div style={{ display: 'flex', minHeight: '100vh' }}>
+            {/* Desktop Sidebar */}
+            <Sidebar />
+            
+            <main style={{ flex: 1, minWidth: 0, padding: '32px 36px', paddingBottom: '100px' }}>
+              {children}
+            </main>
+            
+            {/* Mobile Bottom Navigation */}
+            <MobileNav />
+          </div>
+        </GlobalStateProvider>
       </body>
     </html>
   );

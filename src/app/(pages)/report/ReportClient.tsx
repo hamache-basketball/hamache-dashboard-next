@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import FourFactorsCards from '@/components/charts/FourFactorsCards';
 import ScatterChart from '@/components/charts/ScatterChart';
 import MomentumChart from '@/components/charts/MomentumChart';
 import SankeyChart from '@/components/charts/SankeyChart';
 import QuarterScoreChart from '@/components/charts/QuarterScoreChart';
 import { calcFP, calcEFF, calcUSG, parseNum, formatNum, col } from '@/lib/stats-logic';
+import { useGlobalState } from '@/lib/GlobalStateProvider';
 
 export default function ReportClient({ initialData }: { initialData: any }) {
   const { games, players, lineups } = initialData;
@@ -14,7 +15,15 @@ export default function ReportClient({ initialData }: { initialData: any }) {
     return [...(games || [])].reverse();
   }, [games]);
   
-  const [selectedGameId, setSelectedGameId] = useState<string>(sortedGames.length > 0 ? sortedGames[0].GameID : '');
+  const { globalGameId, setGlobalGameId } = useGlobalState();
+  const selectedGameId = globalGameId || (sortedGames.length > 0 ? sortedGames[0].GameID : '');
+  const setSelectedGameId = setGlobalGameId;
+
+  useEffect(() => {
+    if (!globalGameId && sortedGames.length > 0) {
+      setGlobalGameId(sortedGames[0].GameID);
+    }
+  }, [globalGameId, sortedGames, setGlobalGameId]);
 
   const game = sortedGames.find((g: any) => g.GameID === selectedGameId);
 

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { parseNum, col } from '@/lib/stats-logic';
+import { useGlobalState } from '@/lib/GlobalStateProvider';
 
 export default function LineupClient({ initialData }: { initialData: any }) {
   const { games, lineups } = initialData;
@@ -16,7 +17,17 @@ export default function LineupClient({ initialData }: { initialData: any }) {
     });
   }, [games]);
 
-  const [selectedGameId, setSelectedGameId] = useState<string>(sortedGames.length > 0 ? sortedGames[0].GameID : '');
+  const { globalGameId, setGlobalGameId } = useGlobalState();
+  
+  const selectedGameId = globalGameId || (sortedGames.length > 0 ? sortedGames[0].GameID : '');
+  const setSelectedGameId = setGlobalGameId;
+
+  useEffect(() => {
+    if (!globalGameId && sortedGames.length > 0) {
+      setGlobalGameId(sortedGames[0].GameID);
+    }
+  }, [globalGameId, sortedGames, setGlobalGameId]);
+
   const [selectedPeriod, setSelectedPeriod] = useState<string>('全ピリオド');
 
   const periods = ['全ピリオド', '1Q', '2Q', '3Q', '4Q'];

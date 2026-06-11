@@ -1,13 +1,19 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import PlayerStatsTable from '@/components/stats/PlayerStatsTable';
+import GlossaryCards from '@/components/stats/GlossaryCards';
 import { calcFP, calcEFF, calcUSG, calcEFG, parseNum, formatNum, col } from '@/lib/stats-logic';
+import { useGlobalState } from '@/lib/GlobalStateProvider';
 
 export default function PlayerClient({ initialData }: { initialData: any }) {
   const { games, players } = initialData;
 
+  const { globalCategory, setGlobalCategory } = useGlobalState();
+  const selectedCategory = globalCategory;
+  const setSelectedCategory = setGlobalCategory;
+
   const [selectedPlayerName, setSelectedPlayerName] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('全カテゴリー');
 
   // Categories extraction
   const categories = useMemo(() => {

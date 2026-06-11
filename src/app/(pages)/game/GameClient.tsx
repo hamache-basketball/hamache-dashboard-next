@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import PlayerStatsTable from '@/components/stats/PlayerStatsTable';
 import GlossaryCards from '@/components/stats/GlossaryCards';
 import { calcFP, calcEFF, calcUSG, calcEFG, parseNum, formatNum, col } from '@/lib/stats-logic';
+import { useGlobalState } from '@/lib/GlobalStateProvider';
 
 export default function GameClient({ initialData }: { initialData: any }) {
   const { games, players } = initialData;
@@ -11,8 +12,19 @@ export default function GameClient({ initialData }: { initialData: any }) {
     return [...(games || [])].reverse();
   }, [games]);
   
-  const [selectedGameId, setSelectedGameId] = useState<string>(sortedGames.length > 0 ? sortedGames[0].GameID : '');
-  const [selectedCategory, setSelectedCategory] = useState<string>('全カテゴリー');
+  const { globalGameId, setGlobalGameId, globalCategory, setGlobalCategory } = useGlobalState();
+  
+  const selectedGameId = globalGameId || (sortedGames.length > 0 ? sortedGames[0].GameID : '');
+  const selectedCategory = globalCategory;
+
+  useEffect(() => {
+    if (!globalGameId && sortedGames.length > 0) {
+      setGlobalGameId(sortedGames[0].GameID);
+    }
+  }, [globalGameId, sortedGames, setGlobalGameId]);
+
+  const setSelectedGameId = setGlobalGameId;
+  const setSelectedCategory = setGlobalCategory;
 
   const game = sortedGames.find((g: any) => g.GameID === selectedGameId);
 
