@@ -8,6 +8,32 @@ export default function TeamClient({ initialData }: { initialData: any }) {
 
   const [selectedCategory, setSelectedCategory] = useState<string>('全カテゴリー');
 
+  // Helpers for 4 Factors
+  const getGameFactor = (g: any, prefix: 'team' | 'opp', factor: string) => {
+    const fga = parseNum(col(g, prefix, 'fga'));
+    const fgm = parseNum(col(g, prefix, 'fgm'));
+    const p3m = parseNum(col(g, prefix, '3pm'));
+    const fta = parseNum(col(g, prefix, 'fta'));
+    const to = parseNum(col(g, prefix, 'to'));
+    const or = parseNum(col(g, prefix, 'or'));
+    const oppPrefix = prefix === 'team' ? 'opp' : 'team';
+    const oppDr = parseNum(col(g, oppPrefix, 'dr'));
+
+    switch (factor) {
+      case 'efg':
+        return fga > 0 ? ((fgm + 0.5 * p3m) / fga) * 100 : 0;
+      case 'to':
+        const poss = fga + 0.44 * fta + to;
+        return poss > 0 ? (to / poss) * 100 : 0;
+      case 'or':
+        return (or + oppDr) > 0 ? (or / (or + oppDr)) * 100 : 0;
+      case 'ftr':
+        return fga > 0 ? (fta / fga) * 100 : 0;
+      default:
+        return 0;
+    }
+  };
+
   // Categories
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -204,11 +230,18 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     const wins = filteredGamesAsc.filter((g: any) => parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us')) > parseNum(col(g, 'opp', 'pts')));
     const losses = filteredGamesAsc.filter((g: any) => parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us')) < parseNum(col(g, 'opp', 'pts')));
 
-    const avg = (gamesArr: any[], statKey: string) => {
+    const avgFactor = (gamesArr: any[], statKey: string) => {
       if (gamesArr.length === 0) return 0;
-      const sum = gamesArr.reduce((acc, g) => acc + parseNum(col(g, 'team', statKey)), 0);
+      const sum = gamesArr.reduce((acc, g) => acc + getGameFactor(g, 'team', statKey), 0);
       return sum / gamesArr.length;
     };
+    
+    const avgPts = (gamesArr: any[], prefix: 'team' | 'opp') => {
+      if (gamesArr.length === 0) return 0;
+      const sum = gamesArr.reduce((acc, g) => acc + parseNum(col(g, prefix, 'pts') || (prefix === 'team' ? col(g, 'pts', 'us') : 0)), 0);
+      return sum / gamesArr.length;
+    };
+    
     const avgPpp = (gamesArr: any[]) => {
       if (gamesArr.length === 0) return 0;
       let p = 0, poss = 0;
@@ -218,22 +251,17 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       });
       return poss > 0 ? p / poss : 0;
     };
-    const avgOppPts = (gamesArr: any[]) => {
-      if (gamesArr.length === 0) return 0;
-      const sum = gamesArr.reduce((acc, g) => acc + parseNum(col(g, 'opp', 'pts')), 0);
-      return sum / gamesArr.length;
-    };
 
     return {
       winCount: wins.length,
       lossCount: losses.length,
       win: {
-        efg: avg(wins, 'efg'), to: avg(wins, 'tov'), or: avg(wins, 'or'), ftr: avg(wins, 'ftr'),
-        pts: avg(wins, 'pts') || avg(wins, 'us'), oppPts: avgOppPts(wins), ppp: avgPpp(wins)
+        efg: avgFactor(wins, 'efg'), to: avgFactor(wins, 'to'), or: avgFactor(wins, 'or'), ftr: avgFactor(wins, 'ftr'),
+        pts: avgPts(wins, 'team'), oppPts: avgPts(wins, 'opp'), ppp: avgPpp(wins)
       },
       loss: {
-        efg: avg(losses, 'efg'), to: avg(losses, 'tov'), or: avg(losses, 'or'), ftr: avg(losses, 'ftr'),
-        pts: avg(losses, 'pts') || avg(losses, 'us'), oppPts: avgOppPts(losses), ppp: avgPpp(losses)
+        efg: avgFactor(losses, 'efg'), to: avgFactor(losses, 'to'), or: avgFactor(losses, 'or'), ftr: avgFactor(losses, 'ftr'),
+        pts: avgPts(losses, 'team'), oppPts: avgPts(losses, 'opp'), ppp: avgPpp(losses)
       }
     };
   }, [filteredGamesAsc]);
@@ -248,15 +276,15 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
     };
 
-    const stats = ['efg', 'tov', 'or', 'ftr'].map(key => {
-      const vals = filteredGamesAsc.map((g: any) => parseNum(col(g, 'team', key)));
+    const stats = ['efg', 'to', 'or', 'ftr'].map(key => {
+      const vals = filteredGamesAsc.map((g: any) => getGameFactor(g, 'team', key));
       const median = getMedian(vals);
       
       let aboveWins = 0, aboveTotal = 0;
       let belowWins = 0, belowTotal = 0;
       
       filteredGamesAsc.forEach((g: any) => {
-        const val = parseNum(col(g, 'team', key));
+        const val = getGameFactor(g, 'team', key);
         const isWin = parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us')) > parseNum(col(g, 'opp', 'pts'));
         // For TO%, lower is better, so "above baseline" means better (lower TO%). Wait, let's just do mathematical > median
         if (val > median) {
@@ -273,7 +301,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       
       // "Better" win pct means win pct when the stat is in the good direction.
       // eFG, OR, FTR -> higher is better. TO -> lower is better.
-      const isGoodAbove = key !== 'tov';
+      const isGoodAbove = key !== 'to';
       const goodWinPct = isGoodAbove ? aboveWinPct : belowWinPct;
       const badWinPct = isGoodAbove ? belowWinPct : aboveWinPct;
       const gap = goodWinPct - badWinPct;
@@ -287,7 +315,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
   }, [filteredGamesAsc]);
 
   // UI rendering helpers
-  const statLabels: Record<string, string> = { efg: 'eFG%', tov: 'TO%', or: 'OR%', ftr: 'FTR' };
+  const statLabels: Record<string, string> = { efg: 'eFG%', to: 'TO%', or: 'OR%', ftr: 'FTR' };
 
   return (
     <div>
@@ -567,8 +595,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
         <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>4 FACTORS 試合別推移</div>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px' }}>
-          {['efg', 'tov', 'or', 'ftr'].map((k: string) => {
-            const isGoodUp = k !== 'tov';
+          {['efg', 'to', 'or', 'ftr'].map((k: string) => {
+            const isGoodUp = k !== 'to';
             
             return (
               <div key={k} className="glass-panel" style={{ padding: '24px' }}>
@@ -587,13 +615,13 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     <polyline
                       fill="none" stroke="#4f8ef7" strokeWidth="2"
                       points={filteredGamesAsc.map((g: any, i: number) => {
-                        const val = parseNum(col(g, 'team', k));
+                        const val = getGameFactor(g, 'team', k);
                         const max = k === 'efg' || k === 'or' ? 80 : 80; // Scale 0-80% for aesthetics
                         return `${(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000},${200 - (Math.min(val, max) / max) * 200}`;
                       }).join(' ')}
                     />
                     {filteredGamesAsc.map((g: any, i: number) => {
-                      const val = parseNum(col(g, 'team', k));
+                      const val = getGameFactor(g, 'team', k);
                       const max = 80;
                       return <circle key={i} cx={(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000} cy={200 - (Math.min(val, max) / max) * 200} r="4" fill="#4f8ef7" />;
                     })}
@@ -601,13 +629,13 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     <polyline
                       fill="none" stroke="rgba(240, 111, 111, 0.7)" strokeWidth="2"
                       points={filteredGamesAsc.map((g: any, i: number) => {
-                        const val = parseNum(col(g, 'opp', k));
+                        const val = getGameFactor(g, 'opp', k);
                         const max = 80;
                         return `${(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000},${200 - (Math.min(val, max) / max) * 200}`;
                       }).join(' ')}
                     />
                     {filteredGamesAsc.map((g: any, i: number) => {
-                      const val = parseNum(col(g, 'opp', k));
+                      const val = getGameFactor(g, 'opp', k);
                       const max = 80;
                       return <circle key={i} cx={(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000} cy={200 - (Math.min(val, max) / max) * 200} r="4" fill="rgba(240, 111, 111, 0.7)" />;
                     })}
@@ -618,7 +646,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                       points={filteredGamesAsc.map((g: any, i: number) => {
                         let sum = 0; let count = 0;
                         for (let j = Math.max(0, i - 4); j <= i; j++) {
-                          sum += parseNum(col(filteredGamesAsc[j], 'team', k));
+                          sum += getGameFactor(filteredGamesAsc[j], 'team', k);
                           count++;
                         }
                         const val = sum / count;
