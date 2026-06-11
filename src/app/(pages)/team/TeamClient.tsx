@@ -5,6 +5,22 @@ import { useRouter } from 'next/navigation';
 import { parseNum, formatNum, col, calcEFG, calcFP, calcEFF, calcUSG } from '@/lib/stats-logic';
 import { useGlobalState } from '@/lib/GlobalStateProvider';
 
+const lineToCubicBezier = (points: [number, number][]) => {
+  if (points.length === 0) return '';
+  if (points.length === 1) return `M ${points[0][0]},${points[0][1]}`;
+  const d = [`M ${points[0][0]},${points[0][1]}`];
+  for (let i = 0; i < points.length - 1; i++) {
+    const current = points[i];
+    const next = points[i + 1];
+    const cp1x = current[0] + (next[0] - current[0]) / 2;
+    const cp1y = current[1];
+    const cp2x = current[0] + (next[0] - current[0]) / 2;
+    const cp2y = next[1];
+    d.push(`C ${cp1x},${cp1y} ${cp2x},${cp2y} ${next[0]},${next[1]}`);
+  }
+  return d.join(' ');
+};
+
 export default function TeamClient({ initialData }: { initialData: any }) {
   const router = useRouter();
   const { games, players } = initialData;
@@ -298,7 +314,6 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       filteredGamesAsc.forEach((g: any) => {
         const val = getGameFactor(g, 'team', key);
         const isWin = parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us')) > parseNum(col(g, 'opp', 'pts'));
-        // For TO%, lower is better, so "above baseline" means better (lower TO%). Wait, let's just do mathematical > median
         if (val > median) {
           aboveTotal++;
           if (isWin) aboveWins++;
@@ -311,19 +326,85 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       const aboveWinPct = aboveTotal > 0 ? (aboveWins / aboveTotal) * 100 : 0;
       const belowWinPct = belowTotal > 0 ? (belowWins / belowTotal) * 100 : 0;
       
-      // "Better" win pct means win pct when the stat is in the good direction.
-      // eFG, OR, FTR -> higher is better. TO -> lower is better.
       const isGoodAbove = key !== 'to';
       const goodWinPct = isGoodAbove ? aboveWinPct : belowWinPct;
       const badWinPct = isGoodAbove ? belowWinPct : aboveWinPct;
       const gap = goodWinPct - badWinPct;
       
-      return { key, median, goodWinPct, badWinPct, gap, isGoodAbove };
+      return { key, median, goodWinPct, badWinPct, gap, isGoodAbove, aboveWinPct, belowWinPct };
     });
 
     const best = [...stats].sort((a, b) => b.gap - a.gap)[0];
+    const statLabels: Record<string, string> = { efg: 'eFG%', to: 'TO%', or: 'OR%', ftr: 'FTR' };
 
-    return { stats, best };
+    const comments: { text: React.ReactNode, col: string }[] = [];
+    if (best) {
+      comments.push({
+        text: (
+          <span>
+            最も勝敗に影響している指標は <strong style={{ color: 'var(--text)' }}>{statLabels[best.key]}</strong> です。基準値 ({formatNum(best.median)}%) を上回った試合の勝率は <strong style={{ color: '#38d9a9' }}>{formatNum(best.aboveWinPct)}%</strong>、下回った試合は <strong style={{ color: 'var(--lose)' }}>{formatNum(best.belowWinPct)}%</strong> です。
+          </span>
+        ),
+        col: '#4f8ef7'
+      });
+    }
+
+    const wEfg = wlAnalysis.win.efg, lEfg = wlAnalysis.loss.efg;
+    if (Math.abs(wEfg - lEfg) > 3) {
+      comments.push({
+        text: `勝利試合のeFG%（${formatNum(wEfg)}%）は敗戦時（${formatNum(lEfg)}%）より ${formatNum(Math.abs(wEfg - lEfg))}%高く、シュート精度が勝敗に直結しています。`,
+        col: '#38d9a9'
+      });
+    }
+
+    const wTo = wlAnalysis.win.to, lTo = wlAnalysis.loss.to;
+    if (Math.abs(wTo - lTo) > 3) {
+      comments.push({
+        text: `ターンオーバーは勝利試合（${formatNum(wTo)}%）と敗戦試合（${formatNum(lTo)}%）で ${formatNum(Math.abs(wTo - lTo))}%の差があります。ボール管理の徹底が勝利への鍵です。`,
+        col: '#f06f6f'
+      });
+    }
+
+    const wOr = wlAnalysis.win.or, lOr = wlAnalysis.loss.or;
+    if (Math.abs(wOr - lOr) > 3) {
+      comments.push({
+        text: `リバウンド（OR%）は勝利時（${formatNum(wOr)}%）と敗戦時（${formatNum(lOr)}%）で ${formatNum(Math.abs(wOr - lOr))}%の差。${wOr > lOr ? 'オフェンスリバウンドが勝利を引き寄せています。' : 'リバウンド強化が優先課題です。'}`,
+        col: '#f7a84f'
+      });
+    }
+
+    return { stats, best, comments };
+  }, [filteredGamesAsc, wlAnalysis]);
+
+  // Trends
+  const trendAnalysis = useMemo(() => {
+    if (filteredGamesAsc.length < 2) return null;
+    const recent = filteredGamesAsc.slice(-Math.min(5, filteredGamesAsc.length));
+
+    const trendOf = (key: string, higherBetter: boolean) => {
+      const vals = recent.map((g: any) => getGameFactor(g, 'team', key)).filter(v => v > 0);
+      if (vals.length < 2) return null;
+      const mid = Math.ceil(vals.length / 2);
+      const first = vals.slice(0, mid).reduce((a, b) => a + b, 0) / mid;
+      const last = vals.slice(mid).reduce((a, b) => a + b, 0) / (vals.length - mid);
+      const diff = last - first;
+      const pct = Math.abs(diff).toFixed(1);
+      const improving = higherBetter ? diff > 0 : diff < 0;
+      const flat = Math.abs(diff) < 2;
+      const allAvg = vals.reduce((a, b) => a + b, 0) / vals.length;
+      
+      if (flat) return { icon: '→', text: `横ばい傾向 (直近5試合 avg ${allAvg.toFixed(1)}%)`, color: 'var(--muted)' };
+      return improving
+        ? { icon: '↑', text: `改善傾向 (直近5試合で${pct}%${higherBetter ? '上昇' : '低下'})`, color: '#38d9a9' }
+        : { icon: '↓', text: `悪化傾向 (直近5試合で${pct}%${higherBetter ? '低下' : '上昇'})`, color: 'var(--lose)' };
+    };
+
+    return {
+      efg: trendOf('efg', true),
+      to: trendOf('to', false),
+      or: trendOf('or', true),
+      ftr: trendOf('ftr', true)
+    };
   }, [filteredGamesAsc]);
 
   // UI rendering helpers
@@ -597,17 +678,17 @@ export default function TeamClient({ initialData }: { initialData: any }) {
             </div>
 
             <div style={{ padding: '16px', background: 'rgba(56, 217, 169, 0.05)', borderLeft: '3px solid #38d9a9', borderRadius: '0 8px 8px 0' }}>
-              <div style={{ fontSize: '12px', fontWeight: 700, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 700, marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ fontSize: '14px' }}>🔍</span> 分析コメント
               </div>
-              <ul style={{ fontSize: '13px', margin: 0, paddingLeft: '20px', lineHeight: 1.6 }}>
-                <li style={{ marginBottom: '4px' }}>
-                  最も勝敗に影響している指標は <strong style={{ color: 'var(--text)' }}>{statLabels[boundaries.best.key]}</strong> です。基準値 ({formatNum(boundaries.best.median)}%) を{boundaries.best.isGoodAbove ? '上回った' : '下回った'}試合の勝率は <strong style={{ color: '#38d9a9' }}>{formatNum(boundaries.best.goodWinPct)}%</strong>、{boundaries.best.isGoodAbove ? '下回った' : '上回った'}試合は <strong style={{ color: 'var(--lose)' }}>{formatNum(boundaries.best.badWinPct)}%</strong> です。
-                </li>
-                <li>
-                  勝利試合の {statLabels[boundaries.best.key]} は敗戦時より {formatNum(Math.abs((wlAnalysis.win as any)[boundaries.best.key] - (wlAnalysis.loss as any)[boundaries.best.key]))}% {boundaries.best.isGoodAbove ? '高く' : '低く'}、この数値の改善が勝敗に直結しています。
-                </li>
-              </ul>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {boundaries.comments.map((c, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '10px', fontSize: '13px', lineHeight: 1.5, color: 'var(--text)' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: c.col, marginTop: '7px', flexShrink: 0 }}></div>
+                    <div>{c.text}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -620,14 +701,22 @@ export default function TeamClient({ initialData }: { initialData: any }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px' }}>
           {['efg', 'to', 'or', 'ftr'].map((k: string) => {
             const isGoodUp = k !== 'to';
+            const trend = trendAnalysis ? (trendAnalysis as any)[k] : null;
             
             return (
               <div key={k} className="glass-panel" style={{ padding: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                   <div style={{ fontSize: '13px', fontWeight: 700 }}>
                     {statLabels[k]} <span style={{ fontSize: '10px', color: 'var(--muted)', fontWeight: 400, marginLeft: '8px' }}>{isGoodUp ? '高いほど良' : '低いほど良'}</span>
                   </div>
                 </div>
+
+                {trend && (
+                  <div style={{ fontSize: '12px', color: trend.color, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '14px', fontWeight: 700 }}>{trend.icon}</span>
+                    <span>{trend.text}</span>
+                  </div>
+                )}
                 
                 <div style={{ height: '180px', position: 'relative' }}>
                   <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
@@ -635,13 +724,13 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                       <line key={p} x1="0" y1={p} x2="1000" y2={p} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
                     ))}
                     
-                    <polyline
+                    <path
                       fill="none" stroke="#4f8ef7" strokeWidth="2"
-                      points={filteredGamesAsc.map((g: any, i: number) => {
+                      d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         const val = getGameFactor(g, 'team', k);
                         const max = k === 'efg' || k === 'or' ? 80 : 80; // Scale 0-80% for aesthetics
-                        return `${(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000},${200 - (Math.min(val, max) / max) * 200}`;
-                      }).join(' ')}
+                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200];
+                      }))}
                     />
                     {filteredGamesAsc.map((g: any, i: number) => {
                       const val = getGameFactor(g, 'team', k);
@@ -649,13 +738,13 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                       return <circle key={i} cx={(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000} cy={200 - (Math.min(val, max) / max) * 200} r="4" fill="#4f8ef7" />;
                     })}
 
-                    <polyline
+                    <path
                       fill="none" stroke="rgba(240, 111, 111, 0.7)" strokeWidth="2"
-                      points={filteredGamesAsc.map((g: any, i: number) => {
+                      d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         const val = getGameFactor(g, 'opp', k);
                         const max = 80;
-                        return `${(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000},${200 - (Math.min(val, max) / max) * 200}`;
-                      }).join(' ')}
+                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200];
+                      }))}
                     />
                     {filteredGamesAsc.map((g: any, i: number) => {
                       const val = getGameFactor(g, 'opp', k);
@@ -664,9 +753,9 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     })}
 
                     {/* Trend line (5 game MA) */}
-                    <polyline
+                    <path
                       fill="none" stroke="#4f8ef7" strokeWidth="2" strokeDasharray="5,5"
-                      points={filteredGamesAsc.map((g: any, i: number) => {
+                      d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         let sum = 0; let count = 0;
                         for (let j = Math.max(0, i - 4); j <= i; j++) {
                           sum += getGameFactor(filteredGamesAsc[j], 'team', k);
@@ -674,8 +763,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                         }
                         const val = sum / count;
                         const max = 80;
-                        return `${(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000},${200 - (Math.min(val, max) / max) * 200}`;
-                      }).join(' ')}
+                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200];
+                      }))}
                     />
                   </svg>
                   
