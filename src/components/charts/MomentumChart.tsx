@@ -16,25 +16,70 @@ export default function MomentumChart({ labels, dataDiff }: MomentumChartProps) 
       {
         label: '累積得失点差',
         data: dataDiff,
-        fill: true,
+        fill: 'origin',
         backgroundColor: (context: any) => {
           const chart = context.chart;
-          const {ctx, chartArea} = chart;
+          const {ctx, chartArea, scales} = chart;
           if (!chartArea) return null;
+          
+          const yZero = scales.y.getPixelForValue(0);
+          const chartHeight = chartArea.bottom - chartArea.top;
+          
+          let zeroRatio = (chartArea.bottom - yZero) / chartHeight;
+          zeroRatio = Math.max(0, Math.min(1, zeroRatio));
+          
           const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-          gradient.addColorStop(0, 'rgba(240, 111, 111, 0.3)'); 
-          gradient.addColorStop(0.5, 'rgba(122, 128, 153, 0)'); 
-          gradient.addColorStop(1, 'rgba(56, 217, 169, 0.3)'); 
+          
+          if (zeroRatio <= 0) {
+            gradient.addColorStop(0, 'rgba(0, 230, 118, 0.05)');
+            gradient.addColorStop(1, 'rgba(0, 230, 118, 0.5)');
+            return gradient;
+          }
+          if (zeroRatio >= 1) {
+            gradient.addColorStop(0, 'rgba(255, 60, 60, 0.5)');
+            gradient.addColorStop(1, 'rgba(255, 60, 60, 0.05)');
+            return gradient;
+          }
+
+          gradient.addColorStop(0, 'rgba(255, 60, 60, 0.5)');
+          gradient.addColorStop(zeroRatio, 'rgba(255, 60, 60, 0.05)');
+          gradient.addColorStop(zeroRatio, 'rgba(0, 230, 118, 0.05)');
+          gradient.addColorStop(1, 'rgba(0, 230, 118, 0.5)');
+          
           return gradient;
         },
         borderColor: (context: any) => {
-          // 最後の値などで色を変える場合は工夫が必要ですが、今回は固定色かグラデーションで対応
-          return '#4f8ef7';
+          const chart = context.chart;
+          const {ctx, chartArea, scales} = chart;
+          if (!chartArea) return null;
+          
+          const yZero = scales.y.getPixelForValue(0);
+          const chartHeight = chartArea.bottom - chartArea.top;
+          
+          let zeroRatio = (chartArea.bottom - yZero) / chartHeight;
+          zeroRatio = Math.max(0, Math.min(1, zeroRatio));
+          
+          const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+          
+          if (zeroRatio <= 0) return 'rgba(0, 230, 118, 1)';
+          if (zeroRatio >= 1) return 'rgba(255, 60, 60, 1)';
+
+          gradient.addColorStop(0, 'rgba(255, 60, 60, 1)');
+          gradient.addColorStop(zeroRatio, 'rgba(255, 60, 60, 1)');
+          gradient.addColorStop(zeroRatio, 'rgba(0, 230, 118, 1)');
+          gradient.addColorStop(1, 'rgba(0, 230, 118, 1)');
+          
+          return gradient;
         },
         borderWidth: 2,
-        tension: 0.3,
+        tension: 0.4,
         pointRadius: 4,
-        pointBackgroundColor: '#4f8ef7',
+        pointBackgroundColor: (context: any) => {
+          const val = context.raw;
+          return val < 0 ? 'rgba(255, 60, 60, 1)' : 'rgba(0, 230, 118, 1)';
+        },
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1,
       }
     ]
   };
