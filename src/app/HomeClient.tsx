@@ -53,7 +53,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
     const gamePlayers = players.filter((p: any) => p.GameID === gameId);
     
     let maxFp = -999;
-    let mvpPlayer = null;
+    let mvpPlayer: any = null;
 
     gamePlayers.forEach((p: any) => {
       const fp = calcFP(p.PTS, p.OR, p.DR, p.AST, p.STL, p.BLK, p.TO);
