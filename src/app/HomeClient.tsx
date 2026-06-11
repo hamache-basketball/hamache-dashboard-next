@@ -78,20 +78,15 @@ export default function HomeClient({ initialData }: { initialData: any }) {
       
       {/* Header Area */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(0,240,255,0.1)', border: '1px solid var(--neon-cyan)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--neon-cyan)', fontSize: '20px', filter: 'drop-shadow(0 0 5px rgba(0,240,255,0.5))' }}>
             🏀
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.1em' }}>BASKETBALL ANALYTICS</span>
-            <span style={{ color: 'var(--border2)' }}>|</span>
+            <span className="mobile-only" style={{ color: 'var(--border2)' }}>|</span>
             <span style={{ fontSize: '16px', color: 'var(--muted)', letterSpacing: '0.05em' }}>SEASON DASHBOARD</span>
           </div>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '8px 20px', borderRadius: '24px', border: '1px solid var(--border)' }}>
-          <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--muted)' }}></div>
-          <span style={{ fontSize: '13px', fontWeight: 500 }}>Coach</span>
-          <span style={{ fontSize: '10px', color: 'var(--muted)' }}>▼</span>
         </div>
       </div>
 

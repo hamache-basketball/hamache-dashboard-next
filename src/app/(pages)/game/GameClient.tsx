@@ -148,16 +148,16 @@ export default function GameClient({ initialData }: { initialData: any }) {
         </div>
       </div>
 
-      <div className="glass-panel" style={{ padding: '32px 40px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <div style={{ fontSize: '64px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)', lineHeight: 1 }}>{ptsUs}</div>
-          <div style={{ fontSize: '32px', color: 'var(--border2)' }}>—</div>
-          <div style={{ fontSize: '64px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--muted)', lineHeight: 1 }}>{ptsOpp}</div>
+      <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div className="mobile-text-huge" style={{ fontSize: '64px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)', lineHeight: 1 }}>{ptsUs}</div>
+          <div className="mobile-text-med" style={{ fontSize: '32px', color: 'var(--border2)' }}>—</div>
+          <div className="mobile-text-huge" style={{ fontSize: '64px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--muted)', lineHeight: 1 }}>{ptsOpp}</div>
           {isWin && <div style={{ background: 'rgba(56, 217, 169, 0.15)', color: 'var(--accent2)', border: '1px solid var(--accent2)', padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em' }}>WIN</div>}
           {isLose && <div style={{ background: 'rgba(240, 111, 111, 0.15)', color: 'var(--lose)', border: '1px solid var(--lose)', padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em' }}>LOSE</div>}
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '20px', fontWeight: 700 }}>vs {col(game, '対戦相手')}</div>
+        <div style={{ textAlign: 'left', minWidth: '150px' }}>
+          <div style={{ fontSize: '20px', fontWeight: 700, wordBreak: 'break-word' }}>vs {col(game, '対戦相手')}</div>
           <div style={{ fontSize: '12px', color: 'var(--muted)', fontFamily: 'var(--mono)', marginTop: '4px' }}>{col(game, 'date')}</div>
         </div>
       </div>
