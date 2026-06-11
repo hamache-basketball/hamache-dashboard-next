@@ -276,6 +276,87 @@ export default function ReportClient({ initialData }: { initialData: any }) {
         <SankeyChart {...sankeyStats} />
       </div>
 
+      <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>5</span>
+        リバウンド支配 ＆ FP ランキング
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Board Control */}
+          <div className="glass-panel" style={{ padding: '20px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>BOARD CONTROL (リバウンド支配)</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              
+              {/* Def Rebound */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '120px', fontSize: '12px', color: 'var(--muted)' }}>自軍ゴール下(Def)</div>
+                <div style={{ flex: 1, background: 'var(--bg3)', height: '12px', borderRadius: '6px', overflow: 'hidden', display: 'flex' }}>
+                  <div style={{ width: `${Math.round((parseNum(col(game, 'team', 'dr')) / Math.max(1, parseNum(col(game, 'team', 'dr')) + parseNum(col(game, 'opp', 'or')))) * 100)}%`, background: '#4f8ef7', height: '100%' }} />
+                  <div style={{ width: `${Math.round((parseNum(col(game, 'opp', 'or')) / Math.max(1, parseNum(col(game, 'team', 'dr')) + parseNum(col(game, 'opp', 'or')))) * 100)}%`, background: 'rgba(240, 111, 111, 0.7)', height: '100%' }} />
+                </div>
+                <div style={{ width: '30px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)', fontWeight: 600 }}>{Math.round((parseNum(col(game, 'team', 'dr')) / Math.max(1, parseNum(col(game, 'team', 'dr')) + parseNum(col(game, 'opp', 'or')))) * 100)}%</div>
+              </div>
+
+              {/* Off Rebound */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '120px', fontSize: '12px', color: 'var(--muted)' }}>相手ゴール下(Off)</div>
+                <div style={{ flex: 1, background: 'var(--bg3)', height: '12px', borderRadius: '6px', overflow: 'hidden', display: 'flex' }}>
+                  <div style={{ width: `${Math.round((parseNum(col(game, 'team', 'or')) / Math.max(1, parseNum(col(game, 'team', 'or')) + parseNum(col(game, 'opp', 'dr')))) * 100)}%`, background: '#4f8ef7', height: '100%' }} />
+                  <div style={{ width: `${Math.round((parseNum(col(game, 'opp', 'dr')) / Math.max(1, parseNum(col(game, 'team', 'or')) + parseNum(col(game, 'opp', 'dr')))) * 100)}%`, background: 'rgba(240, 111, 111, 0.7)', height: '100%' }} />
+                </div>
+                <div style={{ width: '30px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)', fontWeight: 600 }}>{Math.round((parseNum(col(game, 'team', 'or')) / Math.max(1, parseNum(col(game, 'team', 'or')) + parseNum(col(game, 'opp', 'dr')))) * 100)}%</div>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '16px', fontSize: '11px', color: 'var(--muted)', marginTop: '4px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4f8ef7' }} /> チーム
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(240, 111, 111, 0.7)' }} /> 相手
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Forced TO% */}
+          <div className="glass-panel" style={{ padding: '20px', flex: 1 }}>
+            <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>Forced TO% (STL誘発率)</div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
+              <span style={{ fontSize: '32px', fontWeight: 800, color: '#38d9a9', lineHeight: 1 }}>
+                {parseNum(col(game, 'opp', 'to')) > 0 ? Math.round((gamePlayers.reduce((sum, p) => sum + parseNum(p.STL), 0) / parseNum(col(game, 'opp', 'to'))) * 100) : 0}%
+              </span>
+              <span style={{ fontSize: '12px', color: 'var(--muted)', paddingBottom: '4px' }}>をSTLで誘発</span>
+            </div>
+          </div>
+        </div>
+
+        {/* FP Ranking */}
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>FP ランキング (この試合のMVP)</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {gamePlayers.slice(0, 10).map((p: any, i: number) => {
+              const maxFp = gamePlayers[0]?.FP || 1;
+              const percent = Math.max(0, (p.FP / maxFp) * 100);
+              return (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '80px', fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p['コートネーム']||p['選手名']}</div>
+                  <div style={{ flex: 1, background: 'var(--bg3)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
+                    <div style={{ width: `${percent}%`, background: 'var(--accent3)', height: '100%', borderRadius: '6px', transition: 'width 1s ease-out' }} />
+                  </div>
+                  <div style={{ width: '40px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)', color: 'var(--accent3)', fontWeight: 600 }}>{formatNum(p.FP, 1)}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>6</span>
+        貢献度マップ ＆ 分析
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '24px' }}>
         <div className="glass-panel" style={{ padding: '20px' }}>
           <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>貢献度マップ A (FP × USG%)</div>
@@ -290,25 +371,6 @@ export default function ReportClient({ initialData }: { initialData: any }) {
           <div style={{ height: '220px' }}>
             <ScatterChart points={scatterEFF} xLabel="USG%" yLabel="EFF" color="#4f8ef7" />
           </div>
-        </div>
-      </div>
-
-      <div className="glass-panel" style={{ padding: '20px' }}>
-        <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.1em' }}>FP ランキング (この試合のMVP)</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {gamePlayers.slice(0, 10).map((p: any, i: number) => {
-            const maxFp = gamePlayers[0]?.FP || 1;
-            const percent = Math.max(0, (p.FP / maxFp) * 100);
-            return (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '80px', fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p['コートネーム']||p['選手名']}</div>
-                <div style={{ flex: 1, background: 'var(--bg3)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
-                  <div style={{ width: `${percent}%`, background: 'var(--accent3)', height: '100%', borderRadius: '6px', transition: 'width 1s ease-out' }} />
-                </div>
-                <div style={{ width: '40px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)', color: 'var(--accent3)', fontWeight: 600 }}>{formatNum(p.FP, 1)}</div>
-              </div>
-            );
-          })}
         </div>
       </div>
     </div>
