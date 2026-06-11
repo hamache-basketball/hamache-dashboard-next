@@ -382,7 +382,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     const recent = filteredGamesAsc.slice(-Math.min(5, filteredGamesAsc.length));
 
     const trendOf = (key: string, higherBetter: boolean) => {
-      const vals = recent.map((g: any) => getGameFactor(g, 'team', key)).filter(v => v > 0);
+      const vals = recent.map((g: any) => getGameFactor(g, 'team', key)).filter((v: number) => v > 0);
       if (vals.length < 2) return null;
       const mid = Math.ceil(vals.length / 2);
       const first = vals.slice(0, mid).reduce((a, b) => a + b, 0) / mid;
