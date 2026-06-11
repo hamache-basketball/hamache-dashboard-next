@@ -96,24 +96,24 @@ export default function HomeClient({ initialData }: { initialData: any }) {
       </div>
 
       {/* Two Column Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '32px', alignItems: 'start' }}>
+      <div className="grid-sidebar-layout">
         
         {/* LEFT COLUMN: EXECUTIVE SUMMARY */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)', letterSpacing: '0.1em' }}>EXECUTIVE SUMMARY</div>
           
           {/* Row 1: Season Record & PPP */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '20px' }}>
+          <div className="grid-2col-responsive-uneven">
             {/* Season Record */}
             <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Season Record</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', marginBottom: '16px' }}>
-                <span style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-cyan)', textShadow: '0 0 24px rgba(0,240,255,0.5)', lineHeight: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                <span className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-cyan)', textShadow: '0 0 24px rgba(0,240,255,0.5)', lineHeight: 1 }}>
                   {seasonSummary.wins}
                 </span>
                 <span style={{ fontSize: '18px', color: 'var(--muted)' }}>WINS</span>
                 <span style={{ fontSize: '40px', color: 'var(--border2)' }}>|</span>
-                <span style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1 }}>
+                <span className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1 }}>
                   {seasonSummary.losses}
                 </span>
                 <span style={{ fontSize: '18px', color: 'var(--muted)' }}>LOSSES</span>
@@ -126,7 +126,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
             {/* Team PPP */}
             <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Team PPP</div>
-              <div style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1, marginBottom: '16px' }}>
+              <div className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1, marginBottom: '16px' }}>
                 {formatNum(seasonSummary.ppp, 2)}
               </div>
               <div style={{ fontSize: '13px', color: 'var(--muted)' }}>POINTS PER POSSESSION</div>
@@ -138,7 +138,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
 
           {/* Row 2: Latest Game & MVP */}
           {latestGame && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="grid-2col-responsive">
               
               {/* Latest Game */}
               <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
@@ -154,10 +154,10 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{col(latestGame, 'team', 'pts') || col(latestGame, 'pts', 'us')}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                      <span className="mobile-text-large" style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{col(latestGame, 'team', 'pts') || col(latestGame, 'pts', 'us')}</span>
                       <span style={{ fontSize: '24px', color: 'var(--muted)' }}>-</span>
-                      <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{col(latestGame, 'opp', 'pts')}</span>
+                      <span className="mobile-text-large" style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{col(latestGame, 'opp', 'pts')}</span>
                     </div>
                     <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px', background: 'rgba(255,255,255,0.05)', padding: '4px 12px', borderRadius: '4px', letterSpacing: '0.1em' }}>FINAL SCORE</div>
                   </div>

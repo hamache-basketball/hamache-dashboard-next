@@ -23,7 +23,7 @@ export default function RootLayout({
             {/* Desktop Sidebar */}
             <Sidebar />
             
-            <main style={{ flex: 1, minWidth: 0, padding: '32px 36px', paddingBottom: '100px' }}>
+            <main className="main-content">
               {children}
             </main>
             
