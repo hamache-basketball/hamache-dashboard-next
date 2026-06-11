@@ -729,7 +729,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                       d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         const val = getGameFactor(g, 'team', k);
                         const max = k === 'efg' || k === 'or' ? 80 : 80; // Scale 0-80% for aesthetics
-                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200];
+                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200] as [number, number];
                       }))}
                     />
                     {filteredGamesAsc.map((g: any, i: number) => {
@@ -743,7 +743,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                       d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         const val = getGameFactor(g, 'opp', k);
                         const max = 80;
-                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200];
+                        return [(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000, 200 - (Math.min(val, max) / max) * 200] as [number, number];
                       }))}
                     />
                     {filteredGamesAsc.map((g: any, i: number) => {

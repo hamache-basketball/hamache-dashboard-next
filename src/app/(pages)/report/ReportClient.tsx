@@ -135,8 +135,8 @@ export default function ReportClient({ initialData }: { initialData: any }) {
     const ftrWin = ftrUs >= ftrOpp;
     const wins   = [efgWin, topWin, orpWin, ftrWin].filter(Boolean).length;
 
-    const winFactors  = [];
-    const loseFactors = [];
+    const winFactors: string[]  = [];
+    const loseFactors: string[] = [];
     if(efgWin)  winFactors.push(`eFG%で相手を上回った（${formatNum(efgUs,1)}% vs ${formatNum(efgOpp,1)}%）`);
     else       loseFactors.push(`eFG%で相手に劣勢（${formatNum(efgUs,1)}% vs ${formatNum(efgOpp,1)}%）`);
     if(topWin)  winFactors.push(`ボール管理で相手を上回った（TO% ${formatNum(topUs,1)}% vs ${formatNum(topOpp,1)}%）`);
