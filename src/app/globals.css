@@ -1,29 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Modern Dark Theme Palette */
-  --bg: #090a0f;
-  --bg2: #12141c;
-  --bg3: #1a1d27;
+  /* Cyber Premium Dark Theme Palette */
+  --bg: #0b0f19;
+  --bg2: #121826;
+  --bg3: #1a2235;
   
-  --border: rgba(255, 255, 255, 0.06);
-  --border2: rgba(255, 255, 255, 0.12);
-  --border-glow: rgba(79, 142, 247, 0.2);
+  --border: rgba(255, 255, 255, 0.08);
+  --border2: rgba(255, 255, 255, 0.15);
+  --border-glow: rgba(0, 240, 255, 0.3);
   
   --text: #f0f2f8;
-  --muted: #8b92a5;
+  --muted: #8b96ab;
   
-  /* Accent Colors */
-  --accent: #4f8ef7;    /* Primary Blue */
-  --accent-hover: #3b76d9;
-  --accent2: #38d9a9;   /* Green / Win / Positive */
-  --accent3: #f7a84f;   /* Orange / Highlight */
+  /* Neon Colors */
+  --neon-cyan: #00f0ff;
+  --neon-orange: #ff7b00;
+  --neon-purple: #b535f6;
+  --neon-green: #00e676;
+  --neon-blue: #0070f3;
+  
+  /* Legacy mapping */
+  --accent: var(--neon-cyan);
+  --accent-hover: #00c3cc;
+  --accent2: var(--neon-green);
+  --accent3: var(--neon-orange);
   --yellow: #f7e04f;
-  --danger: #f06f6f;    /* Red / Lose / Negative */
-  --win: #38d9a9;
-  --lose: #f06f6f;
+  --danger: #ff3366;
+  --win: var(--neon-cyan);
+  --lose: var(--neon-orange);
   
-  --mono: 'DM Mono', monospace;
+  --mono: 'Oswald', sans-serif;
   --sans: 'Inter', sans-serif;
   
   --radius: 12px;
@@ -31,8 +38,8 @@
   --radius-full: 9999px;
 
   /* Glassmorphism */
-  --glass-bg: rgba(18, 20, 28, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(18, 24, 38, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.05);
 }
 
 *, *::before, *::after {
@@ -44,6 +51,9 @@
 body {
   font-family: var(--sans);
   background-color: var(--bg);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.04), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(255, 123, 0, 0.04), transparent 25%);
   color: var(--text);
   min-height: 100vh;
   font-size: 14px;
@@ -55,10 +65,11 @@ body {
 /* Base utility classes for premium feel */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
 }
 
 .gradient-text {
@@ -74,7 +85,7 @@ body {
 
 .animated-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-glow);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-glow);
 }
 
 /* Custom Scrollbar */

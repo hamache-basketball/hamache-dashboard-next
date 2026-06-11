@@ -74,188 +74,218 @@ export default function HomeClient({ initialData }: { initialData: any }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
       
-      {/* 1. Season Summary */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
-        <div className="glass-panel" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '120px', color: 'rgba(255,255,255,0.02)', fontWeight: 800, lineHeight: 1 }}>{sortedGames.length}</div>
-          <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Season Record</div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
-            <span style={{ fontSize: '36px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--text)' }}>
-              {seasonSummary.wins}
-              <span style={{ fontSize: '16px', color: 'var(--muted)', fontWeight: 400 }}>W</span>
-            </span>
-            <span style={{ fontSize: '24px', color: 'var(--border2)' }}>-</span>
-            <span style={{ fontSize: '36px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--text)' }}>
-              {seasonSummary.losses}
-              <span style={{ fontSize: '16px', color: 'var(--muted)', fontWeight: 400 }}>L</span>
-            </span>
+      {/* Header Area */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(0,240,255,0.1)', border: '1px solid var(--neon-cyan)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--neon-cyan)', fontSize: '20px', filter: 'drop-shadow(0 0 5px rgba(0,240,255,0.5))' }}>
+            🏀
           </div>
-          <div style={{ fontSize: '13px', color: 'var(--accent2)', fontWeight: 600, marginTop: '4px' }}>
-            Win Rate: {formatNum(seasonSummary.winRate, 1)}%
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.1em' }}>BASKETBALL ANALYTICS</span>
+            <span style={{ color: 'var(--border2)' }}>|</span>
+            <span style={{ fontSize: '16px', color: 'var(--muted)', letterSpacing: '0.05em' }}>SEASON DASHBOARD</span>
           </div>
         </div>
-
-        <div className="glass-panel" style={{ padding: '24px' }}>
-          <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Team Avg PPP</div>
-          <div style={{ fontSize: '36px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--accent)' }}>
-            {formatNum(seasonSummary.ppp, 2)}
-          </div>
-          <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>
-            Points Per Possession
-          </div>
-        </div>
-
-        <div className="glass-panel" style={{ padding: '24px' }}>
-          <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>Team Avg PACE</div>
-          <div style={{ fontSize: '36px', fontWeight: 800, fontFamily: 'var(--mono)', color: '#f0d34f' }}>
-            {formatNum(seasonSummary.pace, 1)}
-          </div>
-          <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>
-            Possessions per 40 min
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '8px 20px', borderRadius: '24px', border: '1px solid var(--border)' }}>
+          <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--muted)' }}></div>
+          <span style={{ fontSize: '13px', fontWeight: 500 }}>Coach</span>
+          <span style={{ fontSize: '10px', color: 'var(--muted)' }}>▼</span>
         </div>
       </div>
 
-      {/* 2. Latest Game */}
-      {latestGame && (
-        <div className="glass-panel" style={{ padding: '0', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ padding: '16px 24px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Latest Game Recap</div>
-            <div style={{ fontSize: '12px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>{col(latestGame, 'date')}</div>
-          </div>
+      {/* Two Column Layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '32px', alignItems: 'start' }}>
+        
+        {/* LEFT COLUMN: EXECUTIVE SUMMARY */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)', letterSpacing: '0.1em' }}>EXECUTIVE SUMMARY</div>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {/* Score section */}
-            <div style={{ flex: '1 1 300px', padding: '32px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>
-                vs <span style={{ color: 'var(--text)', fontWeight: 600 }}>{col(latestGame, '対戦相手')}</span>
+          {/* Row 1: Season Record & PPP */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '20px' }}>
+            {/* Season Record */}
+            <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Season Record</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-cyan)', textShadow: '0 0 24px rgba(0,240,255,0.5)', lineHeight: 1 }}>
+                  {seasonSummary.wins}
+                </span>
+                <span style={{ fontSize: '18px', color: 'var(--muted)' }}>WINS</span>
+                <span style={{ fontSize: '40px', color: 'var(--border2)' }}>|</span>
+                <span style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1 }}>
+                  {seasonSummary.losses}
+                </span>
+                <span style={{ fontSize: '18px', color: 'var(--muted)' }}>LOSSES</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '48px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--accent)', lineHeight: 1 }}>{col(latestGame, 'team', 'pts') || col(latestGame, 'pts', 'us')}</div>
-                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px' }}>TEAM</div>
-                </div>
-                <div style={{ fontSize: '24px', color: 'var(--border2)' }}>-</div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '48px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--muted)', lineHeight: 1 }}>{col(latestGame, 'opp', 'pts')}</div>
-                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px' }}>OPP</div>
-                </div>
-              </div>
-              <div style={{ marginTop: '24px' }}>
-                <button 
-                  onClick={() => handleNavigate('/report', latestGame.GameID)}
-                  style={{ background: 'var(--accent)', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--mono)' }}
-                >
-                  View Game Report →
-                </button>
+              <div style={{ fontSize: '13px', background: 'rgba(255,255,255,0.05)', display: 'inline-block', padding: '6px 16px', borderRadius: '6px', alignSelf: 'flex-start' }}>
+                <span style={{ color: 'var(--text)', fontWeight: 600 }}>{formatNum(seasonSummary.winRate, 1)}%</span> <span style={{ color: 'var(--muted)' }}>WIN RATE</span>
               </div>
             </div>
 
-            {/* MVP section */}
-            {mvp && (
-              <div style={{ flex: '1 1 300px', padding: '32px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'radial-gradient(circle at top right, rgba(247, 168, 79, 0.05), transparent)' }}>
-                <div style={{ fontSize: '12px', color: '#f7a84f', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '16px' }}>👑</span> Game MVP
-                </div>
-                <div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--text)', marginBottom: '16px' }}>
-                  <span style={{ color: 'var(--muted)', fontSize: '20px', marginRight: '8px', fontFamily: 'var(--mono)' }}>#{mvp['背番号']}</span>
-                  {mvp['コートネーム'] || mvp['選手名']}
+            {/* Team PPP */}
+            <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Team PPP</div>
+              <div style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1, marginBottom: '16px' }}>
+                {formatNum(seasonSummary.ppp, 2)}
+              </div>
+              <div style={{ fontSize: '13px', color: 'var(--muted)' }}>POINTS PER POSSESSION</div>
+              <div style={{ fontSize: '13px', background: 'rgba(255,255,255,0.05)', display: 'inline-block', padding: '6px 16px', borderRadius: '6px', alignSelf: 'flex-start', marginTop: 'auto' }}>
+                <span style={{ color: 'var(--text)' }}>PACE: {formatNum(seasonSummary.pace, 1)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 2: Latest Game & MVP */}
+          {latestGame && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              
+              {/* Latest Game */}
+              <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Latest Game Recap</div>
+                  <div style={{ fontSize: '12px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>{col(latestGame, 'date')}</div>
                 </div>
                 
-                <div style={{ display: 'flex', gap: '24px' }}>
-                  <div>
-                    <div style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'var(--mono)', color: '#f7a84f' }}>{formatNum(mvp.FP, 1)}</div>
-                    <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase' }}>FP</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 1, marginBottom: '24px' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '24px' }}>🛡️</div>
+                    <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)' }}>TEAM</div>
                   </div>
-                  <div>
-                    <div style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{mvp.PTS}</div>
-                    <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase' }}>PTS</div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{col(latestGame, 'team', 'pts') || col(latestGame, 'pts', 'us')}</span>
+                      <span style={{ fontSize: '24px', color: 'var(--muted)' }}>-</span>
+                      <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{col(latestGame, 'opp', 'pts')}</span>
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px', background: 'rgba(255,255,255,0.05)', padding: '4px 12px', borderRadius: '4px', letterSpacing: '0.1em' }}>FINAL SCORE</div>
                   </div>
-                  <div>
-                    <div style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{(parseNum(mvp.OR) + parseNum(mvp.DR))}</div>
-                    <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase' }}>REB</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{mvp.AST}</div>
-                    <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase' }}>AST</div>
+
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '24px' }}>⚔️</div>
+                    <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--muted)' }}>OPP</div>
                   </div>
                 </div>
+
+                <button 
+                  onClick={() => handleNavigate('/report', latestGame.GameID)}
+                  style={{ background: 'rgba(0, 240, 255, 0.1)', color: 'var(--neon-cyan)', border: '1px solid var(--neon-cyan)', padding: '12px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--mono)', letterSpacing: '0.05em', transition: 'all 0.2s', width: '100%' }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(0, 240, 255, 0.2)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 240, 255, 0.3)'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(0, 240, 255, 0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                >
+                  VIEW GAME REPORT →
+                </button>
               </div>
-            )}
-          </div>
+
+              {/* MVP Stats */}
+              {mvp && (
+                <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '24px' }}>MVP Stats</div>
+                  
+                  <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '32px' }}>
+                    <div style={{ width: '80px', height: '80px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px' }}>
+                      👤
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '12px', color: 'var(--neon-cyan)', fontWeight: 600, marginBottom: '6px', letterSpacing: '0.05em', textShadow: '0 0 8px rgba(0,240,255,0.3)' }}>PLAYER OF THE GAME</div>
+                      <div style={{ fontSize: '24px', fontWeight: 700 }}>#{mvp['背番号']} {mvp['コートネーム'] || mvp['選手名']}</div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{mvp.PTS}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--muted)' }}>PTS</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{(parseNum(mvp.OR) + parseNum(mvp.DR))}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--muted)' }}>REB</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{mvp.AST}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--muted)' }}>AST</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 10px rgba(255,123,0,0.3)' }}>{formatNum(mvp.FP, 1)}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--neon-orange)' }}>FP</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      )}
 
-      {/* 3. Quick Access Portal */}
-      <div style={{ marginTop: '16px' }}>
-        <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', marginBottom: '16px' }}>Quick Access</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+        {/* RIGHT COLUMN: QUICK ACCESS */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)', letterSpacing: '0.1em' }}>QUICK ACCESS</div>
           
-          <div 
-            onClick={() => handleNavigate('/report')}
-            className="glass-panel" 
-            style={{ padding: '24px', cursor: 'pointer', borderTop: '2px solid var(--accent)', transition: 'transform 0.2s, background 0.2s' }}
-            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'var(--bg2)'; }}
-          >
-            <div style={{ fontSize: '24px', marginBottom: '16px' }}>📊</div>
-            <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>試合レポート</div>
-            <div style={{ fontSize: '12px', color: 'var(--muted)' }}>モメンタム推移、Sankeyフロー図、貢献度散布図による視覚的分析</div>
-          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            
+            <div 
+              onClick={() => handleNavigate('/report')}
+              className="animated-card"
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(0, 240, 255, 0.05)', border: '1px solid var(--neon-cyan)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(0, 240, 255, 0.05), 0 0 10px rgba(0, 240, 255, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <div>
+                <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>GAME REPORT</div>
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Visual momentum & flows</div>
+              </div>
+              <div style={{ fontSize: '28px', color: 'var(--neon-cyan)', filter: 'drop-shadow(0 0 8px rgba(0,240,255,0.6))' }}>📈</div>
+            </div>
 
-          <div 
-            onClick={() => handleNavigate('/game')}
-            className="glass-panel" 
-            style={{ padding: '24px', cursor: 'pointer', borderTop: '2px solid #4f8ef7', transition: 'transform 0.2s, background 0.2s' }}
-            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'var(--bg2)'; }}
-          >
-            <div style={{ fontSize: '24px', marginBottom: '16px' }}>📋</div>
-            <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>試合分析 (Box Score)</div>
-            <div style={{ fontSize: '12px', color: 'var(--muted)' }}>試合単位の基本スタッツ一覧とEFF、USG%などのアドバンスド指標</div>
-          </div>
+            <div 
+              onClick={() => handleNavigate('/game')}
+              className="animated-card"
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(255, 123, 0, 0.05)', border: '1px solid var(--neon-orange)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(255, 123, 0, 0.05), 0 0 10px rgba(255, 123, 0, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <div>
+                <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>BOX SCORE</div>
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Game stats & advanced metrics</div>
+              </div>
+              <div style={{ fontSize: '28px', color: 'var(--neon-orange)', filter: 'drop-shadow(0 0 8px rgba(255,123,0,0.6))' }}>📋</div>
+            </div>
 
-          <div 
-            onClick={() => handleNavigate('/player')}
-            className="glass-panel" 
-            style={{ padding: '24px', cursor: 'pointer', borderTop: '2px solid #f7a84f', transition: 'transform 0.2s, background 0.2s' }}
-            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'var(--bg2)'; }}
-          >
-            <div style={{ fontSize: '24px', marginBottom: '16px' }}>🏃</div>
-            <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>選手個人スタッツ</div>
-            <div style={{ fontSize: '12px', color: 'var(--muted)' }}>シーズンを通した各選手の平均スタッツとチーム内ランキング</div>
-          </div>
+            <div 
+              onClick={() => handleNavigate('/player')}
+              className="animated-card"
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(0, 240, 255, 0.05)', border: '1px solid var(--neon-cyan)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(0, 240, 255, 0.05), 0 0 10px rgba(0, 240, 255, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <div>
+                <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>PLAYER STATS</div>
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Individual season averages</div>
+              </div>
+              <div style={{ fontSize: '28px', color: 'var(--neon-cyan)', filter: 'drop-shadow(0 0 8px rgba(0,240,255,0.6))' }}>👤</div>
+            </div>
 
-          <div 
-            onClick={() => handleNavigate('/lineup')}
-            className="glass-panel" 
-            style={{ padding: '24px', cursor: 'pointer', borderTop: '2px solid #a855f7', transition: 'transform 0.2s, background 0.2s' }}
-            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'var(--bg2)'; }}
-          >
-            <div style={{ fontSize: '24px', marginBottom: '16px' }}>👥</div>
-            <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>ラインナップ</div>
-            <div style={{ fontSize: '12px', color: 'var(--muted)' }}>5人組組み合わせ毎の+/-（得失点差）と出場時間の分析</div>
-          </div>
+            <div 
+              onClick={() => handleNavigate('/lineup')}
+              className="animated-card"
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(181, 53, 246, 0.05)', border: '1px solid var(--neon-purple)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(181, 53, 246, 0.05), 0 0 10px rgba(181, 53, 246, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <div>
+                <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>LINEUPS</div>
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>5-man combinations & +/-</div>
+              </div>
+              <div style={{ fontSize: '28px', color: 'var(--neon-purple)', filter: 'drop-shadow(0 0 8px rgba(181,53,246,0.6))' }}>👥</div>
+            </div>
 
-          <div 
-            onClick={() => handleNavigate('/team')}
-            className="glass-panel" 
-            style={{ padding: '24px', cursor: 'pointer', borderTop: '2px solid #22c55e', transition: 'transform 0.2s, background 0.2s' }}
-            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'var(--bg2)'; }}
-          >
-            <div style={{ fontSize: '24px', marginBottom: '16px' }}>🏢</div>
-            <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>チーム全体スタッツ</div>
-            <div style={{ fontSize: '12px', color: 'var(--muted)' }}>チーム全体の4 Factorsやカテゴリー別・勝敗別の傾向分析</div>
-          </div>
+            <div 
+              onClick={() => handleNavigate('/team')}
+              className="animated-card"
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(0, 230, 118, 0.05)', border: '1px solid var(--neon-green)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(0, 230, 118, 0.05), 0 0 10px rgba(0, 230, 118, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <div>
+                <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>TEAM OVERALL</div>
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>4 factors & W/L analysis</div>
+              </div>
+              <div style={{ fontSize: '28px', color: 'var(--neon-green)', filter: 'drop-shadow(0 0 8px rgba(0,230,118,0.6))' }}>🏢</div>
+            </div>
 
+          </div>
         </div>
       </div>
-
     </div>
   );
 }
