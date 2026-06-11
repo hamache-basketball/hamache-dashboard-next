@@ -145,7 +145,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 1, marginBottom: '24px' }}>
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '24px' }}>🛡️</div>
-                    <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)' }}>TEAM</div>
+                    <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)' }}>HAMACHE</div>
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -184,7 +184,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                     </div>
                     <div>
                       <div style={{ fontSize: '12px', color: 'var(--neon-cyan)', fontWeight: 600, marginBottom: '6px', letterSpacing: '0.05em', textShadow: '0 0 8px rgba(0,240,255,0.3)' }}>PLAYER OF THE GAME</div>
-                      <div style={{ fontSize: '24px', fontWeight: 700 }}>#{mvp['背番号']} {mvp['コートネーム'] || mvp['選手名']}</div>
+                      <div style={{ fontSize: '24px', fontWeight: 700 }}>#{(mvp._rawRow && mvp._rawRow[3]) || mvp['背番号'] || '-'} {mvp['コートネーム'] || mvp['選手名']}</div>
                     </div>
                   </div>
 
