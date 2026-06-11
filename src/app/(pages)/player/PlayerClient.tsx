@@ -6,6 +6,27 @@ import GlossaryCards from '@/components/stats/GlossaryCards';
 import { calcFP, calcEFF, calcUSG, calcEFG, parseNum, formatNum, col } from '@/lib/stats-logic';
 import { useGlobalState } from '@/lib/GlobalStateProvider';
 
+const lineToCubicBezier = (points: [number, number][]) => {
+  if (points.length === 0) return '';
+  if (points.length === 1) return `M ${points[0][0]},${points[0][1]}`;
+  
+  let d = `M ${points[0][0]},${points[0][1]}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i === 0 ? 0 : i - 1];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[i + 2 === points.length ? i + 1 : i + 2];
+    
+    const cp1x = p1[0] + (p2[0] - p0[0]) * 0.15;
+    const cp1y = p1[1] + (p2[1] - p0[1]) * 0.15;
+    const cp2x = p2[0] - (p3[0] - p1[0]) * 0.15;
+    const cp2y = p2[1] - (p3[1] - p1[1]) * 0.15;
+    
+    d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+};
+
 export default function PlayerClient({ initialData }: { initialData: any }) {
   const { games, players } = initialData;
 
@@ -113,7 +134,7 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
     const pMap = new Map<string, any>();
     filteredPlayerGames.forEach(p => {
       const name = p['コートネーム'] || p['選手名'] || 'Unknown';
-      if (!pMap.has(name)) pMap.set(name, { games: 0, pts: 0, ast: 0, reb: 0, stl: 0, blk: 0, fga: 0, fgm: 0, fta: 0, ftm: 0, to: 0, min: 0, pm: 0, usgSum: 0, effSum: 0, p3m: 0 });
+      if (!pMap.has(name)) pMap.set(name, { games: 0, pts: 0, ast: 0, reb: 0, stl: 0, blk: 0, fga: 0, fgm: 0, fta: 0, ftm: 0, to: 0, min: 0, pm: 0, effSum: 0, p3m: 0, teamMin: 0, teamFga: 0, teamFta: 0, teamTo: 0 });
       const exist = pMap.get(name);
       if (parseNum(p.MIN) > 0) {
         exist.games += 1;
@@ -130,8 +151,15 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
         exist.to += parseNum(p.TO);
         exist.min += parseNum(p.MIN);
         exist.pm += p.PlusMinus;
-        exist.usgSum += p.USG;
         exist.effSum += p.EFF;
+
+        if (p.gameObj) {
+          const gMin = parseNum(col(p.gameObj, 'min')) || 40;
+          exist.teamMin += gMin * 5;
+          exist.teamFga += parseNum(col(p.gameObj, 'team', 'fga'));
+          exist.teamFta += parseNum(col(p.gameObj, 'team', 'fta'));
+          exist.teamTo += parseNum(col(p.gameObj, 'team', 'to'));
+        }
       }
     });
     
@@ -150,7 +178,7 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
           REB: data.reb / data.games,
           STL: data.stl / data.games,
           BLK: data.blk / data.games,
-          USG: data.usgSum / data.games,
+          USG: calcUSG(data.fga, data.fta, data.to, data.min, data.teamMin, data.teamFga, data.teamFta, data.teamTo),
           EFF: data.effSum / data.games,
           PM: data.pm / data.games,
           EFG: calcEFG(data.fgm, data.p3m, data.fga),
@@ -308,16 +336,16 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
                     <line key={p} x1="0" y1={p} x2="1000" y2={p} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
                   ))}
                   
-                  <polyline
+                  <path
                     fill="none"
                     stroke="#4f8ef7"
                     strokeWidth="3"
-                    points={trendData.map((d, i) => {
+                    d={lineToCubicBezier(trendData.map((d, i) => {
                       const maxPts = Math.max(...trendData.map((dd: any) => parseNum(dd.PTS)), 10);
                       const x = (i / Math.max(1, trendData.length - 1)) * 1000;
                       const y = 200 - (parseNum(d.PTS) / maxPts) * 200;
-                      return `${x},${y}`;
-                    }).join(' ')}
+                      return [x, y] as [number, number];
+                    }))}
                   />
                   
                   {trendData.map((d, i) => {
