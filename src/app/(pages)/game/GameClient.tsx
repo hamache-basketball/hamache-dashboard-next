@@ -61,9 +61,12 @@ export default function GameClient({ initialData }: { initialData: any }) {
       const efg = calcEFG(p.FGM, p['3PM'], p.FGA);
       const fp = calcFP(p.PTS, p.OR, p.DR, p.AST, p.STL, p.BLK, p.TO);
       const eff = calcEFF(p.PTS, (parseNum(p.OR) + parseNum(p.DR)), p.AST, p.STL, p.BLK, p.FGA, p.FGM, p.FTA, p.FTM, p.TO);
+      const gameMin = parseNum(col(game, 'min')) || 40;
+      const teamMinForUsg = gameMin * 5;
+
       const usg = calcUSG(
         p.FGA, p.FTA, p.TO, p.MIN, 
-        col(game, 'team', 'min') || 200, 
+        teamMinForUsg, 
         col(game, 'team', 'fga') || 100, 
         col(game, 'team', 'fta') || 20, 
         col(game, 'team', 'to') || 15

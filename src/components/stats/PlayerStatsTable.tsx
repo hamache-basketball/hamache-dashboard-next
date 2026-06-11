@@ -17,7 +17,7 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
         <thead>
           <tr style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)', fontSize: '11px' }}>
             <th style={{ padding: '12px 16px', textAlign: 'left' }}>#</th>
-            <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>選手名</th>
+            <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>選手名</th>
             <th style={{ padding: '12px 16px' }}>MIN</th>
             <th style={{ padding: '12px 16px' }}>PTS</th>
             <th style={{ padding: '12px 16px' }}>FGM/A</th>
@@ -42,7 +42,7 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
             return (
               <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                 <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{p['背番号'] || '-'}</td>
-                <td style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif' }}>{p['コートネーム'] || p['選手名']}</td>
+                <td style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap' }}>{p['コートネーム'] || p['選手名']}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.MIN || '0'}</td>
                 <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text)' }}>{p.PTS || '0'}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.FGM || '0'}/{p.FGA || '0'}</td>
