@@ -174,22 +174,34 @@ export default function ReportClient({ initialData }: { initialData: any }) {
       </div>
 
       <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)', lineHeight: 1 }}>{col(game, 'team', 'pts') || col(game, 'pts', 'us') || '0'}</span>
           <span style={{ fontSize: '24px', color: 'var(--border2)' }}>—</span>
           <span style={{ fontSize: '48px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--muted)', lineHeight: 1 }}>{col(game, 'opp', 'pts') || '0'}</span>
         </div>
         <div style={{ display: 'flex', gap: '24px' }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{formatNum(col(game, 'pace')||0)}</div>
+            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{formatNum(col(game, 'pace')||0, 1)}</div>
             <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Pace</div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)' }}>{formatNum(col(game, 'team', 'ppp')||0, 2)}</div>
+            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)' }}>
+              {(() => {
+                const p = parseNum(col(game, 'team', 'pts') || col(game, 'pts', 'us'));
+                const poss = parseNum(col(game, 'team', 'fga')) + 0.44 * parseNum(col(game, 'team', 'fta')) + parseNum(col(game, 'team', 'to'));
+                return formatNum(poss > 0 ? p / poss : 0, 1);
+              })()}
+            </div>
             <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Team PPP</div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'rgba(240, 111, 111, 0.7)' }}>{formatNum(col(game, 'opp', 'ppp')||0, 2)}</div>
+            <div style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'rgba(240, 111, 111, 0.7)' }}>
+              {(() => {
+                const op = parseNum(col(game, 'opp', 'pts'));
+                const oppPoss = parseNum(col(game, 'opp', 'fga')) + 0.44 * parseNum(col(game, 'opp', 'fta')) + parseNum(col(game, 'opp', 'to'));
+                return formatNum(oppPoss > 0 ? op / oppPoss : 0, 1);
+              })()}
+            </div>
             <div style={{ fontSize: '10px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Opp PPP</div>
           </div>
         </div>
