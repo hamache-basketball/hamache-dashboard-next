@@ -83,7 +83,9 @@ export default function HomeClient({ initialData }: { initialData: any }) {
             🏀
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.1em' }}>BASKETBALL ANALYTICS</span>
+            <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.1em' }}>
+              <span style={{ color: 'var(--accent)' }}>HAMACHE</span> BASKETBALL ANALYTICS
+            </span>
             <span className="mobile-only" style={{ color: 'var(--border2)' }}>|</span>
             <span style={{ fontSize: '16px', color: 'var(--muted)', letterSpacing: '0.05em' }}>SEASON DASHBOARD</span>
           </div>
