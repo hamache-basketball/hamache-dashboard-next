@@ -1,7 +1,11 @@
 const SHEET_ID = '1Q2c9BHrUHJB3dX2LpC7LJsVXgQqj5F_HLjrROHsRxl8';
-const API_KEY = 'AIzaSyDDG3PeoGS6_0QBEo-H8VxKBU3XvrUJjhw';
+// APIキーは環境変数から取得します（セキュリティのためハードコードは避けます）
+const API_KEY = process.env.GOOGLE_API_KEY;
 
 export async function fetchSheet(sheetName: string) {
+  if (!API_KEY) {
+    throw new Error('GOOGLE_API_KEY environment variable is not set');
+  }
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
   
   // APIキーのHTTPリファラー制限を回避するため、元のダッシュボードのURLをRefererとして付与
