@@ -43,9 +43,10 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     switch (factor) {
       case 'efg':
         return fga > 0 ? ((fgm + 0.5 * p3m) / fga) * 100 : 0;
-      case 'to':
+      case 'to': {
         const poss = fga + 0.44 * fta + to;
         return poss > 0 ? (to / poss) * 100 : 0;
+      }
       case 'or':
         return (or + oppDr) > 0 ? (or / (or + oppDr)) * 100 : 0;
       case 'ftr':
@@ -296,7 +297,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
 
   // Boundaries & Comments
   const boundaries = useMemo(() => {
-    if (filteredGamesAsc.length === 0) return null;
+    if (filteredGamesAsc.length === 0 || !wlAnalysis) return null;
     
     const getMedian = (arr: number[]) => {
       const sorted = [...arr].sort((a, b) => a - b);

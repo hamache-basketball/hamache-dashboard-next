@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import FourFactorsCards from '@/components/charts/FourFactorsCards';
 import ScatterChart from '@/components/charts/ScatterChart';
 import MomentumChart from '@/components/charts/MomentumChart';
