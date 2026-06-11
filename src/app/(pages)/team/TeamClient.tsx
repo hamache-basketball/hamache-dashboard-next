@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { parseNum, formatNum, col, calcEFG, calcFP, calcEFF, calcUSG } from '@/lib/stats-logic';
 import { useGlobalState } from '@/lib/GlobalStateProvider';
 
 export default function TeamClient({ initialData }: { initialData: any }) {
+  const router = useRouter();
   const { games, players } = initialData;
 
-  const { globalCategory, setGlobalCategory } = useGlobalState();
+  const { globalCategory, setGlobalCategory, setGlobalPlayerName } = useGlobalState();
   const selectedCategory = globalCategory;
   const setSelectedCategory = setGlobalCategory;
 
@@ -409,7 +411,12 @@ export default function TeamClient({ initialData }: { initialData: any }) {
               {playerRankings.map((p, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                   <td style={{ padding: '12px 16px', textAlign: 'left' }}>{i + 1}</td>
-                  <td style={{ padding: '12px 16px', textAlign: 'left', color: '#4f8ef7', fontWeight: 600, fontFamily: '"Inter", sans-serif' }}>#{p.jersey} <span style={{ textDecoration: 'underline' }}>{p.name}</span></td>
+                  <td 
+                    style={{ padding: '12px 16px', textAlign: 'left', color: '#4f8ef7', fontWeight: 600, fontFamily: '"Inter", sans-serif', cursor: 'pointer' }}
+                    onClick={() => { setGlobalPlayerName(p.name); router.push('/player'); }}
+                  >
+                    #{p.jersey} <span style={{ textDecoration: 'underline' }}>{p.name}</span>
+                  </td>
                   <td style={{ padding: '12px 16px', textAlign: 'center' }}>{p.games}</td>
                   <td style={{ padding: '12px 16px', color: 'var(--text)' }}>
                     <span style={{ fontWeight: 700 }}>{formatNum(p.ptsAvg)}</span>

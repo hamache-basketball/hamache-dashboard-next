@@ -7,6 +7,8 @@ interface GlobalStateContextType {
   setGlobalGameId: (id: string) => void;
   globalCategory: string;
   setGlobalCategory: (category: string) => void;
+  globalPlayerName: string;
+  setGlobalPlayerName: (name: string) => void;
 }
 
 const GlobalStateContext = createContext<GlobalStateContextType | undefined>(undefined);
@@ -14,9 +16,10 @@ const GlobalStateContext = createContext<GlobalStateContextType | undefined>(und
 export const GlobalStateProvider = ({ children }: { children: ReactNode }) => {
   const [globalGameId, setGlobalGameId] = useState<string>('');
   const [globalCategory, setGlobalCategory] = useState<string>('全カテゴリー');
+  const [globalPlayerName, setGlobalPlayerName] = useState<string>('');
 
   return (
-    <GlobalStateContext.Provider value={{ globalGameId, setGlobalGameId, globalCategory, setGlobalCategory }}>
+    <GlobalStateContext.Provider value={{ globalGameId, setGlobalGameId, globalCategory, setGlobalCategory, globalPlayerName, setGlobalPlayerName }}>
       {children}
     </GlobalStateContext.Provider>
   );
