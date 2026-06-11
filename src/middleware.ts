@@ -13,9 +13,9 @@ export function middleware(req: NextRequest) {
     const authValue = basicAuth.split(' ')[1];
     const [user, pwd] = atob(authValue).split(':');
 
-    // ユーザー名 "coach"、パスワード "hamache" に設定
-    // ※ Vercelに公開した際、このID/PWを入力しないとアクセスできなくなります
-    if (user === 'coach' && pwd === 'hamache') {
+    // ユーザー名 "hamache"、パスワード "hamayama" に設定
+    // ※ セキュリティ上、本来は環境変数等を使用すべきですが、今回はハードコーディングで実装しています。
+    if (user === 'hamache' && pwd === 'hamayama') {
       return NextResponse.next();
     }
   }
