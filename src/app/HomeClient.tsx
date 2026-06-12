@@ -233,8 +233,8 @@ export default function HomeClient({ initialData }: { initialData: any }) {
 
               {/* MVP Stats */}
               {mvp && (
-                <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '24px' }}>MVP Stats</div>
+                <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '24px' }}>MVP STATS（FPランキング）</div>
                   
                   <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '32px' }}>
                     <div style={{ width: '80px', height: '80px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px' }}>
@@ -246,7 +246,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '16px' }}>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)' }}>{mvp.PTS}</div>
                       <div style={{ fontSize: '11px', color: 'var(--muted)' }}>PTS</div>
@@ -263,6 +263,10 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                       <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 10px rgba(255,123,0,0.3)' }}>{formatNum(mvp.FP, 1)}</div>
                       <div style={{ fontSize: '11px', color: 'var(--neon-orange)' }}>FP</div>
                     </div>
+                  </div>
+
+                  <div style={{ marginTop: 'auto', fontSize: '10px', color: 'rgba(255,255,255,0.4)', lineHeight: '1.5' }}>
+                    ※ <strong>FP (Fantasy Points)</strong> : PTS + REB×1.2 + AST×1.5 + STL×3.0 + BLK×3.0 - TO で算出される、試合への総合的な貢献度を表す指標です。
                   </div>
                 </div>
               )}
