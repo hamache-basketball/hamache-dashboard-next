@@ -46,6 +46,23 @@ export default function HomeClient({ initialData }: { initialData: any }) {
 
   // Latest Game and MVP
   const latestGame = sortedGames[0];
+
+  const lgStats = useMemo(() => {
+    if (!latestGame) return null;
+    return {
+      efgUs: parseNum(col(latestGame, 'team', 'efg')),
+      efgOpp: parseNum(col(latestGame, 'opp', 'efg')),
+      topUs: parseNum(col(latestGame, 'team', 'to%')),
+      topOpp: parseNum(col(latestGame, 'opp', 'to%')),
+      toUs: parseNum(col(latestGame, 'team', 'to')),
+      toOpp: parseNum(col(latestGame, 'opp', 'to')),
+      orUs: parseNum(col(latestGame, 'team', 'or')),
+      orOpp: parseNum(col(latestGame, 'opp', 'or')),
+      drUs: parseNum(col(latestGame, 'team', 'dr')),
+      drOpp: parseNum(col(latestGame, 'opp', 'dr')),
+    };
+  }, [latestGame]);
+
   const mvp = useMemo(() => {
     if (!latestGame || !players) return null;
     
@@ -164,6 +181,45 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                     <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--muted)' }}>{col(latestGame, '対戦相手') || 'OPP'}</div>
                   </div>
                 </div>
+
+                {/* Key Stats Comparison */}
+                {lgStats && (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '24px', padding: '16px 0', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    {/* eFG% */}
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--muted)', letterSpacing: '0.05em', marginBottom: '8px' }}>eFG%</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '14px', fontWeight: 600, color: lgStats.efgUs >= lgStats.efgOpp ? 'var(--accent2)' : 'var(--text)' }}>{formatNum(lgStats.efgUs, 1)}%</span>
+                        <span style={{ fontSize: '10px', color: 'var(--muted)' }}>vs</span>
+                        <span style={{ fontSize: '13px', color: lgStats.efgUs < lgStats.efgOpp ? 'var(--lose)' : 'var(--muted)' }}>{formatNum(lgStats.efgOpp, 1)}%</span>
+                      </div>
+                    </div>
+                    {/* TO */}
+                    <div style={{ textAlign: 'center', borderLeft: '1px solid rgba(255,255,255,0.05)', borderRight: '1px solid rgba(255,255,255,0.05)' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--muted)', letterSpacing: '0.05em', marginBottom: '8px' }}>TO% <span style={{ fontSize: '9px' }}>(数)</span></div>
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '14px', fontWeight: 600, color: lgStats.topUs <= lgStats.topOpp ? 'var(--accent2)' : 'var(--text)' }}>{formatNum(lgStats.topUs, 1)}% <span style={{ fontSize: '10px', fontWeight: 400 }}>({lgStats.toUs})</span></span>
+                        <span style={{ fontSize: '10px', color: 'var(--muted)' }}>vs</span>
+                        <span style={{ fontSize: '13px', color: lgStats.topUs > lgStats.topOpp ? 'var(--lose)' : 'var(--muted)' }}>{formatNum(lgStats.topOpp, 1)}% <span style={{ fontSize: '10px', fontWeight: 400 }}>({lgStats.toOpp})</span></span>
+                      </div>
+                    </div>
+                    {/* OR / DR */}
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--muted)', letterSpacing: '0.05em', marginBottom: '8px' }}>OR / DR</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: '1.3' }}>
+                          <span style={{ fontSize: '13px', fontWeight: 600, color: lgStats.orUs >= lgStats.orOpp ? 'var(--accent2)' : 'var(--text)' }}>O:{lgStats.orUs}</span>
+                          <span style={{ fontSize: '13px', fontWeight: 600, color: lgStats.drUs >= lgStats.drOpp ? 'var(--accent2)' : 'var(--text)' }}>D:{lgStats.drUs}</span>
+                        </div>
+                        <span style={{ fontSize: '10px', color: 'var(--muted)' }}>vs</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: '1.3' }}>
+                          <span style={{ fontSize: '12px', color: lgStats.orUs < lgStats.orOpp ? 'var(--lose)' : 'var(--muted)' }}>O:{lgStats.orOpp}</span>
+                          <span style={{ fontSize: '12px', color: lgStats.drUs < lgStats.drOpp ? 'var(--lose)' : 'var(--muted)' }}>D:{lgStats.drOpp}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <button 
                   onClick={() => handleNavigate('/report', latestGame.GameID)}
