@@ -47,7 +47,7 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
     const scale = (v: number) => Math.max(5, Math.round((v / offense) * drawH));
     const GAP = 4;
     const NW = 12;
-    const X = { off: 60, mid: 192, p2p3: 328, result: 464, total: 562, final: 642 };
+    const X = { off: 55, mid: 170, p2p3: 285, result: 400, total: 515, final: 675 };
 
     const hFGA = scale(fga), hTO = scale(to), hFT = scale(fta);
     const h2PA = scale(pa2), h3PA = scale(pa3);
