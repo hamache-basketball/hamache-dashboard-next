@@ -48,7 +48,7 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
               <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                 <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{p['背番号'] || '-'}</td>
                 <td 
-                  style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: '#4f8ef7', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap', cursor: 'pointer' }}
+                  style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--accent2)', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap', cursor: 'pointer' }}
                   onClick={() => {
                     const name = p['コートネーム'] || p['選手名'];
                     if (name) {
@@ -71,12 +71,12 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
                 <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.TO || '0'}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.STL || '0'}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.BLK || '0'}</td>
-                <td style={{ padding: '12px 16px', fontWeight: 700, color: pm > 0 ? 'var(--accent2)' : pm < 0 ? 'var(--lose)' : 'var(--muted)' }}>
+                <td style={{ padding: '12px 16px', fontWeight: 700, color: pm > 0 ? 'var(--accent)' : pm < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
                   {pm > 0 ? `+${pm}` : pm}
                 </td>
-                <td style={{ padding: '12px 16px', fontWeight: 700, color: '#f7a84f' }}>{formatNum(p.FP, 1)}</td>
-                <td style={{ padding: '12px 16px', fontWeight: 700, color: '#4f8ef7' }}>{formatNum(p.EFF, 0)}</td>
-                <td style={{ padding: '12px 16px', fontWeight: 700, color: '#f0d34f' }}>{formatNum(p.USG, 1)}%</td>
+                <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.FP, 1)}</td>
+                <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.EFF, 0)}</td>
+                <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.USG, 1)}%</td>
               </tr>
             );
           })}
