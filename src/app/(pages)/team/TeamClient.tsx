@@ -342,7 +342,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       comments.push({
         text: (
           <span>
-            最も勝敗に影響している指標は <strong style={{ color: 'var(--text)' }}>{statLabels[best.key]}</strong> です。基準値 ({formatNum(best.median)}%) を上回った試合の勝率は <strong style={{ color: 'var(--accent)' }}>{formatNum(best.aboveWinPct)}%</strong>、下回った試合は <strong style={{ color: 'var(--lose)' }}>{formatNum(best.belowWinPct)}%</strong> です。
+            最も勝敗に影響している指標は <strong style={{ color: 'var(--text)' }}>{statLabels[best.key]}</strong> です。基準値 ({formatNum(best.median)}%) を上回った試合の勝率は <strong style={{ color: 'var(--accent)' }}>{formatNum(best.aboveWinPct)}%</strong>、下回った試合は <strong style={{ color: 'var(--accent2)' }}>{formatNum(best.belowWinPct)}%</strong> です。
           </span>
         ),
         col: 'var(--accent2)'
@@ -396,7 +396,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       if (flat) return { icon: '→', text: `横ばい傾向 (直近5試合 avg ${allAvg.toFixed(1)}%)`, color: 'var(--muted)' };
       return improving
         ? { icon: '↑', text: `改善傾向 (直近5試合で${pct}%${higherBetter ? '上昇' : '低下'})`, color: 'var(--accent)' }
-        : { icon: '↓', text: `悪化傾向 (直近5試合で${pct}%${higherBetter ? '低下' : '上昇'})`, color: 'var(--lose)' };
+        : { icon: '↓', text: `悪化傾向 (直近5試合で${pct}%${higherBetter ? '低下' : '上昇'})`, color: 'var(--accent2)' };
     };
 
     return {
@@ -450,7 +450,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(teamStats.fgPct)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>相手 avg {formatNum(teamStats.oppFgPct)}%</div>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--lose)' }}>
+        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent2)' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>平均TO</div>
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(teamStats.toAvg)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>相手 avg {formatNum(teamStats.oppToAvg)}</div>
@@ -507,7 +507,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                   <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.efg)}%</td>
                   <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.ftp)}%</td>
                   <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.ppp, 2)}</td>
-                  <td style={{ padding: '12px 16px', fontWeight: 700, color: p.netRating > 0 ? 'var(--accent2)' : p.netRating < 0 ? 'var(--lose)' : 'var(--muted)' }}>
+                  <td style={{ padding: '12px 16px', fontWeight: 700, color: p.netRating > 0 ? 'var(--accent)' : p.netRating < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
                     {p.netRating > 0 ? '+' : ''}{formatNum(p.netRating)}
                   </td>
                   <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.fpAvg)}</td>
@@ -529,10 +529,10 @@ export default function TeamClient({ initialData }: { initialData: any }) {
         <div className="glass-panel" style={{ padding: '20px 20px 60px 20px', height: '300px', position: 'relative' }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
-              <div style={{ width: '12px', height: '12px', background: 'var(--accent2)', borderRadius: '2px' }}></div> チーム得点
+              <div style={{ width: '12px', height: '12px', background: 'var(--accent)', borderRadius: '2px' }}></div> チーム得点
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
-              <div style={{ width: '12px', height: '12px', background: 'rgba(240, 111, 111, 0.7)', borderRadius: '2px' }}></div> 失点
+              <div style={{ width: '12px', height: '12px', background: 'var(--accent2)', borderRadius: '2px' }}></div> 失点
             </div>
           </div>
           
@@ -554,8 +554,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                 
                 return (
                   <g key={i}>
-                    <rect x={xPct + barWidth*0.5} y={200 - ptsH} width={barWidth} height={ptsH} fill="var(--accent2)" rx="2" />
-                    <rect x={xPct + barWidth*1.7} y={200 - oppH} width={barWidth} height={oppH} fill="rgba(240, 111, 111, 0.7)" rx="2" />
+                    <rect x={xPct + barWidth*0.5} y={200 - ptsH} width={barWidth} height={ptsH} fill="var(--accent)" rx="2" />
+                    <rect x={xPct + barWidth*1.7} y={200 - oppH} width={barWidth} height={oppH} fill="var(--accent2)" rx="2" />
                   </g>
                 );
               })}
@@ -603,7 +603,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                       <div style={{ width: `${(valW / max) * 100}%`, height: '100%', background: 'var(--accent)', borderRadius: '3px' }}></div>
                     </div>
                     <div style={{ width: '40px', textAlign: 'right', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(valW)}%</div>
-                    <div style={{ width: '40px', textAlign: 'right', fontWeight: 700, color: diff > 0 ? 'var(--accent)' : diff < 0 ? 'var(--lose)' : 'var(--muted)' }}>
+                    <div style={{ width: '40px', textAlign: 'right', fontWeight: 700, color: diff > 0 ? 'var(--accent)' : diff < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
                       {diff > 0 ? '+' : ''}{formatNum(diff)}
                     </div>
                   </div>
@@ -611,9 +611,9 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     <div style={{ width: '40px' }}></div>
                     <div style={{ width: '20px' }}>敗</div>
                     <div style={{ flex: 1, height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', position: 'relative' }}>
-                      <div style={{ width: `${(valL / max) * 100}%`, height: '100%', background: 'rgba(240, 111, 111, 0.7)', borderRadius: '3px' }}></div>
+                      <div style={{ width: `${(valL / max) * 100}%`, height: '100%', background: 'var(--accent2)', borderRadius: '3px' }}></div>
                     </div>
-                    <div style={{ width: '40px', textAlign: 'right', fontWeight: 700, color: 'rgba(240, 111, 111, 0.7)' }}>{formatNum(valL)}%</div>
+                    <div style={{ width: '40px', textAlign: 'right', fontWeight: 700, color: 'var(--accent2)' }}>{formatNum(valL)}%</div>
                     <div style={{ width: '40px' }}></div>
                   </div>
                 </div>
@@ -645,9 +645,9 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     <div style={{ width: '60px' }}></div>
                     <div style={{ width: '20px' }}>敗</div>
                     <div style={{ flex: 1, height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', position: 'relative' }}>
-                      <div style={{ width: `${(valL / max) * 100}%`, height: '100%', background: 'rgba(240, 111, 111, 0.7)', borderRadius: '3px' }}></div>
+                      <div style={{ width: `${(valL / max) * 100}%`, height: '100%', background: 'var(--accent2)', borderRadius: '3px' }}></div>
                     </div>
-                    <div style={{ width: '40px', textAlign: 'right', fontWeight: 700, color: 'rgba(240, 111, 111, 0.7)' }}>{formatNum(valL, isPpp ? 2 : 1)}</div>
+                    <div style={{ width: '40px', textAlign: 'right', fontWeight: 700, color: 'var(--accent2)' }}>{formatNum(valL, isPpp ? 2 : 1)}</div>
                   </div>
                 </div>
               );
@@ -656,7 +656,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
             <div style={{ marginTop: '30px', fontSize: '12px', color: 'var(--muted)', textAlign: 'center' }}>
               勝利試合の平均得失点差: <span style={{ color: 'var(--accent)', fontWeight: 700 }}>+{formatNum(wlAnalysis.win.pts - wlAnalysis.win.oppPts)}</span> 
               <span style={{ margin: '0 10px' }}></span> 
-              敗戦: <span style={{ color: 'var(--lose)', fontWeight: 700 }}>{formatNum(wlAnalysis.loss.pts - wlAnalysis.loss.oppPts)}</span>
+              敗戦: <span style={{ color: 'var(--accent2)', fontWeight: 700 }}>{formatNum(wlAnalysis.loss.pts - wlAnalysis.loss.oppPts)}</span>
             </div>
           </div>
         </div>
@@ -671,8 +671,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                 <div key={b.key}>
                   <div style={{ fontSize: '11px', color: 'var(--muted)' }}>{statLabels[b.key]}</div>
                   <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '8px' }}>基準値: {formatNum(b.median)}%</div>
-                  <div style={{ fontSize: '12px', color: b.isGoodAbove ? 'var(--accent)' : 'var(--lose)' }}>上回った時の勝率 {formatNum(b.isGoodAbove ? b.goodWinPct : b.badWinPct)}%</div>
-                  <div style={{ fontSize: '12px', color: !b.isGoodAbove ? 'var(--accent)' : 'var(--lose)' }}>下回った時の勝率 {formatNum(!b.isGoodAbove ? b.goodWinPct : b.badWinPct)}%</div>
+                  <div style={{ fontSize: '12px', color: b.isGoodAbove ? 'var(--accent)' : 'var(--accent2)' }}>上回った時の勝率 {formatNum(b.isGoodAbove ? b.goodWinPct : b.badWinPct)}%</div>
+                  <div style={{ fontSize: '12px', color: !b.isGoodAbove ? 'var(--accent)' : 'var(--accent2)' }}>下回った時の勝率 {formatNum(!b.isGoodAbove ? b.goodWinPct : b.badWinPct)}%</div>
                 </div>
               ))}
             </div>
@@ -725,7 +725,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     ))}
                     
                     <path
-                      fill="none" stroke="var(--accent2)" strokeWidth="2"
+                      fill="none" stroke="var(--accent)" strokeWidth="2"
                       d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         const val = getGameFactor(g, 'team', k);
                         const max = k === 'efg' || k === 'or' ? 80 : 80; // Scale 0-80% for aesthetics
@@ -735,11 +735,11 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     {filteredGamesAsc.map((g: any, i: number) => {
                       const val = getGameFactor(g, 'team', k);
                       const max = 80;
-                      return <circle key={i} cx={(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000} cy={200 - (Math.min(val, max) / max) * 200} r="4" fill="var(--accent2)" />;
+                      return <circle key={i} cx={(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000} cy={200 - (Math.min(val, max) / max) * 200} r="4" fill="var(--accent)" />;
                     })}
 
                     <path
-                      fill="none" stroke="rgba(240, 111, 111, 0.7)" strokeWidth="2"
+                      fill="none" stroke="var(--accent2)" strokeWidth="2"
                       d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         const val = getGameFactor(g, 'opp', k);
                         const max = 80;
@@ -749,12 +749,12 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                     {filteredGamesAsc.map((g: any, i: number) => {
                       const val = getGameFactor(g, 'opp', k);
                       const max = 80;
-                      return <circle key={i} cx={(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000} cy={200 - (Math.min(val, max) / max) * 200} r="4" fill="rgba(240, 111, 111, 0.7)" />;
+                      return <circle key={i} cx={(i / Math.max(1, filteredGamesAsc.length - 1)) * 1000} cy={200 - (Math.min(val, max) / max) * 200} r="4" fill="var(--accent2)" />;
                     })}
 
                     {/* Trend line (5 game MA) */}
                     <path
-                      fill="none" stroke="var(--accent2)" strokeWidth="2" strokeDasharray="5,5"
+                      fill="none" stroke="var(--accent)" strokeWidth="2" strokeDasharray="5,5"
                       d={lineToCubicBezier(filteredGamesAsc.map((g: any, i: number) => {
                         let sum = 0; let count = 0;
                         for (let j = Math.max(0, i - 4); j <= i; j++) {
@@ -770,9 +770,9 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                   
                   {/* Legend overlay inside chart area */}
                   <div style={{ position: 'absolute', top: '-10px', left: '0', display: 'flex', gap: '16px', fontSize: '10px', color: 'var(--muted)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '2px', background: 'var(--accent2)' }}></div> 自チーム</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '2px', background: 'rgba(240, 111, 111, 0.7)' }}></div> 相手</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '2px', background: 'var(--accent2)', borderBottom: '2px dashed var(--accent2)' }}></div> トレンド</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '2px', background: 'var(--accent)' }}></div> 自チーム</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '2px', background: 'var(--accent2)' }}></div> 相手</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: '12px', height: '2px', background: 'var(--accent)', borderBottom: '2px dashed var(--accent)' }}></div> トレンド</div>
                   </div>
 
                   {/* Y Axis labels */}

@@ -288,7 +288,7 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
         </div>
         <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #38d9a9' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>+/- 平均</div>
-          <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px', color: selectedPlayerAverages.PM > 0 ? 'var(--accent2)' : selectedPlayerAverages.PM < 0 ? 'var(--lose)' : 'inherit' }}>
+          <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px', color: selectedPlayerAverages.PM > 0 ? 'var(--accent)' : selectedPlayerAverages.PM < 0 ? 'var(--accent2)' : 'inherit' }}>
             {selectedPlayerAverages.PM > 0 ? '+' : ''}{formatNum(selectedPlayerAverages.PM)}
           </div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>出場時得失点差</div>
@@ -338,7 +338,7 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
                   
                   <path
                     fill="none"
-                    stroke="#4f8ef7"
+                    stroke="var(--accent)"
                     strokeWidth="3"
                     d={lineToCubicBezier(trendData.map((d, i) => {
                       const maxPts = Math.max(...trendData.map((dd: any) => parseNum(dd.PTS)), 10);
@@ -354,7 +354,7 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
                     const y = 200 - (parseNum(d.PTS) / maxPts) * 200;
                     
                     return (
-                      <circle key={i} cx={x} cy={y} r="6" fill="#4f8ef7" stroke="var(--bg2)" strokeWidth="3" />
+                      <circle key={i} cx={x} cy={y} r="6" fill="var(--accent)" stroke="var(--bg2)" strokeWidth="3" />
                     );
                   })}
                 </svg>
@@ -430,8 +430,8 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
                   <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                     <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{col(p.gameObj, 'date')}</td>
                     <td style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif' }}>{col(p.gameObj, '対戦相手')}</td>
-                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                      <div style={{ display: 'inline-block', background: isWin ? 'rgba(56, 217, 169, 0.15)' : 'rgba(240, 111, 111, 0.15)', color: isWin ? 'var(--accent2)' : 'var(--lose)', border: `1px solid ${isWin ? 'var(--accent2)' : 'var(--lose)'}`, padding: '2px 8px', borderRadius: '12px', fontSize: '10px', fontWeight: 700 }}>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
+                      <div style={{ display: 'inline-block', background: isWin ? 'rgba(247, 224, 79, 0.15)' : 'rgba(181, 53, 246, 0.15)', color: isWin ? 'var(--accent)' : 'var(--accent2)', border: `1px solid ${isWin ? 'var(--accent)' : 'var(--accent2)'}`, padding: '2px 8px', borderRadius: '12px', fontSize: '10px', fontWeight: 700 }}>
                         {isWin ? 'WIN' : 'LOSE'}
                       </div>
                     </td>
@@ -447,7 +447,7 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
                     <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.STL || '0'}</td>
                     <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent2)' }}>{formatNum(p.EFF, 0)}</td>
                     <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.FP, 1)}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: p.PlusMinus > 0 ? 'var(--accent2)' : p.PlusMinus < 0 ? 'var(--lose)' : 'var(--muted)' }}>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: p.PlusMinus > 0 ? 'var(--accent)' : p.PlusMinus < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
                       {p.PlusMinus > 0 ? `+${p.PlusMinus}` : p.PlusMinus}
                     </td>
                   </tr>

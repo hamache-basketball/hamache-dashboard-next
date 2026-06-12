@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { parseNum, col } from '@/lib/stats-logic';
@@ -162,8 +162,8 @@ export default function LineupClient({ initialData }: { initialData: any }) {
                     display: 'flex', gap: '8px', alignItems: 'center', 
                     padding: '4px 16px', 
                     borderRadius: '16px',
-                    background: isPositive ? 'rgba(56, 217, 169, 0.15)' : isNegative ? 'rgba(240, 111, 111, 0.15)' : 'rgba(255,255,255,0.08)',
-                    color: isPositive ? 'var(--accent2)' : isNegative ? 'var(--lose)' : 'var(--muted)',
+                    background: isPositive ? 'rgba(247, 224, 79, 0.15)' : isNegative ? 'rgba(181, 53, 246, 0.15)' : 'rgba(255,255,255,0.08)',
+                    color: isPositive ? 'var(--accent)' : isNegative ? 'var(--accent2)' : 'var(--muted)',
                     marginLeft: 'auto'
                   }}>
                     <span style={{ fontSize: '12px' }}>得失点差</span>
