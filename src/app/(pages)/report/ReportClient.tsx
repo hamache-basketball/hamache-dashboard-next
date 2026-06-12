@@ -362,12 +362,12 @@ pm2: playerRows.reduce((a: number, r: any) => a + parseNum(r['2PM']), 0),
               const percent = Math.max(0, (p.FP / maxFp) * 100);
               return (
 
-<div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '80px', fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p['コートネーム']||p['選手名']}</div>
                   <div style={{ flex: 1, background: 'var(--bg3)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
-                    <div style={{ width: `${percent}%`, background: 'var(--accent3)', height: '100%', borderRadius: '6px', transition: 'width 1s ease-out' }} />
+                    <div style={{ width: `${percent}%`, background: i === 0 ? 'var(--accent)' : 'var(--accent2)', height: '100%', borderRadius: '6px', transition: 'width 1s ease-out' }} />
                   </div>
-                  <div style={{ width: '40px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)', color: 'var(--accent3)', fontWeight: 600 }}>{formatNum(p.FP, 1)}</div>
+                  <div style={{ width: '40px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)', color: i === 0 ? 'var(--accent)' : 'var(--accent2)', fontWeight: 600 }}>{formatNum(p.FP, 1)}</div>
                 </div>
               );
             })}

@@ -266,27 +266,27 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
 
       {/* 5 Summary Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #38d9a9' }}>
+        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent)' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>平均得点</div>
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(selectedPlayerAverages.PTS)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>チーム avg {formatNum(teamAverages.teamAvgPts)}</div>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #38d9a9' }}>
+        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent2)' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>EFG%</div>
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(selectedPlayerAverages.EFG)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>FT% {formatNum(selectedPlayerAverages.FTP)}%</div>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #f7a84f' }}>
+        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent)' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>USG%</div>
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(selectedPlayerAverages.USG)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>使用率</div>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #4f8ef7' }}>
+        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent2)' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>EFF</div>
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(selectedPlayerAverages.EFF)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>効率指標</div>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #38d9a9' }}>
+        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent)' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>+/- 平均</div>
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px', color: selectedPlayerAverages.PM > 0 ? 'var(--accent)' : selectedPlayerAverages.PM < 0 ? 'var(--accent2)' : 'inherit' }}>
             {selectedPlayerAverages.PM > 0 ? '+' : ''}{formatNum(selectedPlayerAverages.PM)}

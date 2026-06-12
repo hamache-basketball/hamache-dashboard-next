@@ -76,14 +76,16 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
 
     const labelR = (x: number, y: number, h: number, name: string, val: number, col: string) => {
       const cy = y + h / 2;
+      const textCol = col === 'var(--border)' ? 'var(--text)' : col;
       return `<text font-size="10" font-family="monospace" fill="#9098b0" x="${x+NW+6}" y="${cy-5}" dominant-baseline="central">${name}</text>`+
-             `<text font-size="12" font-weight="500" font-family="monospace" fill="${col}" x="${x+NW+6}" y="${cy+7}" dominant-baseline="central">${val}</text>`;
+             `<text font-size="12" font-weight="500" font-family="monospace" fill="${textCol}" x="${x+NW+6}" y="${cy+7}" dominant-baseline="central">${val}</text>`;
     };
 
     const labelL = (x: number, y: number, h: number, name: string, val: number, col: string) => {
       const cy = y + h / 2;
+      const textCol = col === 'var(--border)' ? 'var(--text)' : col;
       return `<text font-size="10" font-family="monospace" fill="#9098b0" x="${x-4}" text-anchor="end" y="${cy-5}" dominant-baseline="central">${name}</text>`+
-             `<text font-size="12" font-weight="500" font-family="monospace" fill="${col}" x="${x-4}" text-anchor="end" y="${cy+7}" dominant-baseline="central">${val}</text>`;
+             `<text font-size="12" font-weight="500" font-family="monospace" fill="${textCol}" x="${x-4}" text-anchor="end" y="${cy+7}" dominant-baseline="central">${val}</text>`;
     };
 
     const badge = (x: number, y: number, w: number, h: number, label: string, val: number, col: string, bgOpacity = 0.12) => 
