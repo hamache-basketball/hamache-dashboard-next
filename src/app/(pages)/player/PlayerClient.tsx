@@ -219,11 +219,11 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
   };
 
   const chartStats = [
-    { label: '得点', key: 'PTS', color: '#4f8ef7' },
-    { label: 'アシスト', key: 'AST', color: '#7f77dd' },
-    { label: 'リバウンド', key: 'REB', color: '#38d9a9' },
-    { label: 'スティール', key: 'STL', color: '#f7a84f' },
-    { label: 'ブロック', key: 'BLK', color: '#4f8ef7' },
+    { label: '得点', key: 'PTS', color: '#f7e04f' },
+    { label: 'アシスト', key: 'AST', color: '#b535f6' },
+    { label: 'リバウンド', key: 'REB', color: '#f7e04f' },
+    { label: 'スティール', key: 'STL', color: '#b535f6' },
+    { label: 'ブロック', key: 'BLK', color: '#f7e04f' },
   ];
 
   // Trend Chart Data
@@ -445,8 +445,8 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
                     <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.AST || '0'}</td>
                     <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.TO || '0'}</td>
                     <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.STL || '0'}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: '#4f8ef7' }}>{formatNum(p.EFF, 0)}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: '#f7a84f' }}>{formatNum(p.FP, 1)}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent2)' }}>{formatNum(p.EFF, 0)}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.FP, 1)}</td>
                     <td style={{ padding: '12px 16px', fontWeight: 700, color: p.PlusMinus > 0 ? 'var(--accent2)' : p.PlusMinus < 0 ? 'var(--lose)' : 'var(--muted)' }}>
                       {p.PlusMinus > 0 ? `+${p.PlusMinus}` : p.PlusMinus}
                     </td>

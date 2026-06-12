@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { calcFP, parseNum, formatNum, col } from '@/lib/stats-logic';
 import { useGlobalState } from '@/lib/GlobalStateProvider';
+import { Shield, Swords, User, TrendingUp, ClipboardList, Users, Building, Dribbble } from 'lucide-react';
 
 export default function HomeClient({ initialData }: { initialData: any }) {
   const { games, players } = initialData;
@@ -96,8 +97,8 @@ export default function HomeClient({ initialData }: { initialData: any }) {
       {/* Header Area */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(0,240,255,0.1)', border: '1px solid var(--neon-cyan)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--neon-cyan)', fontSize: '20px', filter: 'drop-shadow(0 0 5px rgba(0,240,255,0.5))' }}>
-            🏀
+          <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(247, 224, 79,0.1)', border: '1px solid var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', filter: 'drop-shadow(0 0 5px rgba(247, 224, 79,0.5))' }}>
+            <Dribbble size={24} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '0.1em' }}>
@@ -122,12 +123,12 @@ export default function HomeClient({ initialData }: { initialData: any }) {
             <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Season Record</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', marginBottom: '16px', flexWrap: 'wrap' }}>
-                <span className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-cyan)', textShadow: '0 0 24px rgba(0,240,255,0.5)', lineHeight: 1 }}>
+                <span className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)', textShadow: '0 0 24px rgba(247, 224, 79,0.5)', lineHeight: 1 }}>
                   {seasonSummary.wins}
                 </span>
                 <span style={{ fontSize: '18px', color: 'var(--muted)' }}>WINS</span>
                 <span style={{ fontSize: '40px', color: 'var(--border2)' }}>|</span>
-                <span className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1 }}>
+                <span className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent2)', textShadow: '0 0 24px rgba(181, 53, 246,0.5)', lineHeight: 1 }}>
                   {seasonSummary.losses}
                 </span>
                 <span style={{ fontSize: '18px', color: 'var(--muted)' }}>LOSSES</span>
@@ -140,7 +141,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
             {/* Team PPP */}
             <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>Team PPP</div>
-              <div className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 24px rgba(255,123,0,0.5)', lineHeight: 1, marginBottom: '16px' }}>
+              <div className="mobile-text-huge" style={{ fontSize: '80px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent2)', textShadow: '0 0 24px rgba(181, 53, 246,0.5)', lineHeight: 1, marginBottom: '16px' }}>
                 {formatNum(seasonSummary.ppp, 2)}
               </div>
               <div style={{ fontSize: '13px', color: 'var(--muted)' }}>POINTS PER POSSESSION</div>
@@ -163,7 +164,9 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flex: 1, marginBottom: '24px' }}>
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '24px' }}>🛡️</div>
+                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: 'var(--accent)' }}>
+                      <Shield size={24} />
+                    </div>
                     <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)' }}>HAMACHE</div>
                   </div>
                   
@@ -177,7 +180,9 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                   </div>
 
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '24px' }}>⚔️</div>
+                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: 'var(--accent2)' }}>
+                      <Swords size={24} />
+                    </div>
                     <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--muted)' }}>{col(latestGame, '対戦相手') || 'OPP'}</div>
                   </div>
                 </div>
@@ -223,9 +228,9 @@ export default function HomeClient({ initialData }: { initialData: any }) {
 
                 <button 
                   onClick={() => handleNavigate('/report', latestGame.GameID)}
-                  style={{ background: 'rgba(0, 240, 255, 0.1)', color: 'var(--neon-cyan)', border: '1px solid var(--neon-cyan)', padding: '12px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--mono)', letterSpacing: '0.05em', transition: 'all 0.2s', width: '100%' }}
-                  onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(0, 240, 255, 0.2)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 240, 255, 0.3)'; }}
-                  onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(0, 240, 255, 0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  style={{ background: 'rgba(247, 224, 79, 0.1)', color: 'var(--accent)', border: '1px solid var(--accent)', padding: '12px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--mono)', letterSpacing: '0.05em', transition: 'all 0.2s', width: '100%' }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(247, 224, 79, 0.2)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(247, 224, 79, 0.3)'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(247, 224, 79, 0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
                 >
                   VIEW GAME REPORT →
                 </button>
@@ -237,11 +242,11 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                   <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '24px' }}>MVP STATS（FPランキング）</div>
                   
                   <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '32px' }}>
-                    <div style={{ width: '80px', height: '80px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px' }}>
-                      👤
+                    <div style={{ width: '80px', height: '80px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
+                      <User size={40} />
                     </div>
                     <div>
-                      <div style={{ fontSize: '12px', color: 'var(--neon-cyan)', fontWeight: 600, marginBottom: '6px', letterSpacing: '0.05em', textShadow: '0 0 8px rgba(0,240,255,0.3)' }}>PLAYER OF THE GAME</div>
+                      <div style={{ fontSize: '12px', color: 'var(--accent)', fontWeight: 600, marginBottom: '6px', letterSpacing: '0.05em', textShadow: '0 0 8px rgba(247, 224, 79,0.3)' }}>PLAYER OF THE GAME</div>
                       <div style={{ fontSize: '24px', fontWeight: 700 }}>#{(mvp._rawRow && mvp._rawRow[3]) || mvp['背番号'] || '-'} {mvp['コートネーム'] || mvp['選手名']}</div>
                     </div>
                   </div>
@@ -260,8 +265,8 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                       <div style={{ fontSize: '11px', color: 'var(--muted)' }}>AST</div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--neon-orange)', textShadow: '0 0 10px rgba(255,123,0,0.3)' }}>{formatNum(mvp.FP, 1)}</div>
-                      <div style={{ fontSize: '11px', color: 'var(--neon-orange)' }}>FP</div>
+                      <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent2)', textShadow: '0 0 10px rgba(181, 53, 246,0.3)' }}>{formatNum(mvp.FP, 1)}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--accent2)' }}>FP</div>
                     </div>
                   </div>
 
@@ -283,61 +288,71 @@ export default function HomeClient({ initialData }: { initialData: any }) {
             <div 
               onClick={() => handleNavigate('/report')}
               className="animated-card"
-              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(0, 240, 255, 0.05)', border: '1px solid var(--neon-cyan)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(0, 240, 255, 0.05), 0 0 10px rgba(0, 240, 255, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(247, 224, 79, 0.05)', border: '1px solid var(--accent)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(247, 224, 79, 0.05), 0 0 10px rgba(247, 224, 79, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
               <div>
                 <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>GAME REPORT</div>
                 <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Visual momentum & flows</div>
               </div>
-              <div style={{ fontSize: '28px', color: 'var(--neon-cyan)', filter: 'drop-shadow(0 0 8px rgba(0,240,255,0.6))' }}>📈</div>
+              <div style={{ color: 'var(--accent)', filter: 'drop-shadow(0 0 8px rgba(247, 224, 79,0.6))' }}>
+                <TrendingUp size={28} />
+              </div>
             </div>
 
             <div 
               onClick={() => handleNavigate('/game')}
               className="animated-card"
-              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(255, 123, 0, 0.05)', border: '1px solid var(--neon-orange)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(255, 123, 0, 0.05), 0 0 10px rgba(255, 123, 0, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(181, 53, 246, 0.05)', border: '1px solid var(--accent2)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(181, 53, 246, 0.05), 0 0 10px rgba(181, 53, 246, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
               <div>
                 <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>BOX SCORE</div>
                 <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Game stats & advanced metrics</div>
               </div>
-              <div style={{ fontSize: '28px', color: 'var(--neon-orange)', filter: 'drop-shadow(0 0 8px rgba(255,123,0,0.6))' }}>📋</div>
+              <div style={{ color: 'var(--accent2)', filter: 'drop-shadow(0 0 8px rgba(181, 53, 246,0.6))' }}>
+                <ClipboardList size={28} />
+              </div>
             </div>
 
             <div 
               onClick={() => handleNavigate('/player')}
               className="animated-card"
-              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(0, 240, 255, 0.05)', border: '1px solid var(--neon-cyan)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(0, 240, 255, 0.05), 0 0 10px rgba(0, 240, 255, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(247, 224, 79, 0.05)', border: '1px solid var(--accent)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(247, 224, 79, 0.05), 0 0 10px rgba(247, 224, 79, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
               <div>
                 <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>PLAYER STATS</div>
                 <div style={{ fontSize: '12px', color: 'var(--muted)' }}>Individual season averages</div>
               </div>
-              <div style={{ fontSize: '28px', color: 'var(--neon-cyan)', filter: 'drop-shadow(0 0 8px rgba(0,240,255,0.6))' }}>👤</div>
+              <div style={{ color: 'var(--accent)', filter: 'drop-shadow(0 0 8px rgba(247, 224, 79,0.6))' }}>
+                <User size={28} />
+              </div>
             </div>
 
             <div 
               onClick={() => handleNavigate('/lineup')}
               className="animated-card"
-              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(181, 53, 246, 0.05)', border: '1px solid var(--neon-purple)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(181, 53, 246, 0.05), 0 0 10px rgba(181, 53, 246, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(181, 53, 246, 0.05)', border: '1px solid var(--accent2)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(181, 53, 246, 0.05), 0 0 10px rgba(181, 53, 246, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
               <div>
                 <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>LINEUPS</div>
                 <div style={{ fontSize: '12px', color: 'var(--muted)' }}>5-man combinations & +/-</div>
               </div>
-              <div style={{ fontSize: '28px', color: 'var(--neon-purple)', filter: 'drop-shadow(0 0 8px rgba(181,53,246,0.6))' }}>👥</div>
+              <div style={{ color: 'var(--accent2)', filter: 'drop-shadow(0 0 8px rgba(181, 53, 246,0.6))' }}>
+                <Users size={28} />
+              </div>
             </div>
 
             <div 
               onClick={() => handleNavigate('/team')}
               className="animated-card"
-              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(0, 230, 118, 0.05)', border: '1px solid var(--neon-green)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(0, 230, 118, 0.05), 0 0 10px rgba(0, 230, 118, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              style={{ padding: '24px', cursor: 'pointer', background: 'rgba(247, 224, 79, 0.05)', border: '1px solid var(--accent)', borderRadius: '12px', boxShadow: 'inset 0 0 20px rgba(247, 224, 79, 0.05), 0 0 10px rgba(247, 224, 79, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
               <div>
                 <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px', letterSpacing: '0.05em' }}>TEAM OVERALL</div>
                 <div style={{ fontSize: '12px', color: 'var(--muted)' }}>4 factors & W/L analysis</div>
               </div>
-              <div style={{ fontSize: '28px', color: 'var(--neon-green)', filter: 'drop-shadow(0 0 8px rgba(0,230,118,0.6))' }}>🏢</div>
+              <div style={{ color: 'var(--accent)', filter: 'drop-shadow(0 0 8px rgba(247, 224, 79,0.6))' }}>
+                <Building size={28} />
+              </div>
             </div>
 
           </div>

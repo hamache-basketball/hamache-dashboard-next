@@ -8,7 +8,7 @@
   
   --border: rgba(255, 255, 255, 0.08);
   --border2: rgba(255, 255, 255, 0.15);
-  --border-glow: rgba(0, 240, 255, 0.3);
+  --border-glow: rgba(247, 224, 79, 0.3);
   
   --text: #f0f2f8;
   --muted: #8b96ab;
@@ -19,16 +19,17 @@
   --neon-purple: #b535f6;
   --neon-green: #00e676;
   --neon-blue: #0070f3;
+  --neon-yellow: #f7e04f;
   
   /* Legacy mapping */
-  --accent: var(--neon-cyan);
-  --accent-hover: #00c3cc;
-  --accent2: var(--neon-green);
+  --accent: var(--neon-yellow);
+  --accent-hover: #e5c924;
+  --accent2: var(--neon-purple);
   --accent3: var(--neon-orange);
   --yellow: #f7e04f;
   --danger: #ff3366;
-  --win: var(--neon-cyan);
-  --lose: var(--neon-orange);
+  --win: var(--neon-yellow);
+  --lose: var(--neon-purple);
   
   --mono: 'Oswald', sans-serif;
   --sans: 'Inter', sans-serif;
@@ -52,8 +53,8 @@ body {
   font-family: var(--sans);
   background-color: var(--bg);
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.04), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(255, 123, 0, 0.04), transparent 25%);
+    radial-gradient(circle at 15% 50%, rgba(247, 224, 79, 0.04), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(181, 53, 246, 0.04), transparent 25%);
   color: var(--text);
   min-height: 100vh;
   font-size: 14px;
