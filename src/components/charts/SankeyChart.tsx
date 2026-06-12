@@ -31,13 +31,13 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
     }
 
     const C = {
-      flow:  '#4f8ef7',
-      made:  '#38d9a9',
-      miss:  '#f06f6f',
-      ft:    '#f7a84f',
-      orb:   '#7f77dd',
-      to:    '#f06f6f',
-      dr:    '#7a8099',
+      flow:  'var(--border)',
+      made:  'var(--accent)',
+      miss:  'var(--accent2)',
+      ft:    'var(--accent)',
+      orb:   'var(--accent)',
+      to:    'var(--accent2)',
+      dr:    'var(--muted)',
     };
 
     const minH = 320, maxH = 520;
@@ -93,7 +93,7 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
 
     let s = `<svg width="100%" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
 
-    const legend = [['シュートフロー','#4f8ef7'],['成功（得点）','#38d9a9'],['失敗・ミス','#f06f6f'],['FT','#f7a84f'],['OReb','#7f77dd']];
+    const legend = [['シュートフロー','var(--border)'],['成功','var(--accent)'],['失敗・ミス','var(--accent2)'],['FT','var(--accent)'],['OReb','var(--accent)']];
     let lx = 20;
     legend.forEach(([lbl, col]) => {
       s += `<rect x="${lx}" y="6" width="8" height="8" rx="2" fill="${col}"/>`;

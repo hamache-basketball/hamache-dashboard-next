@@ -8,10 +8,10 @@ interface FourFactorsCardsProps {
 }
 
 const factors = [
-  { key: 'eFG%', index: 0, higherIsBetter: true, color: '#38d9a9', oppColor: '#f06f6f' },
-  { key: 'TO%', index: 1, higherIsBetter: false, color: '#f06f6f', oppColor: '#4f8ef7' },
-  { key: 'OR%', index: 2, higherIsBetter: true, color: '#f7a84f', oppColor: '#f06f6f' },
-  { key: 'FTR', index: 3, higherIsBetter: true, color: '#4f8ef7', oppColor: '#f06f6f' },
+  { key: 'eFG%', index: 0, higherIsBetter: true, color: 'var(--accent)', oppColor: 'var(--accent2)' },
+  { key: 'TO%', index: 1, higherIsBetter: false, color: 'var(--accent)', oppColor: 'var(--accent2)' },
+  { key: 'OR%', index: 2, higherIsBetter: true, color: 'var(--accent)', oppColor: 'var(--accent2)' },
+  { key: 'FTR', index: 3, higherIsBetter: true, color: 'var(--accent)', oppColor: 'var(--accent2)' },
 ];
 
 export default function FourFactorsCards({ ourData, oppData }: FourFactorsCardsProps) {
@@ -26,8 +26,8 @@ export default function FourFactorsCards({ ourData, oppData }: FourFactorsCardsP
         
         let diffColor = 'var(--muted)';
         let diffArrow = '';
-        if (isBetter) diffColor = '#38d9a9'; // Greenish
-        else if (isWorse) diffColor = '#f06f6f'; // Redish
+        if (isBetter) diffColor = 'var(--accent)'; // Greenish
+        else if (isWorse) diffColor = 'var(--accent2)'; // Redish
         
         if (diff > 0) diffArrow = '▲';
         if (diff < 0) diffArrow = '▼';

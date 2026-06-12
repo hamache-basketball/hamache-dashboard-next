@@ -14,21 +14,21 @@ export default function RadarChart({ ourData, oppData }: RadarChartProps) {
     labels: ['eFG%', 'TO% (Rev)', 'OR%', 'FTR'],
     datasets: [
       {
-        label: '浜っち',
+        label: 'チーム',
         data: ourData,
-        backgroundColor: 'rgba(79, 142, 247, 0.2)',
-        borderColor: '#4f8ef7',
+        backgroundColor: 'rgba(247, 224, 79, 0.2)',
+        borderColor: 'var(--accent)',
         borderWidth: 2,
-        pointBackgroundColor: '#4f8ef7',
+        pointBackgroundColor: 'var(--accent)',
         pointBorderColor: '#fff',
       },
       {
         label: '相手',
         data: oppData,
-        backgroundColor: 'rgba(240, 111, 111, 0.2)',
-        borderColor: '#f06f6f',
+        backgroundColor: 'rgba(181, 53, 246, 0.2)',
+        borderColor: 'var(--accent2)',
         borderWidth: 2,
-        pointBackgroundColor: '#f06f6f',
+        pointBackgroundColor: 'var(--accent2)',
         pointBorderColor: '#fff',
       }
     ]

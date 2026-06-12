@@ -16,7 +16,7 @@ export default function QuarterScoreChart({ data }: QuarterScoreChartProps) {
           <div key={d.q} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '40px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '120px' }}>
               <div style={{ width: '14px', height: `${(d.us / maxScore) * 100}%`, background: 'var(--accent)', borderRadius: '3px 3px 0 0', transition: 'height 1s ease' }} />
-              <div style={{ width: '14px', height: `${(d.opp / maxScore) * 100}%`, background: 'var(--lose)', borderRadius: '3px 3px 0 0', transition: 'height 1s ease' }} />
+              <div style={{ width: '14px', height: `${(d.opp / maxScore) * 100}%`, background: 'var(--accent2)', borderRadius: '3px 3px 0 0', transition: 'height 1s ease' }} />
             </div>
           </div>
         ))}
@@ -29,7 +29,7 @@ export default function QuarterScoreChart({ data }: QuarterScoreChartProps) {
             <div style={{ fontSize: '15px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
               <span style={{ color: 'var(--accent)' }}>{d.us}</span>
               <span style={{ margin: '0 4px', color: 'var(--muted)' }}>-</span>
-              <span style={{ color: 'var(--lose)' }}>{d.opp}</span>
+              <span style={{ color: 'var(--accent2)' }}>{d.opp}</span>
             </div>
           </div>
         ))}
@@ -41,7 +41,7 @@ export default function QuarterScoreChart({ data }: QuarterScoreChartProps) {
           自チーム
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--lose)' }} />
+          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent2)' }} />
           相手
         </div>
       </div>

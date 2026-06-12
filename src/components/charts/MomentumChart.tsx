@@ -31,20 +31,20 @@ export default function MomentumChart({ labels, dataDiff }: MomentumChartProps) 
           const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
           
           if (zeroRatio <= 0) {
-            gradient.addColorStop(0, 'rgba(0, 230, 118, 0.05)');
-            gradient.addColorStop(1, 'rgba(0, 230, 118, 0.5)');
+            gradient.addColorStop(0, 'rgba(247, 224, 79, 0.05)');
+            gradient.addColorStop(1, 'rgba(247, 224, 79, 0.5)');
             return gradient;
           }
           if (zeroRatio >= 1) {
-            gradient.addColorStop(0, 'rgba(255, 60, 60, 0.5)');
-            gradient.addColorStop(1, 'rgba(255, 60, 60, 0.05)');
+            gradient.addColorStop(0, 'rgba(181, 53, 246, 0.5)');
+            gradient.addColorStop(1, 'rgba(181, 53, 246, 0.05)');
             return gradient;
           }
 
-          gradient.addColorStop(0, 'rgba(255, 60, 60, 0.5)');
-          gradient.addColorStop(zeroRatio, 'rgba(255, 60, 60, 0.05)');
-          gradient.addColorStop(zeroRatio, 'rgba(0, 230, 118, 0.05)');
-          gradient.addColorStop(1, 'rgba(0, 230, 118, 0.5)');
+          gradient.addColorStop(0, 'rgba(181, 53, 246, 0.5)');
+          gradient.addColorStop(zeroRatio, 'rgba(181, 53, 246, 0.05)');
+          gradient.addColorStop(zeroRatio, 'rgba(247, 224, 79, 0.05)');
+          gradient.addColorStop(1, 'rgba(247, 224, 79, 0.5)');
           
           return gradient;
         },
@@ -61,13 +61,13 @@ export default function MomentumChart({ labels, dataDiff }: MomentumChartProps) 
           
           const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
           
-          if (zeroRatio <= 0) return 'rgba(0, 230, 118, 1)';
-          if (zeroRatio >= 1) return 'rgba(255, 60, 60, 1)';
+          if (zeroRatio <= 0) return 'rgba(247, 224, 79, 1)';
+          if (zeroRatio >= 1) return 'rgba(181, 53, 246, 1)';
 
-          gradient.addColorStop(0, 'rgba(255, 60, 60, 1)');
-          gradient.addColorStop(zeroRatio, 'rgba(255, 60, 60, 1)');
-          gradient.addColorStop(zeroRatio, 'rgba(0, 230, 118, 1)');
-          gradient.addColorStop(1, 'rgba(0, 230, 118, 1)');
+          gradient.addColorStop(0, 'rgba(181, 53, 246, 1)');
+          gradient.addColorStop(zeroRatio, 'rgba(181, 53, 246, 1)');
+          gradient.addColorStop(zeroRatio, 'rgba(247, 224, 79, 1)');
+          gradient.addColorStop(1, 'rgba(247, 224, 79, 1)');
           
           return gradient;
         },
@@ -76,7 +76,7 @@ export default function MomentumChart({ labels, dataDiff }: MomentumChartProps) 
         pointRadius: 4,
         pointBackgroundColor: (context: any) => {
           const val = context.raw;
-          return val < 0 ? 'rgba(255, 60, 60, 1)' : 'rgba(0, 230, 118, 1)';
+          return val < 0 ? 'rgba(181, 53, 246, 1)' : 'rgba(247, 224, 79, 1)';
         },
         pointBorderColor: '#fff',
         pointBorderWidth: 1,
