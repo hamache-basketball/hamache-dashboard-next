@@ -391,7 +391,7 @@ pm2: playerRows.reduce((a: number, r: any) => a + parseNum(r['2PM']), 0),
           <div style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>貢献度マップ B (EFF × USG%)</div>
           <div style={{ fontSize: '10px', color: 'var(--muted)', marginBottom: '16px' }}>右上ほど攻撃を引き受け、かつ正確にプレー</div>
           <div style={{ height: '220px' }}>
-            <ScatterChart points={scatterEFF} xLabel="USG%" yLabel="EFF" color="#4f8ef7" />
+            <ScatterChart points={scatterEFF} xLabel="USG%" yLabel="EFF" />
           </div>
         </div>
       </div>

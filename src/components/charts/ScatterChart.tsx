@@ -25,7 +25,7 @@ export default function ScatterChart({ points, xLabel, yLabel, color = 'var(--ac
       {
         label: '選手',
         data: points,
-        backgroundColor: color + '99', 
+        backgroundColor: color.startsWith('#') ? color + '99' : color, 
         borderColor: color,
         borderWidth: 1,
         pointRadius: (context: any) => context.raw?.r || 4,
