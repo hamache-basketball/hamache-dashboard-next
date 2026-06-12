@@ -161,7 +161,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
 
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '24px' }}>⚔️</div>
-                    <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--muted)' }}>OPP</div>
+                    <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--muted)' }}>{col(latestGame, '対戦相手') || 'OPP'}</div>
                   </div>
                 </div>
 

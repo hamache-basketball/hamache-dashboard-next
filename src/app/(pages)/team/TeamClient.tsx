@@ -72,8 +72,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       .filter((g: any) => {
         const c = col(g, 'カテゴリー') || (g._rawRow && g._rawRow[34]) || g['_col_34'];
         return selectedCategory === '全カテゴリー' || (c && c.trim() === selectedCategory);
-      })
-      .sort((a: any, b: any) => new Date(col(a, 'date')).getTime() - new Date(col(b, 'date')).getTime());
+      });
   }, [games, selectedCategory]);
 
   const filteredGamesDesc = useMemo(() => [...filteredGamesAsc].reverse(), [filteredGamesAsc]);

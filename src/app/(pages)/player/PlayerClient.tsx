@@ -200,11 +200,11 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
     return filteredPlayerGames
       .filter(p => (p['コートネーム'] || p['選手名']) === selectedPlayerName && parseNum(p.MIN) > 0)
       .sort((a, b) => {
-        const dateA = new Date(col(a.gameObj, 'date')).getTime();
-        const dateB = new Date(col(b.gameObj, 'date')).getTime();
-        return dateB - dateA;
+        const idxA = games.findIndex((g: any) => g.GameID === a.gameObj.GameID);
+        const idxB = games.findIndex((g: any) => g.GameID === b.gameObj.GameID);
+        return idxB - idxA;
       });
-  }, [filteredPlayerGames, selectedPlayerName]);
+  }, [filteredPlayerGames, selectedPlayerName, games]);
 
   // Rankings
   const getRank = (statKey: string) => {
