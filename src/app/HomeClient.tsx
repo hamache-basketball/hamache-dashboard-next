@@ -266,7 +266,7 @@ export default function HomeClient({ initialData }: { initialData: any }) {
                   </div>
 
                   <div style={{ marginTop: 'auto', fontSize: '10px', color: 'rgba(255,255,255,0.4)', lineHeight: '1.5' }}>
-                    ※ <strong>FP (Fantasy Points)</strong> : PTS + REB×1.2 + AST×1.5 + STL×3.0 + BLK×3.0 - TO で算出される、試合への総合的な貢献度を表す指標です。
+                    ※ <strong>FP (Fantasy Points)</strong> : PTS + REB×1.2 + AST×1.5 + STL×3.0 + BLK×3.0 - TO で算出される、NBAでも採用されている選手の総合的な貢献度を表す指標です。
                   </div>
                 </div>
               )}
