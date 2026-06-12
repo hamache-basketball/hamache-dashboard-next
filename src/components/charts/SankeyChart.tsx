@@ -31,7 +31,7 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
     }
 
     const C = {
-      flow:  'var(--border)',
+      flow:  '#8b96ab',
       made:  'var(--accent)',
       miss:  'var(--accent2)',
       ft:    'var(--accent)',
@@ -95,7 +95,7 @@ export default function SankeyChart({ pa2, pm2, pa3, pm3, fta, ftm, to, orb }: S
 
     let s = `<svg width="100%" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
 
-    const legend = [['シュートフロー','var(--border)'],['成功','var(--accent)'],['失敗・ミス','var(--accent2)'],['FT','var(--accent)'],['OReb','var(--accent)']];
+    const legend = [['シュートフロー','#8b96ab'],['成功','var(--accent)'],['失敗・ミス','var(--accent2)'],['FT','var(--accent)'],['OReb','var(--accent)']];
     let lx = 20;
     legend.forEach(([lbl, col]) => {
       s += `<rect x="${lx}" y="6" width="8" height="8" rx="2" fill="${col}"/>`;
