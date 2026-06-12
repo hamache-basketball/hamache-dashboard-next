@@ -19,7 +19,7 @@ interface ScatterChartProps {
   color?: string;
 }
 
-export default function ScatterChart({ points, xLabel, yLabel, color = 'var(--accent)' }: ScatterChartProps) {
+export default function ScatterChart({ points, xLabel, yLabel, color = '#f7e04f' }: ScatterChartProps) {
   const data = {
     datasets: [
       {

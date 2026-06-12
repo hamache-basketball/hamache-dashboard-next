@@ -17,18 +17,18 @@ export default function RadarChart({ ourData, oppData }: RadarChartProps) {
         label: 'チーム',
         data: ourData,
         backgroundColor: 'rgba(247, 224, 79, 0.2)',
-        borderColor: 'var(--accent)',
+        borderColor: '#f7e04f',
         borderWidth: 2,
-        pointBackgroundColor: 'var(--accent)',
+        pointBackgroundColor: '#f7e04f',
         pointBorderColor: '#fff',
       },
       {
         label: '相手',
         data: oppData,
         backgroundColor: 'rgba(181, 53, 246, 0.2)',
-        borderColor: 'var(--accent2)',
+        borderColor: '#b535f6',
         borderWidth: 2,
-        pointBackgroundColor: 'var(--accent2)',
+        pointBackgroundColor: '#b535f6',
         pointBorderColor: '#fff',
       }
     ]
