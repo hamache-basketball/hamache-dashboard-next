@@ -488,34 +488,59 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                 <th style={{ padding: '12px 16px' }}>USG%</th>
               </tr>
             </thead>
-            <tbody>
-              {playerRankings.map((p, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <td style={{ padding: '12px 16px', textAlign: 'left' }}>{i + 1}</td>
-                  <td 
-                    style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--accent2)', fontWeight: 600, fontFamily: '"Inter", sans-serif', cursor: 'pointer' }}
-                    onClick={() => { setGlobalPlayerName(p.name); router.push('/player'); }}
-                  >
-                    #{p.jersey} <span style={{ textDecoration: 'underline' }}>{p.name}</span>
-                  </td>
-                  <td style={{ padding: '12px 16px', textAlign: 'center' }}>{p.games}</td>
-                  <td style={{ padding: '12px 16px', color: 'var(--text)' }}>
-                    <span style={{ fontWeight: 700 }}>{formatNum(p.ptsAvg)}</span>
-                    <span style={{ fontSize: '11px', color: 'var(--muted)', marginLeft: '6px' }}>/ {p.ptsTotal}</span>
-                  </td>
-                  <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.fgPct)}%</td>
-                  <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.efg)}%</td>
-                  <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.ftp)}%</td>
-                  <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{formatNum(p.ppp, 2)}</td>
-                  <td style={{ padding: '12px 16px', fontWeight: 700, color: p.netRating > 0 ? 'var(--accent)' : p.netRating < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
-                    {p.netRating > 0 ? '+' : ''}{formatNum(p.netRating)}
-                  </td>
-                  <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.fpAvg)}</td>
-                  <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent2)' }}>{formatNum(p.effAvg)}</td>
-                  <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.usg)}%</td>
-                </tr>
-              ))}
-            </tbody>
+            {(() => {
+              const count = playerRankings.length || 1;
+              const avg = {
+                ptsAvg: playerRankings.reduce((s, p) => s + p.ptsAvg, 0) / count,
+                fgPct: playerRankings.reduce((s, p) => s + p.fgPct, 0) / count,
+                efg: playerRankings.reduce((s, p) => s + p.efg, 0) / count,
+                ftp: playerRankings.reduce((s, p) => s + p.ftp, 0) / count,
+                ppp: playerRankings.reduce((s, p) => s + p.ppp, 0) / count,
+                fpAvg: playerRankings.reduce((s, p) => s + p.fpAvg, 0) / count,
+                effAvg: playerRankings.reduce((s, p) => s + p.effAvg, 0) / count,
+                usg: playerRankings.reduce((s, p) => s + p.usg, 0) / count,
+              };
+
+              const getCol = (val: number, avgVal: number, reverse = false) => {
+                if (Math.abs(val - avgVal) < 0.1) return 'var(--text)';
+                if (!reverse) {
+                  return val > avgVal ? 'var(--accent)' : 'var(--muted)';
+                } else {
+                  return val < avgVal ? 'var(--accent)' : 'var(--muted)';
+                }
+              };
+
+              return (
+                <tbody>
+                  {playerRankings.map((p, i) => (
+                    <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                      <td style={{ padding: '12px 16px', textAlign: 'left' }}>{i + 1}</td>
+                      <td 
+                        style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--accent2)', fontWeight: 600, fontFamily: '"Inter", sans-serif', cursor: 'pointer' }}
+                        onClick={() => { setGlobalPlayerName(p.name); router.push('/player'); }}
+                      >
+                        #{p.jersey} <span style={{ textDecoration: 'underline' }}>{p.name}</span>
+                      </td>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>{p.games}</td>
+                      <td style={{ padding: '12px 16px', color: getCol(p.ptsAvg, avg.ptsAvg) }}>
+                        <span style={{ fontWeight: 700 }}>{formatNum(p.ptsAvg)}</span>
+                        <span style={{ fontSize: '11px', color: 'var(--muted)', marginLeft: '6px' }}>/ {p.ptsTotal}</span>
+                      </td>
+                      <td style={{ padding: '12px 16px', color: getCol(p.fgPct, avg.fgPct) }}>{formatNum(p.fgPct)}%</td>
+                      <td style={{ padding: '12px 16px', color: getCol(p.efg, avg.efg) }}>{formatNum(p.efg)}%</td>
+                      <td style={{ padding: '12px 16px', color: getCol(p.ftp, avg.ftp) }}>{formatNum(p.ftp)}%</td>
+                      <td style={{ padding: '12px 16px', color: getCol(p.ppp, avg.ppp) }}>{formatNum(p.ppp, 2)}</td>
+                      <td style={{ padding: '12px 16px', fontWeight: 700, color: p.netRating > 0 ? 'var(--accent)' : p.netRating < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
+                        {p.netRating > 0 ? '+' : ''}{formatNum(p.netRating)}
+                      </td>
+                      <td style={{ padding: '12px 16px', fontWeight: 700, color: getCol(p.fpAvg, avg.fpAvg) }}>{formatNum(p.fpAvg)}</td>
+                      <td style={{ padding: '12px 16px', fontWeight: 700, color: getCol(p.effAvg, avg.effAvg) }}>{formatNum(p.effAvg)}</td>
+                      <td style={{ padding: '12px 16px', fontWeight: 700, color: getCol(p.usg, avg.usg) }}>{formatNum(p.usg)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              );
+            })()}
           </table>
         </div>
         <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px', paddingLeft: '8px' }}>

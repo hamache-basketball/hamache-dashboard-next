@@ -399,62 +399,90 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>試合別詳細</div>
         <div className="glass-panel" style={{ overflowX: 'auto', padding: '10px 0' }}>
-          <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
-            <thead>
-              <tr style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)', fontSize: '11px' }}>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>日付</th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>対戦相手</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', fontFamily: 'inherit' }}>結果</th>
-                <th style={{ padding: '12px 16px' }}>MIN</th>
-                <th style={{ padding: '12px 16px' }}>PTS</th>
-                <th style={{ padding: '12px 16px' }}>FGM/A</th>
-                <th style={{ padding: '12px 16px' }}>3PM/A</th>
-                <th style={{ padding: '12px 16px' }}>FTM/A</th>
-                <th style={{ padding: '12px 16px' }}>OR</th>
-                <th style={{ padding: '12px 16px' }}>DR</th>
-                <th style={{ padding: '12px 16px' }}>AST</th>
-                <th style={{ padding: '12px 16px' }}>TO</th>
-                <th style={{ padding: '12px 16px' }}>STL</th>
-                <th style={{ padding: '12px 16px' }}>EFF</th>
-                <th style={{ padding: '12px 16px' }}>FP</th>
-                <th style={{ padding: '12px 16px' }}>+/-</th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectedPlayerGames.map((p, i) => {
-                const ptsUs = parseNum(col(p.gameObj, 'team', 'pts') || col(p.gameObj, 'pts', 'us') || '0');
-                const ptsOpp = parseNum(col(p.gameObj, 'opp', 'pts') || '0');
-                const isWin = ptsUs > ptsOpp;
-                
-                return (
-                  <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                    <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{col(p.gameObj, 'date')}</td>
-                    <td style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif' }}>{col(p.gameObj, '対戦相手')}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
-                      <div style={{ display: 'inline-block', background: isWin ? 'rgba(247, 224, 79, 0.15)' : 'rgba(181, 53, 246, 0.15)', color: isWin ? 'var(--accent)' : 'var(--accent2)', border: `1px solid ${isWin ? 'var(--accent)' : 'var(--accent2)'}`, padding: '2px 8px', borderRadius: '12px', fontSize: '10px', fontWeight: 700 }}>
-                        {isWin ? 'WIN' : 'LOSE'}
-                      </div>
-                    </td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.MIN || '0'}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text)' }}>{p.PTS || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.FGM || '0'}/{p.FGA || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p['3PM'] || '0'}/{p['3PA'] || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.FTM || '0'}/{p.FTA || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.OR || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.DR || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.AST || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.TO || '0'}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.STL || '0'}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent2)' }}>{formatNum(p.EFF, 0)}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--accent)' }}>{formatNum(p.FP, 1)}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: p.PlusMinus > 0 ? 'var(--accent)' : p.PlusMinus < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
-                      {p.PlusMinus > 0 ? `+${p.PlusMinus}` : p.PlusMinus}
-                    </td>
+          {(() => {
+            const validGames = selectedPlayerGames.filter(p => parseFloat(p.MIN || '0') > 0);
+            const count = validGames.length || 1;
+            const avg = {
+              PTS: validGames.reduce((s, p) => s + parseFloat(p.PTS || '0'), 0) / count,
+              OR: validGames.reduce((s, p) => s + parseFloat(p.OR || '0'), 0) / count,
+              DR: validGames.reduce((s, p) => s + parseFloat(p.DR || '0'), 0) / count,
+              AST: validGames.reduce((s, p) => s + parseFloat(p.AST || '0'), 0) / count,
+              TO: validGames.reduce((s, p) => s + parseFloat(p.TO || '0'), 0) / count,
+              STL: validGames.reduce((s, p) => s + parseFloat(p.STL || '0'), 0) / count,
+              EFF: validGames.reduce((s, p) => s + parseFloat(p.EFF || '0'), 0) / count,
+              FP: validGames.reduce((s, p) => s + parseFloat(p.FP || '0'), 0) / count,
+            };
+
+            const getCol = (val: string | number, avgVal: number, reverse = false) => {
+              const v = parseFloat(val as string || '0');
+              if (Math.abs(v - avgVal) < 0.1) return 'var(--text)';
+              if (!reverse) {
+                return v > avgVal ? 'var(--accent)' : 'var(--muted)';
+              } else {
+                return v < avgVal ? 'var(--accent)' : 'var(--muted)';
+              }
+            };
+
+            return (
+              <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
+                <thead>
+                  <tr style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)', fontSize: '11px' }}>
+                    <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>日付</th>
+                    <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>対戦相手</th>
+                    <th style={{ padding: '12px 16px', textAlign: 'center', fontFamily: 'inherit' }}>結果</th>
+                    <th style={{ padding: '12px 16px' }}>MIN</th>
+                    <th style={{ padding: '12px 16px' }}>PTS</th>
+                    <th style={{ padding: '12px 16px' }}>FGM/A</th>
+                    <th style={{ padding: '12px 16px' }}>3PM/A</th>
+                    <th style={{ padding: '12px 16px' }}>FTM/A</th>
+                    <th style={{ padding: '12px 16px' }}>OR</th>
+                    <th style={{ padding: '12px 16px' }}>DR</th>
+                    <th style={{ padding: '12px 16px' }}>AST</th>
+                    <th style={{ padding: '12px 16px' }}>TO</th>
+                    <th style={{ padding: '12px 16px' }}>STL</th>
+                    <th style={{ padding: '12px 16px' }}>EFF</th>
+                    <th style={{ padding: '12px 16px' }}>FP</th>
+                    <th style={{ padding: '12px 16px' }}>+/-</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {selectedPlayerGames.map((p, i) => {
+                    const ptsUs = parseNum(col(p.gameObj, 'team', 'pts') || col(p.gameObj, 'pts', 'us') || '0');
+                    const ptsOpp = parseNum(col(p.gameObj, 'opp', 'pts') || '0');
+                    const isWin = ptsUs > ptsOpp;
+                    const pm = parseFloat(p.PlusMinus || '0');
+                    
+                    return (
+                      <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{col(p.gameObj, 'date')}</td>
+                        <td style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif' }}>{col(p.gameObj, '対戦相手')}</td>
+                        <td style={{ padding: '12px 16px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
+                          <div style={{ display: 'inline-block', background: isWin ? 'rgba(247, 224, 79, 0.15)' : 'rgba(181, 53, 246, 0.15)', color: isWin ? 'var(--accent)' : 'var(--accent2)', border: `1px solid ${isWin ? 'var(--accent)' : 'var(--accent2)'}`, padding: '2px 8px', borderRadius: '12px', fontSize: '10px', fontWeight: 700 }}>
+                            {isWin ? 'WIN' : 'LOSE'}
+                          </div>
+                        </td>
+                        <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.MIN || '0'}</td>
+                        <td style={{ padding: '12px 16px', fontWeight: 700, color: getCol(p.PTS, avg.PTS) }}>{p.PTS || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.FGM || '0'}/{p.FGA || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p['3PM'] || '0'}/{p['3PA'] || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: 'var(--muted)' }}>{p.FTM || '0'}/{p.FTA || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: getCol(p.OR, avg.OR) }}>{p.OR || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: getCol(p.DR, avg.DR) }}>{p.DR || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: getCol(p.AST, avg.AST) }}>{p.AST || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: getCol(p.TO, avg.TO, true) }}>{p.TO || '0'}</td>
+                        <td style={{ padding: '12px 16px', color: getCol(p.STL, avg.STL) }}>{p.STL || '0'}</td>
+                        <td style={{ padding: '12px 16px', fontWeight: 700, color: getCol(p.EFF, avg.EFF) }}>{formatNum(p.EFF, 0)}</td>
+                        <td style={{ padding: '12px 16px', fontWeight: 700, color: getCol(p.FP, avg.FP) }}>{formatNum(p.FP, 1)}</td>
+                        <td style={{ padding: '12px 16px', fontWeight: 700, color: pm > 0 ? 'var(--accent)' : pm < 0 ? 'var(--accent2)' : 'var(--muted)' }}>
+                          {pm > 0 ? `+${pm}` : pm}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            );
+          })()}
         </div>
       </div>
     </div>
