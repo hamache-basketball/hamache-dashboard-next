@@ -53,8 +53,8 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
       <table className="sticky-table" style={{ width: '100%', minWidth: '900px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
         <thead>
           <tr style={{ color: 'var(--muted)', fontSize: '11px' }}>
-            <th className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', width: '40px', minWidth: '40px' }}>#</th>
-            <th className="sticky-col-2" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', whiteSpace: 'nowrap', width: '140px', minWidth: '140px', left: '40px' }}>選手名</th>
+            <th className="sticky-col-1" style={{ padding: '12px 8px', textAlign: 'left', width: '32px', minWidth: '32px' }}>#</th>
+            <th className="sticky-col-2" style={{ padding: '12px 8px', textAlign: 'left', fontFamily: 'inherit', whiteSpace: 'nowrap', width: '100px', minWidth: '100px', left: '32px' }}>選手名</th>
             <th style={{ padding: '12px 16px' }}>MIN</th>
             <th style={{ padding: '12px 16px' }}>PTS</th>
             <th style={{ padding: '12px 16px' }}>FGM/A</th>
@@ -78,10 +78,10 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
             const pm = parseFloat(p.PlusMinus || 0);
             return (
               <tr key={i}>
-                <td className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{p['背番号'] || '-'}</td>
+                <td className="sticky-col-1" style={{ padding: '12px 8px', textAlign: 'left', color: 'var(--muted)' }}>{p['背番号'] || '-'}</td>
                 <td 
                   className="sticky-col-2"
-                  style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--accent2)', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap', cursor: 'pointer', left: '40px' }}
+                  style={{ padding: '12px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--accent2)', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap', cursor: 'pointer', left: '32px' }}
                   onClick={() => {
                     const name = p['コートネーム'] || p['選手名'];
                     if (name) {

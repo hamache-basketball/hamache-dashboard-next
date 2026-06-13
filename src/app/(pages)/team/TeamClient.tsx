@@ -56,7 +56,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
   const selectedCategory = globalCategory;
   const setSelectedCategory = setGlobalCategory;
 
-  const [rankingFilter, setRankingFilter] = useState<'all' | 'close' | 'loss' | 'recent5'>('all');
+  const [rankingFilter, setRankingFilter] = useState<'all' | 'highRank' | 'close' | 'loss' | 'recent5'>('all');
 
   // Categories
   const categories = useMemo(() => {
@@ -94,6 +94,11 @@ export default function TeamClient({ initialData }: { initialData: any }) {
         const p = parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us'));
         const op = parseNum(col(g, 'opp', 'pts'));
         return Math.abs(p - op) <= 5;
+      });
+    } else if (rankingFilter === 'highRank') {
+      list = list.filter((g: any) => {
+        const rank = (g._rawRow && g._rawRow[39]) || g['_col_40'] || '';
+        return typeof rank === 'string' && (rank.includes('A') || rank.includes('B'));
       });
     }
     return list;
@@ -500,6 +505,10 @@ export default function TeamClient({ initialData }: { initialData: any }) {
               style={{ padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: rankingFilter === 'all' ? 'var(--accent)' : 'rgba(255,255,255,0.05)', color: rankingFilter === 'all' ? '#000' : 'var(--text)', transition: 'all 0.2s' }}
             >すべての試合</button>
             <button 
+              onClick={() => setRankingFilter('highRank')}
+              style={{ padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: rankingFilter === 'highRank' ? 'var(--accent)' : 'rgba(255,255,255,0.05)', color: rankingFilter === 'highRank' ? '#000' : 'var(--text)', transition: 'all 0.2s' }}
+            >同格以上</button>
+            <button 
               onClick={() => setRankingFilter('close')}
               style={{ padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: rankingFilter === 'close' ? 'var(--accent)' : 'rgba(255,255,255,0.05)', color: rankingFilter === 'close' ? '#000' : 'var(--text)', transition: 'all 0.2s' }}
             >接戦 (±5点以内)</button>
@@ -517,8 +526,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
           <table className="sticky-table" style={{ width: '100%', minWidth: '900px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
             <thead>
               <tr style={{ color: 'var(--muted)', fontSize: '11px' }}>
-                <th className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', width: '60px', minWidth: '60px' }}>順位</th>
-                <th className="sticky-col-2" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', width: '160px', minWidth: '160px', left: '60px' }}>選手</th>
+                <th className="sticky-col-1" style={{ padding: '12px 8px', textAlign: 'left', fontFamily: 'inherit', width: '40px', minWidth: '40px' }}>順位</th>
+                <th className="sticky-col-2" style={{ padding: '12px 8px', textAlign: 'left', fontFamily: 'inherit', width: '110px', minWidth: '110px', left: '40px' }}>選手</th>
                 <th style={{ padding: '12px 16px', textAlign: 'center', fontFamily: 'inherit' }}>試合数</th>
                 <th style={{ padding: '12px 16px' }}>PTS <span style={{ fontSize: '10px', color: 'var(--muted)', fontWeight: 400 }}>(AVG/TOT)</span></th>
                 <th style={{ padding: '12px 16px' }}>FG%</th>
@@ -565,10 +574,10 @@ export default function TeamClient({ initialData }: { initialData: any }) {
                 <tbody>
                   {playerRankings.map((p, i) => (
                     <tr key={i}>
-                      <td className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left' }}>{i + 1}</td>
+                      <td className="sticky-col-1" style={{ padding: '12px 8px', textAlign: 'left' }}>{i + 1}</td>
                       <td 
                         className="sticky-col-2"
-                        style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--accent2)', fontWeight: 600, fontFamily: '"Inter", sans-serif', cursor: 'pointer', left: '60px' }}
+                        style={{ padding: '12px 8px', textAlign: 'left', color: 'var(--accent2)', fontWeight: 600, fontFamily: '"Inter", sans-serif', cursor: 'pointer', left: '40px' }}
                         onClick={() => { setGlobalPlayerName(p.name); router.push('/player'); }}
                       >
                         #{p.jersey} <span style={{ textDecoration: 'underline' }}>{p.name}</span>
