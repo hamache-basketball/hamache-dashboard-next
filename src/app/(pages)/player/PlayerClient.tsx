@@ -395,6 +395,133 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
         </div>
       </div>
 
+      {/* Situational Analysis */}
+      {selectedPlayerGames.length > 0 && (() => {
+        const validGames = selectedPlayerGames.filter(p => parseFloat(p.MIN || '0') > 0);
+        if (validGames.length < 2) return null;
+
+        const calcAvg = (games: any[], key: string) => games.length > 0 ? games.reduce((s, g) => s + parseNum(g[key]), 0) / games.length : 0;
+        const calcTrueEfg = (games: any[]) => {
+          const fgm = games.reduce((s, g) => s + parseNum(g.FGM), 0);
+          const fga = games.reduce((s, g) => s + parseNum(g.FGA), 0);
+          const p3m = games.reduce((s, g) => s + parseNum(g['3PM']), 0);
+          return fga > 0 ? ((fgm + 0.5 * p3m) / fga) * 100 : 0;
+        };
+        const calcPm = (games: any[]) => games.length > 0 ? games.reduce((s, g) => s + parseFloat(g.PlusMinus || '0'), 0) / games.length : 0;
+
+        // Growth Trend
+        const recentGames = validGames.slice(0, 5);
+        const prevGames = validGames.slice(5);
+
+        const recentPts = calcAvg(recentGames, 'PTS');
+        const prevPts = calcAvg(prevGames, 'PTS');
+        const recentEfg = calcTrueEfg(recentGames);
+        const prevEfg = calcTrueEfg(prevGames);
+        const recentFp = calcAvg(recentGames, 'FP');
+        const prevFp = calcAvg(prevGames, 'FP');
+
+        const DiffBadge = ({ current, prev, isReversed = false }: { current: number, prev: number, isReversed?: boolean }) => {
+          if (prev === 0 && current === 0) return <span style={{ color: 'var(--muted)', fontSize: '11px', marginLeft: '6px' }}>±0</span>;
+          const diff = current - prev;
+          if (Math.abs(diff) < 0.1) return <span style={{ color: 'var(--muted)', fontSize: '11px', marginLeft: '6px' }}>±0</span>;
+          const isGood = isReversed ? diff < 0 : diff > 0;
+          return (
+            <span style={{ color: isGood ? 'var(--accent)' : 'var(--accent2)', fontSize: '11px', marginLeft: '6px', fontWeight: 700 }}>
+              {diff > 0 ? '+' : ''}{diff.toFixed(1)} {diff > 0 ? '↗' : '↘'}
+            </span>
+          );
+        };
+
+        // Win/Loss Splits
+        const winGames = validGames.filter(g => {
+           const pUs = parseNum(col(g.gameObj, 'team', 'pts') || col(g.gameObj, 'pts', 'us'));
+           const pOpp = parseNum(col(g.gameObj, 'opp', 'pts'));
+           return pUs > pOpp;
+        });
+        const lossGames = validGames.filter(g => {
+           const pUs = parseNum(col(g.gameObj, 'team', 'pts') || col(g.gameObj, 'pts', 'us'));
+           const pOpp = parseNum(col(g.gameObj, 'opp', 'pts'));
+           return pUs < pOpp;
+        });
+
+        const winPts = calcAvg(winGames, 'PTS');
+        const lossPts = calcAvg(lossGames, 'PTS');
+        const winEfg = calcTrueEfg(winGames);
+        const lossEfg = calcTrueEfg(lossGames);
+        const winPm = calcPm(winGames);
+        const lossPm = calcPm(lossGames);
+
+        const StatRow = ({ label, winVal, lossVal, isPct = false, isPm = false }: { label: string, winVal: number, lossVal: number, isPct?: boolean, isPm?: boolean }) => (
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: '12px' }}>
+            <div style={{ color: 'var(--muted)', width: '60px' }}>{label}</div>
+            <div style={{ width: '80px', textAlign: 'right', fontWeight: 600, color: winVal > lossVal && !isPm ? 'var(--accent)' : 'var(--text)' }}>
+              {isPm && winVal > 0 ? '+' : ''}{winVal.toFixed(1)}{isPct ? '%' : ''}
+            </div>
+            <div style={{ width: '80px', textAlign: 'right', fontWeight: 600, color: lossVal > winVal && !isPm ? 'var(--accent)' : 'var(--text)' }}>
+              {isPm && lossVal > 0 ? '+' : ''}{lossVal.toFixed(1)}{isPct ? '%' : ''}
+            </div>
+          </div>
+        );
+
+        return (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+            {/* Growth Trend */}
+            <div className="glass-panel" style={{ padding: '20px' }}>
+              <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
+                <span>成長トレンド</span>
+                <span style={{ fontSize: '11px' }}>直近5試合 vs それ以前</span>
+              </div>
+              {prevGames.length > 0 ? (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+                  <div>
+                    <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '4px' }}>PTS</div>
+                    <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
+                      {recentPts.toFixed(1)} <DiffBadge current={recentPts} prev={prevPts} />
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '4px' }}>eFG%</div>
+                    <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
+                      {recentEfg.toFixed(1)}% <DiffBadge current={recentEfg} prev={prevEfg} />
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '4px' }}>FP</div>
+                    <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
+                      {recentFp.toFixed(1)} <DiffBadge current={recentFp} prev={prevFp} />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>比較対象となる過去の試合がありません</div>
+              )}
+            </div>
+
+            {/* Win/Loss Splits */}
+            <div className="glass-panel" style={{ padding: '20px' }}>
+              <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
+                <span>勝敗別スプリット</span>
+                <span style={{ fontSize: '11px' }}>WIN ({winGames.length}) vs LOSS ({lossGames.length})</span>
+              </div>
+              {winGames.length > 0 && lossGames.length > 0 ? (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid var(--border)', fontSize: '11px', color: 'var(--muted)' }}>
+                    <div style={{ width: '60px' }}>項目</div>
+                    <div style={{ width: '80px', textAlign: 'right' }}>WIN</div>
+                    <div style={{ width: '80px', textAlign: 'right' }}>LOSS</div>
+                  </div>
+                  <StatRow label="PTS" winVal={winPts} lossVal={lossPts} />
+                  <StatRow label="eFG%" winVal={winEfg} lossVal={lossEfg} isPct />
+                  <StatRow label="+/-" winVal={winPm} lossVal={lossPm} isPm />
+                </div>
+              ) : (
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>勝敗両方のデータがありません</div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Game Log Table */}
       <div style={{ marginBottom: '24px' }}>
         <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>試合別詳細</div>

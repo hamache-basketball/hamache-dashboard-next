@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { parseNum, formatNum, col, calcEFG, calcFP, calcEFF, calcUSG } from '@/lib/stats-logic';
 import { useGlobalState } from '@/lib/GlobalStateProvider';
@@ -56,6 +56,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
   const selectedCategory = globalCategory;
   const setSelectedCategory = setGlobalCategory;
 
+  const [rankingFilter, setRankingFilter] = useState<'all' | 'close' | 'loss' | 'recent5'>('all');
+
   // Categories
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -76,6 +78,26 @@ export default function TeamClient({ initialData }: { initialData: any }) {
   }, [games, selectedCategory]);
 
   const filteredGamesDesc = useMemo(() => [...filteredGamesAsc].reverse(), [filteredGamesAsc]);
+
+  const filteredGamesForRanking = useMemo(() => {
+    let list = [...filteredGamesAsc];
+    if (rankingFilter === 'recent5') {
+      list = list.slice(-5);
+    } else if (rankingFilter === 'loss') {
+      list = list.filter((g: any) => {
+        const p = parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us'));
+        const op = parseNum(col(g, 'opp', 'pts'));
+        return p < op;
+      });
+    } else if (rankingFilter === 'close') {
+      list = list.filter((g: any) => {
+        const p = parseNum(col(g, 'team', 'pts') || col(g, 'pts', 'us'));
+        const op = parseNum(col(g, 'opp', 'pts'));
+        return Math.abs(p - op) <= 5;
+      });
+    }
+    return list;
+  }, [filteredGamesAsc, rankingFilter]);
 
   // Aggregate Team Stats
   const teamStats = useMemo(() => {
@@ -136,8 +158,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     // 1. Group player data per game first to handle +/- correctly (from PlayerClient)
     const pMap = new Map<string, any>();
     (players || []).forEach((p: any) => {
-      const game = filteredGamesAsc.find((g: any) => g.GameID === p.GameID);
-      if (!game) return; // ignore games not in category
+      const game = filteredGamesForRanking.find((g: any) => g.GameID === p.GameID);
+      if (!game) return; // ignore games not in category or filter
       
       const name = p['コートネーム'] || p['選手名'] || 'Unknown';
       if (!pMap.has(name)) {
@@ -181,7 +203,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     // Count games and calculate advanced stats
     const uniqueGamesPerPlayer = new Map<string, Set<string>>();
     (players || []).forEach((p: any) => {
-      const game = filteredGamesAsc.find((g: any) => g.GameID === p.GameID);
+      const game = filteredGamesForRanking.find((g: any) => g.GameID === p.GameID);
       if (!game) return;
       const name = p['コートネーム'] || p['選手名'] || 'Unknown';
       if (parseNum(p.MIN) > 0) {
@@ -193,7 +215,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     // Calculate Team Totals across filtered games
     let totalTeamMin = 0;
     let totalTeamPoss = 0;
-    filteredGamesAsc.forEach((g: any) => {
+    filteredGamesForRanking.forEach((g: any) => {
       totalTeamMin += parseNum(col(g, 'team', 'min')) || 200;
       totalTeamPoss += parseNum(col(g, 'team', 'fga')) + 0.44 * parseNum(col(g, 'team', 'fta')) + parseNum(col(g, 'team', 'to'));
     });
@@ -221,7 +243,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       let myTotalTeamPossForNetRating = 0;
 
       uniqueGamesPerPlayer.get(name)?.forEach(gid => {
-        const game = filteredGamesAsc.find((g: any) => g.GameID === gid);
+        const game = filteredGamesForRanking.find((g: any) => g.GameID === gid);
         if (game) {
           const gMin = parseNum(col(game, 'min')) || 40;
           myTotalTeamMinForUsg += gMin * 5;
@@ -252,7 +274,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     }
 
     return rankings.sort((a, b) => b.ptsAvg - a.ptsAvg);
-  }, [players, filteredGamesAsc]);
+  }, [players, filteredGamesForRanking]);
 
   // Win/Loss Analysis
   const wlAnalysis = useMemo(() => {
@@ -470,7 +492,27 @@ export default function TeamClient({ initialData }: { initialData: any }) {
 
       {/* Ranking */}
       <div style={{ marginBottom: '40px' }}>
-        <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>得点ランキング（シーズン平均）</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
+          <div style={{ fontSize: '14px', color: 'var(--muted)' }}>得点ランキング</div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => setRankingFilter('all')}
+              style={{ padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: rankingFilter === 'all' ? 'var(--accent)' : 'rgba(255,255,255,0.05)', color: rankingFilter === 'all' ? '#000' : 'var(--text)', transition: 'all 0.2s' }}
+            >すべての試合</button>
+            <button 
+              onClick={() => setRankingFilter('close')}
+              style={{ padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: rankingFilter === 'close' ? 'var(--accent)' : 'rgba(255,255,255,0.05)', color: rankingFilter === 'close' ? '#000' : 'var(--text)', transition: 'all 0.2s' }}
+            >接戦 (±5点以内)</button>
+            <button 
+              onClick={() => setRankingFilter('loss')}
+              style={{ padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: rankingFilter === 'loss' ? 'var(--accent)' : 'rgba(255,255,255,0.05)', color: rankingFilter === 'loss' ? '#000' : 'var(--text)', transition: 'all 0.2s' }}
+            >負け試合のみ</button>
+            <button 
+              onClick={() => setRankingFilter('recent5')}
+              style={{ padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: rankingFilter === 'recent5' ? 'var(--accent)' : 'rgba(255,255,255,0.05)', color: rankingFilter === 'recent5' ? '#000' : 'var(--text)', transition: 'all 0.2s' }}
+            >チーム直近5試合</button>
+          </div>
+        </div>
         <div className="glass-panel sticky-table-wrapper" style={{ padding: '10px 0' }}>
           <table className="sticky-table" style={{ width: '100%', minWidth: '900px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
             <thead>
