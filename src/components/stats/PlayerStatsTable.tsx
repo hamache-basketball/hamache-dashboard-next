@@ -45,16 +45,16 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
   };
 
   return (
-    <div className="glass-panel" style={{ overflowX: 'auto', padding: '10px 0' }}>
+    <div className="glass-panel sticky-table-wrapper" style={{ padding: '10px 0' }}>
       <div style={{ padding: '10px 20px', fontSize: '11px', color: 'var(--muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <div>※ +/-, FP, EFF, USG% の用語解説はページ下部をご覧ください。</div>
         <div>※ 数値の<span style={{color:'var(--accent)', fontWeight:600}}>黄色</span>はこの試合のチーム平均以上、<span style={{color:'var(--muted)'}}>グレー</span>は平均未満（+/-のマイナスは<span style={{color:'var(--accent2)', fontWeight:600}}>紫色</span>）</div>
       </div>
-      <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
+      <table className="sticky-table" style={{ width: '100%', minWidth: '900px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
         <thead>
-          <tr style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)', fontSize: '11px' }}>
-            <th style={{ padding: '12px 16px', textAlign: 'left' }}>#</th>
-            <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>選手名</th>
+          <tr style={{ color: 'var(--muted)', fontSize: '11px' }}>
+            <th className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', width: '40px', minWidth: '40px' }}>#</th>
+            <th className="sticky-col-2" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', whiteSpace: 'nowrap', width: '140px', minWidth: '140px', left: '40px' }}>選手名</th>
             <th style={{ padding: '12px 16px' }}>MIN</th>
             <th style={{ padding: '12px 16px' }}>PTS</th>
             <th style={{ padding: '12px 16px' }}>FGM/A</th>
@@ -77,10 +77,11 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
           {players.map((p, i) => {
             const pm = parseFloat(p.PlusMinus || 0);
             return (
-              <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{p['背番号'] || '-'}</td>
+              <tr key={i}>
+                <td className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{p['背番号'] || '-'}</td>
                 <td 
-                  style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--accent2)', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap', cursor: 'pointer' }}
+                  className="sticky-col-2"
+                  style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--accent2)', fontFamily: '"Inter", sans-serif', whiteSpace: 'nowrap', cursor: 'pointer', left: '40px' }}
                   onClick={() => {
                     const name = p['コートネーム'] || p['選手名'];
                     if (name) {

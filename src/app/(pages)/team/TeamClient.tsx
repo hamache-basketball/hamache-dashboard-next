@@ -471,12 +471,12 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       {/* Ranking */}
       <div style={{ marginBottom: '40px' }}>
         <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>得点ランキング（シーズン平均）</div>
-        <div className="glass-panel" style={{ overflowX: 'auto', padding: '10px 0' }}>
-          <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
+        <div className="glass-panel sticky-table-wrapper" style={{ padding: '10px 0' }}>
+          <table className="sticky-table" style={{ width: '100%', minWidth: '900px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
             <thead>
-              <tr style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)', fontSize: '11px' }}>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>順位</th>
-                <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>選手</th>
+              <tr style={{ color: 'var(--muted)', fontSize: '11px' }}>
+                <th className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', width: '60px', minWidth: '60px' }}>順位</th>
+                <th className="sticky-col-2" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', width: '160px', minWidth: '160px', left: '60px' }}>選手</th>
                 <th style={{ padding: '12px 16px', textAlign: 'center', fontFamily: 'inherit' }}>試合数</th>
                 <th style={{ padding: '12px 16px' }}>PTS <span style={{ fontSize: '10px', color: 'var(--muted)', fontWeight: 400 }}>(AVG/TOT)</span></th>
                 <th style={{ padding: '12px 16px' }}>FG%</th>
@@ -522,10 +522,11 @@ export default function TeamClient({ initialData }: { initialData: any }) {
               return (
                 <tbody>
                   {playerRankings.map((p, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                      <td style={{ padding: '12px 16px', textAlign: 'left' }}>{i + 1}</td>
+                    <tr key={i}>
+                      <td className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left' }}>{i + 1}</td>
                       <td 
-                        style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--accent2)', fontWeight: 600, fontFamily: '"Inter", sans-serif', cursor: 'pointer' }}
+                        className="sticky-col-2"
+                        style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--accent2)', fontWeight: 600, fontFamily: '"Inter", sans-serif', cursor: 'pointer', left: '60px' }}
                         onClick={() => { setGlobalPlayerName(p.name); router.push('/player'); }}
                       >
                         #{p.jersey} <span style={{ textDecoration: 'underline' }}>{p.name}</span>

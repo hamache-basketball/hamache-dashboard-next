@@ -398,7 +398,7 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
       {/* Game Log Table */}
       <div style={{ marginBottom: '24px' }}>
         <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>試合別詳細</div>
-        <div className="glass-panel" style={{ overflowX: 'auto', padding: '10px 0' }}>
+        <div className="glass-panel sticky-table-wrapper" style={{ padding: '10px 0' }}>
           {(() => {
             const validGames = selectedPlayerGames.filter(p => parseFloat(p.MIN || '0') > 0);
             const count = validGames.length || 1;
@@ -424,11 +424,11 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
             };
 
             return (
-              <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
+              <table className="sticky-table" style={{ width: '100%', minWidth: '900px', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
                 <thead>
-                  <tr style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)', fontSize: '11px' }}>
-                    <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>日付</th>
-                    <th style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit' }}>対戦相手</th>
+                  <tr style={{ color: 'var(--muted)', fontSize: '11px' }}>
+                    <th className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', width: '90px', minWidth: '90px' }}>日付</th>
+                    <th className="sticky-col-2" style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'inherit', width: '160px', minWidth: '160px', left: '90px' }}>対戦相手</th>
                     <th style={{ padding: '12px 16px', textAlign: 'center', fontFamily: 'inherit' }}>結果</th>
                     <th style={{ padding: '12px 16px' }}>MIN</th>
                     <th style={{ padding: '12px 16px' }}>PTS</th>
@@ -453,9 +453,9 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
                     const pm = parseFloat(p.PlusMinus || '0');
                     
                     return (
-                      <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                        <td style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{col(p.gameObj, 'date')}</td>
-                        <td style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif' }}>{col(p.gameObj, '対戦相手')}</td>
+                      <tr key={i}>
+                        <td className="sticky-col-1" style={{ padding: '12px 16px', textAlign: 'left', color: 'var(--muted)' }}>{col(p.gameObj, 'date')}</td>
+                        <td className="sticky-col-2" style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text)', fontFamily: '"Inter", sans-serif', left: '90px' }}>{col(p.gameObj, '対戦相手')}</td>
                         <td style={{ padding: '12px 16px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
                           <div style={{ display: 'inline-block', background: isWin ? 'rgba(247, 224, 79, 0.15)' : 'rgba(181, 53, 246, 0.15)', color: isWin ? 'var(--accent)' : 'var(--accent2)', border: `1px solid ${isWin ? 'var(--accent)' : 'var(--accent2)'}`, padding: '2px 8px', borderRadius: '12px', fontSize: '10px', fontWeight: 700 }}>
                             {isWin ? 'WIN' : 'LOSE'}
