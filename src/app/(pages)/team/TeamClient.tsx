@@ -246,7 +246,8 @@ export default function TeamClient({ initialData }: { initialData: any }) {
       rankings.push({
         name, jersey: d.jersey, games: gCount,
         ptsAvg, ptsTotal: d.pts, fgPct, efg, ftp, ppp, netRating,
-        fpAvg: fp / gCount, effAvg: eff / gCount, usg
+        fpAvg: fp / gCount, effAvg: eff / gCount, usg,
+        fgm: d.fgm, fga: d.fga, p3m: d.p3m, ftm: d.ftm, fta: d.fta, poss
       });
     }
 
@@ -490,15 +491,23 @@ export default function TeamClient({ initialData }: { initialData: any }) {
             </thead>
             {(() => {
               const count = playerRankings.length || 1;
+              const totalFgm = playerRankings.reduce((s, p) => s + p.fgm, 0);
+              const totalFga = playerRankings.reduce((s, p) => s + p.fga, 0);
+              const totalP3m = playerRankings.reduce((s, p) => s + p.p3m, 0);
+              const totalFtm = playerRankings.reduce((s, p) => s + p.ftm, 0);
+              const totalFta = playerRankings.reduce((s, p) => s + p.fta, 0);
+              const totalPoss = playerRankings.reduce((s, p) => s + p.poss, 0);
+              const totalPts = playerRankings.reduce((s, p) => s + p.ptsTotal, 0);
+
               const avg = {
                 ptsAvg: playerRankings.reduce((s, p) => s + p.ptsAvg, 0) / count,
-                fgPct: playerRankings.reduce((s, p) => s + p.fgPct, 0) / count,
-                efg: playerRankings.reduce((s, p) => s + p.efg, 0) / count,
-                ftp: playerRankings.reduce((s, p) => s + p.ftp, 0) / count,
-                ppp: playerRankings.reduce((s, p) => s + p.ppp, 0) / count,
                 fpAvg: playerRankings.reduce((s, p) => s + p.fpAvg, 0) / count,
                 effAvg: playerRankings.reduce((s, p) => s + p.effAvg, 0) / count,
                 usg: playerRankings.reduce((s, p) => s + p.usg, 0) / count,
+                fgPct: totalFga > 0 ? (totalFgm / totalFga) * 100 : 0,
+                efg: totalFga > 0 ? ((totalFgm + 0.5 * totalP3m) / totalFga) * 100 : 0,
+                ftp: totalFta > 0 ? (totalFtm / totalFta) * 100 : 0,
+                ppp: totalPoss > 0 ? (totalPts / totalPoss) : 0,
               };
 
               const getCol = (val: number, avgVal: number, reverse = false) => {

@@ -17,7 +17,6 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
   const count = validPlayers.length || 1;
   const avg = {
     PTS: validPlayers.reduce((s, p) => s + parseFloat(p.PTS || '0'), 0) / count,
-    EFG: validPlayers.reduce((s, p) => s + parseFloat(p.EFG || '0'), 0) / count,
     OR: validPlayers.reduce((s, p) => s + parseFloat(p.OR || '0'), 0) / count,
     DR: validPlayers.reduce((s, p) => s + parseFloat(p.DR || '0'), 0) / count,
     AST: validPlayers.reduce((s, p) => s + parseFloat(p.AST || '0'), 0) / count,
@@ -27,6 +26,12 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
     FP: validPlayers.reduce((s, p) => s + parseFloat(p.FP || '0'), 0) / count,
     EFF: validPlayers.reduce((s, p) => s + parseFloat(p.EFF || '0'), 0) / count,
     USG: validPlayers.reduce((s, p) => s + parseFloat(p.USG || '0'), 0) / count,
+    EFG: (() => {
+      const fga = validPlayers.reduce((s, p) => s + parseFloat(p.FGA || '0'), 0);
+      const fgm = validPlayers.reduce((s, p) => s + parseFloat(p.FGM || '0'), 0);
+      const p3m = validPlayers.reduce((s, p) => s + parseFloat(p['3PM'] || '0'), 0);
+      return fga > 0 ? ((fgm + 0.5 * p3m) / fga) * 100 : 0;
+    })(),
   };
 
   const getCol = (val: string | number, avgVal: number, reverse = false) => {
