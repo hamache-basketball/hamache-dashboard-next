@@ -552,8 +552,9 @@ export default function TeamClient({ initialData }: { initialData: any }) {
             })()}
           </table>
         </div>
-        <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px', paddingLeft: '8px' }}>
-          ※ Net Rating = 出場中の得失点差 ÷ 推定チームポゼッション × 100 (100ポゼッションあたりの得失点差)
+        <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px', paddingLeft: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div>※ Net Rating = 出場中の得失点差 ÷ 推定チームポゼッション × 100 (100ポゼッションあたりの得失点差)</div>
+          <div>※ 数値の<span style={{color:'var(--accent)', fontWeight:600}}>黄色</span>はチーム全体の平均以上、<span style={{color:'var(--muted)'}}>グレー</span>は平均未満（NET RATINGのマイナスは<span style={{color:'var(--accent2)', fontWeight:600}}>紫色</span>）</div>
         </div>
       </div>
 

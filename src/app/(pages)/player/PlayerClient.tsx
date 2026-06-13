@@ -484,6 +484,9 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
             );
           })()}
         </div>
+        <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px', paddingLeft: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div>※ 数値の<span style={{color:'var(--accent)', fontWeight:600}}>黄色</span>はこの選手自身の平均以上、<span style={{color:'var(--muted)'}}>グレー</span>は平均未満（+/-のマイナスは<span style={{color:'var(--accent2)', fontWeight:600}}>紫色</span>）</div>
+        </div>
       </div>
     </div>
   );

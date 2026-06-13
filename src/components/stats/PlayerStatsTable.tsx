@@ -46,8 +46,9 @@ export default function PlayerStatsTable({ players }: PlayerStatsTableProps) {
 
   return (
     <div className="glass-panel" style={{ overflowX: 'auto', padding: '10px 0' }}>
-      <div style={{ padding: '10px 20px', fontSize: '11px', color: 'var(--muted)' }}>
-        ※ +/-, FP, EFF, USG% の用語解説はページ下部をご覧ください。
+      <div style={{ padding: '10px 20px', fontSize: '11px', color: 'var(--muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <div>※ +/-, FP, EFF, USG% の用語解説はページ下部をご覧ください。</div>
+        <div>※ 数値の<span style={{color:'var(--accent)', fontWeight:600}}>黄色</span>はこの試合のチーム平均以上、<span style={{color:'var(--muted)'}}>グレー</span>は平均未満（+/-のマイナスは<span style={{color:'var(--accent2)', fontWeight:600}}>紫色</span>）</div>
       </div>
       <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse', textAlign: 'right', fontSize: '13px', fontFamily: 'var(--mono)' }}>
         <thead>
