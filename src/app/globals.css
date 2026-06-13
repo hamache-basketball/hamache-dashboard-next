@@ -192,8 +192,7 @@ body {
   .grid-2col-responsive-uneven {
     grid-template-columns: 1fr;
   }
-}
-
+  
   .mobile-text-huge {
     font-size: 56px !important;
   }
