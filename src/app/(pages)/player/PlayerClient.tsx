@@ -219,11 +219,11 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
   };
 
   const chartStats = [
-    { label: '得点', key: 'PTS', color: '#f7e04f' },
-    { label: 'アシスト', key: 'AST', color: '#b535f6' },
-    { label: 'リバウンド', key: 'REB', color: '#f7e04f' },
-    { label: 'スティール', key: 'STL', color: '#b535f6' },
-    { label: 'ブロック', key: 'BLK', color: '#f7e04f' },
+    { label: '得点', key: 'PTS', color: 'var(--accent)' },
+    { label: 'アシスト', key: 'AST', color: 'var(--accent2)' },
+    { label: 'リバウンド', key: 'REB', color: 'var(--accent)' },
+    { label: 'スティール', key: 'STL', color: 'var(--accent2)' },
+    { label: 'ブロック', key: 'BLK', color: 'var(--accent)' },
   ];
 
   // Trend Chart Data

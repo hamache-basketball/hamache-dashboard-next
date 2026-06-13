@@ -164,12 +164,12 @@ export default function GameClient({ initialData }: { initialData: any }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         {[
-          { label: 'EFG%', val: formatNum(col(game, 'team', 'efg')), opp: formatNum(col(game, 'opp', 'efg')), unit: '%', color: '#f7e04f' },
-          { label: 'TO%', val: formatNum(col(game, 'team', 'to%')), opp: formatNum(col(game, 'opp', 'to%')), unit: '%', color: '#b535f6' },
-          { label: 'OR%', val: formatNum(col(game, 'team', 'or%')), opp: formatNum(col(game, 'opp', 'or%')), unit: '%', color: '#f7e04f' },
-          { label: 'PACE', val: formatNum(col(game, 'pace')), opp: 'possession/40min', isTextDesc: true, color: '#b535f6' },
-          { label: 'TEAM PPP', val: formatNum(col(game, 'team', 'ppp'), 2), opp: formatNum(col(game, 'opp', 'ppp'), 2), color: '#f7e04f' },
-          { label: 'FTR', val: formatNum(col(game, 'team', 'ftr')), opp: formatNum(col(game, 'opp', 'ftr')), color: '#b535f6' }
+          { label: 'EFG%', val: formatNum(col(game, 'team', 'efg')), opp: formatNum(col(game, 'opp', 'efg')), unit: '%', color: 'var(--accent)' },
+          { label: 'TO%', val: formatNum(col(game, 'team', 'to%')), opp: formatNum(col(game, 'opp', 'to%')), unit: '%', color: 'var(--accent2)' },
+          { label: 'OR%', val: formatNum(col(game, 'team', 'or%')), opp: formatNum(col(game, 'opp', 'or%')), unit: '%', color: 'var(--accent)' },
+          { label: 'PACE', val: formatNum(col(game, 'pace')), opp: 'possession/40min', isTextDesc: true, color: 'var(--accent2)' },
+          { label: 'TEAM PPP', val: formatNum(col(game, 'team', 'ppp'), 2), opp: formatNum(col(game, 'opp', 'ppp'), 2), color: 'var(--accent)' },
+          { label: 'FTR', val: formatNum(col(game, 'team', 'ftr')), opp: formatNum(col(game, 'opp', 'ftr')), color: 'var(--accent2)' }
         ].map((s, i) => (
           <div key={i} className="glass-panel" style={{ padding: '20px', borderTop: `3px solid ${s.color}` }}>
             <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '8px' }}>{s.label}</div>

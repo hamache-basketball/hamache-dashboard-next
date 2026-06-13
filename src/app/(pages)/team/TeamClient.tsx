@@ -361,7 +361,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     if (Math.abs(wTo - lTo) > 3) {
       comments.push({
         text: `ターンオーバーは勝利試合（${formatNum(wTo)}%）と敗戦試合（${formatNum(lTo)}%）で ${formatNum(Math.abs(wTo - lTo))}%の差があります。ボール管理の徹底が勝利への鍵です。`,
-        col: '#f06f6f'
+        col: 'var(--accent2)'
       });
     }
 
@@ -369,7 +369,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
     if (Math.abs(wOr - lOr) > 3) {
       comments.push({
         text: `リバウンド（OR%）は勝利時（${formatNum(wOr)}%）と敗戦時（${formatNum(lOr)}%）で ${formatNum(Math.abs(wOr - lOr))}%の差。${wOr > lOr ? 'オフェンスリバウンドが勝利を引き寄せています。' : 'リバウンド強化が優先課題です。'}`,
-        col: '#f7a84f'
+        col: 'var(--accent)'
       });
     }
 
@@ -455,7 +455,7 @@ export default function TeamClient({ initialData }: { initialData: any }) {
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(teamStats.toAvg)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>相手 avg {formatNum(teamStats.oppToAvg)}</div>
         </div>
-        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid #f7a84f' }}>
+        <div className="glass-panel" style={{ padding: '20px', borderTop: '3px solid var(--accent)' }}>
           <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>平均OR%</div>
           <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{formatNum(teamStats.orPct)}</div>
           <div style={{ fontSize: '11px', color: 'var(--muted)' }}>相手 avg {formatNum(teamStats.oppOrPct)}%</div>
