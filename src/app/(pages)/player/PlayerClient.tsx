@@ -412,13 +412,22 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
         // Growth Trend
         const recentGames = validGames.slice(0, 5);
         const prevGames = validGames.slice(5);
+        const aprilGames = validGames.filter(g => {
+          const dateStr = col(g.gameObj, 'date') || '';
+          return dateStr.includes('/04/') || dateStr.includes('-04-');
+        });
 
         const recentPts = calcAvg(recentGames, 'PTS');
         const prevPts = calcAvg(prevGames, 'PTS');
+        const aprilPts = calcAvg(aprilGames, 'PTS');
+        
         const recentEfg = calcTrueEfg(recentGames);
         const prevEfg = calcTrueEfg(prevGames);
+        const aprilEfg = calcTrueEfg(aprilGames);
+        
         const recentFp = calcAvg(recentGames, 'FP');
         const prevFp = calcAvg(prevGames, 'FP');
+        const aprilFp = calcAvg(aprilGames, 'FP');
 
         const DiffBadge = ({ current, prev, isReversed = false }: { current: number, prev: number, isReversed?: boolean }) => {
           if (prev === 0 && current === 0) return <span style={{ color: 'var(--muted)', fontSize: '11px', marginLeft: '6px' }}>±0</span>;
@@ -469,26 +478,62 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
             <div className="glass-panel" style={{ padding: '20px' }}>
               <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
                 <span>成長トレンド</span>
-                <span style={{ fontSize: '11px' }}>直近5試合 vs それ以前</span>
+                <span style={{ fontSize: '11px' }}>直近5試合の平均</span>
               </div>
-              {prevGames.length > 0 ? (
+              {prevGames.length > 0 || aprilGames.length > 0 ? (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
                   <div>
                     <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '4px' }}>PTS</div>
                     <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
-                      {recentPts.toFixed(1)} <DiffBadge current={recentPts} prev={prevPts} />
+                      {recentPts.toFixed(1)}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
+                      {prevGames.length > 0 && (
+                        <div style={{ fontSize: '10px', color: 'var(--muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>vs 以前</span><DiffBadge current={recentPts} prev={prevPts} />
+                        </div>
+                      )}
+                      {aprilGames.length > 0 && (
+                        <div style={{ fontSize: '10px', color: 'var(--muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>vs 4月</span><DiffBadge current={recentPts} prev={aprilPts} />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>
                     <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '4px' }}>eFG%</div>
                     <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
-                      {recentEfg.toFixed(1)}% <DiffBadge current={recentEfg} prev={prevEfg} />
+                      {recentEfg.toFixed(1)}%
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
+                      {prevGames.length > 0 && (
+                        <div style={{ fontSize: '10px', color: 'var(--muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>vs 以前</span><DiffBadge current={recentEfg} prev={prevEfg} />
+                        </div>
+                      )}
+                      {aprilGames.length > 0 && (
+                        <div style={{ fontSize: '10px', color: 'var(--muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>vs 4月</span><DiffBadge current={recentEfg} prev={aprilEfg} />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>
                     <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '4px' }}>FP</div>
                     <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--mono)' }}>
-                      {recentFp.toFixed(1)} <DiffBadge current={recentFp} prev={prevFp} />
+                      {recentFp.toFixed(1)}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
+                      {prevGames.length > 0 && (
+                        <div style={{ fontSize: '10px', color: 'var(--muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>vs 以前</span><DiffBadge current={recentFp} prev={prevFp} />
+                        </div>
+                      )}
+                      {aprilGames.length > 0 && (
+                        <div style={{ fontSize: '10px', color: 'var(--muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span>vs 4月</span><DiffBadge current={recentFp} prev={aprilFp} />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
