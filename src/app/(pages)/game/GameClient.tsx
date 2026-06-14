@@ -164,19 +164,33 @@ export default function GameClient({ initialData }: { initialData: any }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         {[
-          { label: 'EFG%', val: formatNum(col(game, 'team', 'efg')), opp: formatNum(col(game, 'opp', 'efg')), unit: '%', color: 'var(--accent)' },
-          { label: 'TO%', val: formatNum(col(game, 'team', 'to%')), opp: formatNum(col(game, 'opp', 'to%')), unit: '%', color: 'var(--accent2)' },
-          { label: 'OR%', val: formatNum(col(game, 'team', 'or%')), opp: formatNum(col(game, 'opp', 'or%')), unit: '%', color: 'var(--accent)' },
+          { label: 'EFG%', val: formatNum(col(game, 'team', 'efg')), opp: formatNum(col(game, 'opp', 'efg')), unit: '%', color: 'var(--accent)', details: { us: `${col(game, 'team', 'fgm')}/${col(game, 'team', 'fga')} FG (3PM:${col(game, 'team', '3pm')})`, opp: `${col(game, 'opp', 'fgm')}/${col(game, 'opp', 'fga')} FG (3PM:${col(game, 'opp', '3pm')})` } },
+          { label: 'TO%', val: formatNum(col(game, 'team', 'to%')), opp: formatNum(col(game, 'opp', 'to%')), unit: '%', color: 'var(--accent2)', details: { us: `TO: ${col(game, 'team', 'to')}`, opp: `TO: ${col(game, 'opp', 'to')}` } },
+          { label: 'OR%', val: formatNum(col(game, 'team', 'or%')), opp: formatNum(col(game, 'opp', 'or%')), unit: '%', color: 'var(--accent)', details: { us: `OR: ${col(game, 'team', 'or')} / DR: ${col(game, 'team', 'dr')}`, opp: `OR: ${col(game, 'opp', 'or')} / DR: ${col(game, 'opp', 'dr')}` } },
           { label: 'PACE', val: formatNum(col(game, 'pace')), opp: 'possession/40min', isTextDesc: true, color: 'var(--accent2)' },
-          { label: 'TEAM PPP', val: formatNum(col(game, 'team', 'ppp'), 2), opp: formatNum(col(game, 'opp', 'ppp'), 2), color: 'var(--accent)' },
-          { label: 'FTR', val: formatNum(col(game, 'team', 'ftr')), opp: formatNum(col(game, 'opp', 'ftr')), color: 'var(--accent2)' }
+          { label: 'TEAM PPP', val: formatNum(col(game, 'team', 'ppp'), 2), opp: formatNum(col(game, 'opp', 'ppp'), 2), color: 'var(--accent)', details: { us: `PTS: ${col(game, 'team', 'pts') || col(game, 'pts', 'us')}`, opp: `PTS: ${col(game, 'opp', 'pts')}` } },
+          { label: 'FTR', val: formatNum(col(game, 'team', 'ftr')), opp: formatNum(col(game, 'opp', 'ftr')), color: 'var(--accent2)', details: { us: `FTA: ${col(game, 'team', 'fta')}`, opp: `FTA: ${col(game, 'opp', 'fta')}` } }
         ].map((s, i) => (
-          <div key={i} className="glass-panel" style={{ padding: '20px', borderTop: `3px solid ${s.color}` }}>
-            <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '8px' }}>{s.label}</div>
-            <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{s.val}</div>
-            <div style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
-              {s.isTextDesc ? s.opp : `相手 ${s.opp}${s.unit || ''}`}
+          <div key={i} className="glass-panel" style={{ padding: '20px', borderTop: `3px solid ${s.color}`, display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '8px' }}>{s.label}</div>
+              <div style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'var(--mono)', lineHeight: 1, marginBottom: '8px' }}>{s.val}</div>
+              <div style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
+                {s.isTextDesc ? s.opp : `相手 ${s.opp}${s.unit || ''}`}
+              </div>
             </div>
+            {s.details && (
+              <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px dashed rgba(255,255,255,0.1)', fontSize: '11px', fontFamily: 'var(--mono)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text)', marginBottom: '4px' }}>
+                  <span style={{ color: 'var(--muted)' }}>自:</span>
+                  <span>{s.details.us}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text)' }}>
+                  <span style={{ color: 'var(--muted)' }}>相:</span>
+                  <span>{s.details.opp}</span>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
