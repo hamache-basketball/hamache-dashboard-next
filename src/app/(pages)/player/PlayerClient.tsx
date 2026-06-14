@@ -452,25 +452,42 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
            const pOpp = parseNum(col(g.gameObj, 'opp', 'pts'));
            return pUs < pOpp;
         });
+        const closeGames = validGames.filter(g => {
+           const pUs = parseNum(col(g.gameObj, 'team', 'pts') || col(g.gameObj, 'pts', 'us'));
+           const pOpp = parseNum(col(g.gameObj, 'opp', 'pts'));
+           return Math.abs(pUs - pOpp) <= 5;
+        });
 
         const winPts = calcAvg(winGames, 'PTS');
         const lossPts = calcAvg(lossGames, 'PTS');
+        const closePts = calcAvg(closeGames, 'PTS');
+        
         const winEfg = calcTrueEfg(winGames);
         const lossEfg = calcTrueEfg(lossGames);
+        const closeEfg = calcTrueEfg(closeGames);
+        
         const winPm = calcPm(winGames);
         const lossPm = calcPm(lossGames);
+        const closePm = calcPm(closeGames);
 
-        const StatRow = ({ label, winVal, lossVal, isPct = false, isPm = false }: { label: string, winVal: number, lossVal: number, isPct?: boolean, isPm?: boolean }) => (
+        const StatRow = ({ label, winVal, lossVal, closeVal, isPct = false, isPm = false }: { label: string, winVal: number, lossVal: number, closeVal: number, isPct?: boolean, isPm?: boolean }) => {
+          const vals = [winVal, lossVal, closeVal].filter(v => v !== 0 || true); // keep all
+          const max = Math.max(...vals);
+          
+          return (
           <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: '12px' }}>
             <div style={{ color: 'var(--muted)', width: '60px' }}>{label}</div>
-            <div style={{ width: '80px', textAlign: 'right', fontWeight: 600, color: winVal > lossVal && !isPm ? 'var(--accent)' : 'var(--text)' }}>
+            <div style={{ width: '60px', textAlign: 'right', fontWeight: 600, color: winVal >= max && !isPm ? 'var(--accent)' : 'var(--text)' }}>
               {isPm && winVal > 0 ? '+' : ''}{winVal.toFixed(1)}{isPct ? '%' : ''}
             </div>
-            <div style={{ width: '80px', textAlign: 'right', fontWeight: 600, color: lossVal > winVal && !isPm ? 'var(--accent)' : 'var(--text)' }}>
+            <div style={{ width: '60px', textAlign: 'right', fontWeight: 600, color: lossVal >= max && !isPm ? 'var(--accent)' : 'var(--text)' }}>
               {isPm && lossVal > 0 ? '+' : ''}{lossVal.toFixed(1)}{isPct ? '%' : ''}
             </div>
+            <div style={{ width: '60px', textAlign: 'right', fontWeight: 600, color: closeVal >= max && !isPm ? 'var(--accent)' : 'var(--text)' }}>
+              {isPm && closeVal > 0 ? '+' : ''}{closeVal.toFixed(1)}{isPct ? '%' : ''}
+            </div>
           </div>
-        );
+        )};
 
         return (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '24px' }}>
@@ -545,22 +562,23 @@ export default function PlayerClient({ initialData }: { initialData: any }) {
             {/* Win/Loss Splits */}
             <div className="glass-panel" style={{ padding: '20px' }}>
               <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
-                <span>勝敗別スプリット</span>
-                <span style={{ fontSize: '11px' }}>WIN ({winGames.length}) vs LOSS ({lossGames.length})</span>
+                <span>シチュエーション別スプリット</span>
+                <span style={{ fontSize: '11px' }}>WIN({winGames.length}) / LOSS({lossGames.length}) / 接戦({closeGames.length})</span>
               </div>
-              {winGames.length > 0 && lossGames.length > 0 ? (
+              {winGames.length > 0 || lossGames.length > 0 || closeGames.length > 0 ? (
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid var(--border)', fontSize: '11px', color: 'var(--muted)' }}>
                     <div style={{ width: '60px' }}>項目</div>
-                    <div style={{ width: '80px', textAlign: 'right' }}>WIN</div>
-                    <div style={{ width: '80px', textAlign: 'right' }}>LOSS</div>
+                    <div style={{ width: '60px', textAlign: 'right' }}>WIN</div>
+                    <div style={{ width: '60px', textAlign: 'right' }}>LOSS</div>
+                    <div style={{ width: '60px', textAlign: 'right' }}>接戦(±5)</div>
                   </div>
-                  <StatRow label="PTS" winVal={winPts} lossVal={lossPts} />
-                  <StatRow label="eFG%" winVal={winEfg} lossVal={lossEfg} isPct />
-                  <StatRow label="+/-" winVal={winPm} lossVal={lossPm} isPm />
+                  <StatRow label="PTS" winVal={winPts} lossVal={lossPts} closeVal={closePts} />
+                  <StatRow label="eFG%" winVal={winEfg} lossVal={lossEfg} closeVal={closeEfg} isPct />
+                  <StatRow label="+/-" winVal={winPm} lossVal={lossPm} closeVal={closePm} isPm />
                 </div>
               ) : (
-                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>勝敗両方のデータがありません</div>
+                <div style={{ fontSize: '12px', color: 'var(--muted)' }}>データがありません</div>
               )}
             </div>
           </div>
