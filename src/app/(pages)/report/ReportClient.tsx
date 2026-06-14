@@ -76,6 +76,13 @@ export default function ReportClient({ initialData }: { initialData: any }) {
     parseNum(col(game, 'opp', 'ftr'))
   ];
 
+  const fourFactorsDetails = [
+    { us: `${col(game, 'team', 'fgm')}/${col(game, 'team', 'fga')} FG (3PM:${col(game, 'team', '3pm')})`, opp: `${col(game, 'opp', 'fgm')}/${col(game, 'opp', 'fga')} FG (3PM:${col(game, 'opp', '3pm')})` },
+    { us: `TO: ${col(game, 'team', 'to')}`, opp: `TO: ${col(game, 'opp', 'to')}` },
+    { us: `OR: ${col(game, 'team', 'or')} / DR: ${col(game, 'team', 'dr')}`, opp: `OR: ${col(game, 'opp', 'or')} / DR: ${col(game, 'opp', 'dr')}` },
+    { us: `FTA: ${col(game, 'team', 'fta')}`, opp: `FTA: ${col(game, 'opp', 'fta')}` }
+  ];
+
   // Scatter data
   const scatterFP = gamePlayers.map((p: any) => ({ 
     x: p.USG, y: p.FP, r: Math.max(2, parseNum(p.PTS)/2), 
@@ -229,7 +236,7 @@ pm2: playerRows.reduce((a: number, r: any) => a + parseNum(r['2PM']), 0),
           <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '1px solid var(--border2)', fontSize: '10px' }}>1</span>
           4 FACTORS - 勝敗を分けた4指標
         </div>
-        <FourFactorsCards ourData={our4Factors} oppData={opp4Factors} />
+        <FourFactorsCards ourData={our4Factors} oppData={opp4Factors} details={fourFactorsDetails} />
 
         {conclusionAnalysis && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '16px' }}>
