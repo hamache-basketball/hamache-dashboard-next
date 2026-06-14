@@ -182,11 +182,11 @@ export default function GameClient({ initialData }: { initialData: any }) {
             {s.details && (
               <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px dashed rgba(255,255,255,0.1)', fontSize: '11px', fontFamily: 'var(--mono)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text)', marginBottom: '4px' }}>
-                  <span style={{ color: 'var(--muted)' }}>自:</span>
+                  <span style={{ color: 'var(--muted)' }}>浜っち:</span>
                   <span>{s.details.us}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text)' }}>
-                  <span style={{ color: 'var(--muted)' }}>相:</span>
+                  <span style={{ color: 'var(--muted)' }}>Opp:</span>
                   <span>{s.details.opp}</span>
                 </div>
               </div>
